@@ -1,6 +1,8 @@
 import serial
 import os,time
 
+#GPS SAMPLE CODE 
+#UC20 module and MiniIOEx Raspberry Shield will be used 
 
 
 port = serial.Serial('/dev/ttyUSB2',baudrate = 115200,timeout=1)
@@ -45,7 +47,7 @@ while(1):
 
 
 
-port.write('AT+QGPSEND'+'\r\n') #gps stop
+port.write('AT+QGPSEND'+'\r\n') #gps stop - NEVER USED for this code
 time.sleep(1)
 
 
