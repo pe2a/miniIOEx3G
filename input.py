@@ -1,5 +1,5 @@
 #input IO test
-from firebase import firebase
+
 import RPi.GPIO as GPIO
 import time
 import random 
@@ -18,7 +18,7 @@ GPIO.setwarnings(False)
 while (1):
 	
 	
-	print ("INPUT TEST START")
+	
 	
 	#input 
 	if GPIO.input(DI_In1)== GPIO.HIGH:
@@ -33,7 +33,8 @@ while (1):
 	else:
                 print("DI_In2 -> LOW")
                 
-	 		
-        print ("INPUT TEST FINISH")
+
+
+ 	print('\n\n')
 
         time.sleep(2)

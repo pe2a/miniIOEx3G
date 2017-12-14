@@ -13,8 +13,6 @@ port.write('AT+CREG?'+'\r\n')
 time.sleep(1)
 port.write('AT+CSQ'+'\r\n')
 time.sleep(1)
-print "\n"
-print "operator: "
 port.write('AT+COPS?'+'\r\n')
 time.sleep(1)
 
