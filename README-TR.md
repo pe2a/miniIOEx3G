@@ -8,14 +8,14 @@ Raspberry Pi’nin kısaca tarihinden bahsedecek olursak, Bilgisiyar Bilimcisi E
 Raspberry Pi 3 Model B+’da aşağıdaki özellikler bulunmaktadır:
 
 
-BCM2837B0, Cortex-A53 64-bit 1.4GHz işlemci
-•	1 GB LPDDR2 SDRAM
-•	2.4GHz ve 5GHz IEEE 802.11.b/g/ n/ac kablosuz LAN, Bluetooth 4.2, BLE
-•	USB 2.0 üzerinden Gigabit Ethernet (maksimum çıkış 300 Mbps)
-•	Genişletilmiş 40 pinli GPIO başlığı
-•	HDMI
-•	4 USB 2.0 bağlantı noktası
-•	CSI kamera portu
-•	DSI dokunmatik ekran portu
-•	Video ve ses çıkış portu (4’lü jack çıkışı)
-•	Micro SD Kart girişi 
+- BCM2837B0, Cortex-A53 64-bit 1.4GHz işlemci
+- 1 GB LPDDR2 SDRAM
+- 2.4GHz ve 5GHz IEEE 802.11.b/g/ n/ac kablosuz LAN, Bluetooth 4.2, BLE
+- USB 2.0 üzerinden Gigabit Ethernet (maksimum çıkış 300 Mbps)
+- Genişletilmiş 40 pinli GPIO başlığı
+- HDMI
+- 4 USB 2.0 bağlantı noktası
+- CSI kamera portu
+- DSI dokunmatik ekran portu
+- Video ve ses çıkış portu (4’lü jack çıkışı)
+- Micro SD Kart girişi 
