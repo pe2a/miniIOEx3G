@@ -126,9 +126,12 @@ Raspberry ISO Link: https://www.raspberrypi.org/downloads/raspbian/
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI4OS.jpg)
 
-![Image of Note](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg)
+![Image of Note](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg = 20x)
+
 Note__ Raspberry’yi görüntü işleme veya yoğun process işlemlerde kullanıyor iseniz MiniIOEX üzerinden 24V ile Raspberry’yi beslemeniz önerilir. 
-![Image of Note](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg)
+
+![Image of Note](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg = 20x)
+
 Note__ Raspberry Pi üzerinde çalışacak SD kartı, formatlanmış bir şekilde mağazamızdan satın alabilirsiniz. 
 
 
