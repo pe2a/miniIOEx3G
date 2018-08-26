@@ -143,7 +143,7 @@ MiniIOEx’e enerji verdiğinizde Raspberry’ye de çalışma gerilimi için ge
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/11.jpg)
 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
-Note
+**Note**
 Raspberry Pi'yi ÇALIŞTIRMAK için fişini takmanız yeterlidir. Üzerinde bir açma-kapama düğmesi mevcut değildir. Çalışan programlarınızı ya da işletim sisteminizi kapattıktan sonra cihazın fişini çekebilirsiniz.
 
 
@@ -175,5 +175,65 @@ Raspberry Pi’yi eğer yeniden başlatmak veya kapatmak istiyorsak aşağıdaki
 | reboot	| Yeniden başlatma |
 | poweroff	| Komutu yazar yazmaz işletim sistemi kapanır. Açık dosyalarınız ve hali hazırda çalışan programlarınız var ise bu komut önerilmez. | 
 
+<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
+**Note**
 Raspberry’yi komut ekranından kapattığınızda yeniden açmak için enerjisini kesip tekrar enerjisini vermeniz yeterlidir. 
+
+## Raspbian Konfigürasyon Araçları ##
+Linux/GNU işletim sistemleri üzerinde bazı işlemler vakit alır. Örnek olarak ssh servisini açmak istiyorsak bununla ilgili portları açmalıyız ve servislerin işletim sistemleri üzerinde çalışmasına izin vermeliyiz. Üzerlerindeki GPIO’ları kullanmak için bazı izinler de gereklidir. Örnek olarak SPI,i2C portlarını kullanacağımızı işletim sistemine bildirmemiz gereklidir ki işletim sistemi de belirli GPIO’lardan “clock” üretsin veri okusun vs. Raspbian işletim sisteminin “raspi-config” aracıyla bu işlemler basite indirgenmiştir. Bu araçları kullanarak manuel yapılan birçok işlemi otomatik hale getirebiliriz. Bu başlık altında bu aracın nasıl çalıştığı ile özet bilgi verilecektir. İlgili başlıklarda bu servislerin kullanılması ile ilgili ayrıntılı bilgiler mevcuttur. 
+
+### SSH Ayarları ###
+
+Raspberry’yi monitör ve klavye gibi çevre birim elemanları takıp üzerinde çalışmak mümkün ama çoğu zaman yazılımcılar Raspberry’ye uzaktan bağlanmayı tercih ederler. Bu da tabiki sahada çalışan Raspberry’ler içinde büyük bir avantaj olmaktadır. Uzaktan çalışmanın çeşitli yolları olsa da Linux/GNU üzerinde en yaygın kullanılanı Secure Socket Shell (SSH) çözümüdür. Bu bağlantı yöntemiyle güvenli bir bağlantı sağlar ve cihazlarınıza güvenle erişebilirsiniz. SSH Linux/GNU üzerinde çalışan bir servis olduğundan dolayım belirli bir port numarası kullanır. 22 No’lu Port SSH için ayrılmıştır. Raspbian işletim sisteminde SSH servisini **“raspi-config”** üzerinden rahatlıkla aktif edebiliriz.  
+Eğer Windows bir işletim sistemi kullanıyorsanız SSH yüklü olarak gelmez. Yardımcı bir programla SSH üzerinden başka bir cihaza bağlanmanız gerekir. 
+Windows üzerinde Putty programı ile başka bir cihaza SHH üzerinden bağlanabiliriz.  Putty programını indirmek için bu bağlantıdan bilgi alabilirsiniz: https://www.putty.org/
+Hostname kısmına Raspberry’nin IP’sini girebilirsiniz. Sonrasında da gelecek ekranda **“login name”** yani Raspberry kullanıcı adı istenilecektir. Eğer değiştirmediyseniz Raspbian işletim sistemlerinde  hostname / password aşağıda  verilmiştir. 
+
+Default Raspbian Login Ayarları:
+
+- Raspberry Hostname:	pi
+- Raspberry Password:	raspberry
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/14.jpg)
+
+Raspberry üzerinde SSH kullanımını aktif etmek için aşağıdaki adımları izlemeniz yeterlidir:
+1)	Terminal ekranında “sudo raspi-config” komutunu gir
+2)	“Interfacing Options” kısmına git
+3)	“SSH” menüsünü seç
+4)	Ok-> Enable et
+5)	Finish
+Kaynak: https://www.raspberrypi.org/documentation/remote-access/ssh/
+Bu işlemler bittikten sonra işletim sistemini yeniden başlatarak SSH ile cihaza bağlanabilirsiniz. IP’nizi öğrenmek için terminal ekranında **“ifconfig”** komutunu girebilirsiniz ve buradaki IP numaranızı putty ekranında hostname olarak yazabilirsiniz. 
+
+## Raspbian Üzerinde C/C++/Python Derlenmesi ve Çalıştırılması ##
+
+Raspberry Pi üzerinde yazılım dilleriyle çalışmak oldukça kolaydır. Windows İşletim sistemlerinde herhangi bir .C dosyasını çalıştırmak için birçok program indirilmesi gerekse de Raspbian işletim sistemleri Linux/GNU tabanlı olduğu için buna gerek yoktur. GCC derleyicisi hazır olarak gelmektedir. Yapmamız gereken tek şey terminali açıp, programı yazmak ve derlemektir. Raspberry’de çalışmak bazı durumlarda zor olabilir.  Eğer kendi bilgisiyarımızdan Raspberry’ye bağlanmak istiyorsak Linux üzerinde çalışabilen SSH protokolünü kullanabiliriz. Bu protokel sayesinde kendi kişisel bilgisiyarınızda (Macbook vs.) yerde kodumuzu yazabilir ve Raspberry üzerinde çalıştırabiliriz. Bu başlık altında bu uygulamalara da yer verilecektir. 
+
+<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
+**Note**
+Yeni açtığınız dosyalarda veri işlemeye işletim sistemi tarafından izin verilmiyor ise dosyaya veya klasöre bazı haklar vermeniz gerekiyor. Aşağıdaki komut ile bu hakların hepsini vermiş olursunuz. 
+
+'''sh
+$ sudo chmod a+w "DOSYA ADI"
+'''
+### C99 Standartlarına Göre C Programlama Dili ve Derlenmesi ###
+
+Raspbian işletims sistemlerinde C ve C++ kodlarını derlemek için hazır olarak GCC derleyici gelmektedir. Terminali açtıktan sonra “nano” editörü yardımıyla kodumuzu yazabiliriz.  
+Terminal ekranında:
+'''sh
+$ nano helloWorld.c
+'''
+
+**helloWorld.c**
+'''sh
+#include <stdio.h>
+void foo(){
+    printf("Hello World\n");
+}
+int main(){
+    foo();
+    return 0;
+}
+'''
+
 
