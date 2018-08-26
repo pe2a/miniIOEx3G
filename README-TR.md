@@ -1889,6 +1889,7 @@ speedRef = 0
         speedRef = speedRef + 10000
         time.sleep(10)
 ```
+Programı çalıştırdığımızda aşağıdaki gibi hız değerlerini elde ediyoruz:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/50.jpg)
 
@@ -1897,7 +1898,7 @@ speedRef = 0
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/51.jpg)
 
-*Tam Hızda Sürücü Kullanıcı Paneli [AUTO] Modda *
+*Tam Hızda Sürücü Kullanıcı Paneli [AUTO] Modda*
 
 Yukarıdaki ekran görüntüsünde görüldüğü gibi Hız rpm cinsinden kademeli olarak artmış ve sonrasında kademeli olarak azalmıştır. Motor üzerindeki kaymadan dolayı maksimum 1476rpm’e yükselmiştir. Bölüm başında hedeflediğimiz gibi ABB sürücü hız referansı verilerek motor İLERİ yönde döndürülmüş ve durdurulmuştur. Bütün bunları PYTHON dilini kullanarak rahatlıkla yapabilmek mümkün. Program geliştirilerek çok güzel grafikler çıkartılabilir, WEB’e veriler gönderilebilir veya çeşitli durumlarda WEB’den program çalıştırılabilir. Tabiki bütün bunlar yapılırken motorun dönme kuvvetinden dolayı herhangi bir canlıya zarar verilebileceği unutulmamlı ve sadece yazılım ile değil donanım ile de motorun dönmesi istendiğinde durdurulacak tesisatların yapılması gerekmektedir. Aşağıda ABB ACH550 Motor sürücüsünü kontrol etmek için gerekli kodu bulabilirsiniz.
 
