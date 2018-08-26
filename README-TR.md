@@ -29,7 +29,7 @@ Yukarıdaki grafikte 2017 yılında en popüler programlama dilleri yer almaktad
 
 Raspberry Pi ve endüstriyel shield’lerin kullanılma alanları ve tarihlerinden kısaca bahsettik.  Sırada artık bu dokumanın konusu olan MiniIIOEx-3G var. Aşağıdaki başlıklarda bu konuyla ilgili uygulama örnekleri ve Raspberry kurulumlarını bulabilirsiniz. 
 
-## Endustriyel raspberry Shield: MiniIOEx3G ##
+## Endustriyel Raspberry Shield: MiniIOEx3G ##
 
 Bu dokuman, otomasyon sektöründe uzun yıllar tecrübe etmiş PLC kullanmış ve Raspberry Pi’ye geçmek isteyen kullanıcılar için olduğundan temel elektrik ve otomasyon bilgileri çoğu zaman kullanıcı tarafından biliniyor kabul edilmiştir. 
 
@@ -53,7 +53,82 @@ MiniIOEx-3G özellikleri aşağıda belirtilmiştir:
 
 
 
+RS232/RS485 portunu sahadaki diğer cihazlarla haberleşmek için kullanabilirsiniz. Eğer ethernet veya wireless imkanına sahip olan bir yerde iseniz 3G modulü satın almadan da shield üzerinde bulunan IO’ların hepsini kullanabilirsiniz. MiniIOEx, çalışması için gerekli olan gerilimi Raspberry 5V pinlerinden almaktadır. Bundan dolayı Raspberry’yi 5V USB ile besleyerek aynı zamanda MiniIOEx’i de beslemiş olursunuz.
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3369.jpg)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3373.jpg)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3369.jpg)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3380.jpg)
+
+MiniIOEx3G endüstriyel ortamlar göz önüne alınarak üretildiği için Metal Sac kutu içerisinde gelmektedir. metal Sac Kutu, DIN Rayı ile beraber geldiği için elektrik panolarında montaja uygundur. Eğer DIN Rayı dışında bir yere montaj etmek istenirse 3 adet M2.5 kulakçıklar akıllı vida ile montaj edilebilir. 
 
 
+MiniIOEx üzerinde aşağıdaki tabloda özellikleri verilen 2x12’li bir konnektör bulunmaktadır. Bu konnektör ile zaman kaybetmeden hızlı ve sağlam kablo montajı yapabilirsiniz. 
+
+MiniIOEx Konnektör özellikleri:
+
+| Konnektör Özellikleri	| Açıklama |
+| ------------- | ------------- |
+| Konnektör Sayısı	|12x2 |
+| Nominal Gerilim	| 300V |
+| Nominal Akım	| 8A |
+| Dayanma/Atlama Gerilimi	| 2000V |
+| Max. Kablo Kalınlığı	| 2.5mm2 |
+| Çalışma Sıcaklığı	| -400C   +1050C |
+
+Bu dokumanda Raspberry üzerinde çalışacak MiniIOEx’in nasıl kurulacağı ve Raspberry için gerekli olan SD kart formatı, Linux üzerinde çalışırken bilinmesi gereken temel Linux komutları ve ayarlarından da bahsedilecektir. MiniIOEx ile basit otomasyon uygulamaları da gerçekleştirilerek dokumanda anlatılanların gerçek hayatta da uygulanabilirliği gösterilecektir. 
+
+### MiniIOEx-3G Kimin İçin ###
+
+
+Endüstriyel otomasyon projeleri geliştirirken en çok aradığımız özellik: PLC’de C/C++/Python/JAVA gibi yüksek seviye dillerini kullanmak, internete verileri aktarabilmek, PLC üzerinde local veritabanı kurarak SCADA üzerindeki yükü azaltmaktı. Raspberry Pi ilk çıktığında cihaza biraz mesafeli yaklaşsam da sonradan Raspberry Pi ile birçok endüstriyel otomasyon pprojeleri geliştirdim. Raspberry üzerinde GUI uygulamaları, verilerin seri port üzerinden veya doğrudan IO’lar üzerinden alınması ve bu verilerin bir sunucuya aktarılması/WEB uygulaması oluşturulması gibi işlemler oldukça kolaydır. Bunun nedeni Raspberry’nin üzerinde bir işletim sistemi çalışması ve Linux üzerinden programlama yapabilmemizdir. Bu dokumanda da bu başlığa birçok atıf yapacağız. Neden Linux/GNU kullanmamız gerektiği, PLC üzerinde yapması nerdeyse günler süren ve pahalı çözümlerin burada ne kadar yapılabildiğini de birçok başlık altında görebileceğiz. 
+
+MiniIOEx projelerinde PLC’den Linux/GNU’ya geçmek isteyen kullanıcılar için aslında bire bir. Piyasada birçok Raspberry Pi eğitim kartları bulunmakta ama bu kartların hiçbirini endüstriyel projelerimizde kullanamamaktayız. Bundan dolayı ilk hevesle alınan birçok Raspberry’nin tekrar çekmecelere konduğuna şahidim. Bu dokumanda da aslında Raspberry ile nelerin yapılabileceğini gösteriyoruz. Enerki analizöründen veri okuyoruz, AC motorumuza hız referansı gönderiyoruz, sensörlerden veri okuyoruz ve bunları bir sunucuya göndererek verilerimize dışarıdan erişilmesine fırsat tanıyoruz. Yani tüm bunları özetleyecek olursak MiniIOEx kimin için?
+
+Endüstriyel otomasyon firmaları,
+IOT projeleri geliştiren start-up’lar,
+Gateway tabanlı proje geliştiren firmalar (RS485 / Ethernet -> Web Service vs.),
+Hızlı prototipleme ihtiyacı olan kullanıcılar,
+Gömülü Linux tabanlı uygulama geliştirmek isteyen öğrenciler/akademisyenler,
+Ve tabiki Hobi kullanıcıları.
+
+## Raspbian İşletim Sistemi Kurulumu ##
+
+Raspberry, üzerindeki SD kartı üzerinden işletim sistemini çalıştırmaktadır. Bundan dolayı kaliteli ve hızlı bir SD kart (class 10 önerilir) ve üzerinde çalışacak işletim sistemini doğru formatta yüklemek için bir “Disk Image” programı olması gerekmektedir. 
+Aşağıdaki adımları takip ederek Windows’da “Win32 Disk Imager” ile bu işlemleri gerçekleştirebilirsiniz:
+Win32 Disk Imager Programı: https://sourceforge.net/projects/win32diskimager/
+
+Eğer GPIO’ları yoğun bir şekilde kullanıyor iseniz Raspbian tabanlı bir işletim sistemini kurmak önemlidir. Diğer işletim sistemleri Raspbian gibi Raspberry üzerinde stabil bir çalışma yapısına sahip değildir. Raspberry Vakfı yılın belli dönemlerinde işletim sistemini güncellemektedir. En güncel Raspbian işletim  sistemine ise aşağıdaki linkten ulaşabilirsiniz. 
+
+Raspberry ISO Link: https://www.raspberrypi.org/downloads/raspbian/
+
+İlgili linkte iki adet ISO formatında Raspbian OS bulunmaktadır. “Raspbian Lite” sadece terminal ekranı açılır. Herhangi bir GUI barındırmaz. Bundan dolayı eğer programınız GPIO kullanıyor ve bu verielri örnek olarak bir sunucuya gönderiyor yani herhangi bir GUI işleminin kullanmıyor iseniz ‘Lite’ versiyonu yükleyebilirsiniz. Böylelikle işletim sistemi de kullanmadığınız birçok programın yükünden kurtulacaktır. Eğer Raspbian üzerinde uygulama geliştiriyorsanız, Office gibi programlarını da kullanmak istiyorsanız ‘with Desktop’ en uygun seçim olacaktır. Böylelikle normal bir ‘Windows’ kullanıyor gibi Raspberry’yi kullanabilirsiniz. 
+
+İstenilen işletim sistemi indirildikten sonra ‘Disk Imager’ programınızı açarak ve SD kartını formatlanması için SD kartı bilgisayarınıza yerleştirerek aşağıdaki işlemlere başlayabilirsiniz. 
+
+1)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI1OS.jpg)
+
+2)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI2OS.jpg)
+
+3)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI3OS.jpg)
+
+
+## MiniIOEx-3G İlk Enerji Verilmesi ##
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI4OS.jpg)
+
+![Image of Note](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg)
+Note__ Raspberry’yi görüntü işleme veya yoğun process işlemlerde kullanıyor iseniz MiniIOEX üzerinden 24V ile Raspberry’yi beslemeniz önerilir. 
+![Image of Note](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg)
+Note__ Raspberry Pi üzerinde çalışacak SD kartı, formatlanmış bir şekilde mağazamızdan satın alabilirsiniz. 
 
 
