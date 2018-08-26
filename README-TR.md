@@ -414,3 +414,302 @@ bcm2835_gpio_write(RASP_DIG_tr_LED_1, LOW);
 ### C++ Programlama Dili ve Derlenmesi: ###
 
 C++ dilini C diline benzer bir şekilde derleyebilir ve çalıştırabiliriz. Komut satırında “.cpp” uzantılı dosya yaratalım. 
+
+```sh
+$ sudo nano helloWorld.cpp 
+```
+
+
+```sh
+$ #include <iostream>
+int main(){
+    std::cout<<"Hello World"<<std::endl;
+    return 0;
+} 
+```
+Dosyayı kayıt ettiğimizde aşağıdaki komut satırını yazarak programı derleyebiliriz. 
+g++ -o helloWorld helloWorld.cpp
+```sh
+$ sudo g++ -o helloWorld helloWorld.cpp 
+```
+
+Programı çalıştırmak için ise aşağıdaki komut satırını terminalde girmemiz gereklidir:
+```sh
+$ sudo ./helloWorld 
+```
+
+Programın çıktısı olarak “Hello World” görmemiz gereklidir. Bu başlık altında çok temel olarak Linux/GNU üzerinde C/C++ programların derlenmesi ve çalıştırabilir dosyaların nasıl oluşturulacağı incelenmiştir. Bu bilgiler kullanılarak en azından temel olarak “nano” editöründe veya başka bir editörde C/C++ dillerinde yazdığımız kodları derleyip/çalıştırabiliriz. 
+
+### QT ile Raspbian Üzerinde Çalışmak  ###
+
+C++ ‘ın geniş kütüphane desteğini kullanarak Raspberry üzerinde çok farklı uygulamalar yapılabilir. Görüntü işleme, yapay zeka gibi birçok popüler yazılım araçlarında da C++ kullanılabilir. C++ ile modern GUI’ler de oluşturulabilir. Bu GUI’lerin hazırlanmasında QT kullanılabilir. QT’yi Raspberry’de çalıştırmanın diğer avantajı da GPIO’lara C++ üzerinden doğrudan erişilebilir ve bu GUI’de GPIO kontrollerini de yapabilirsiniz. 
+
+```sh
+$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get install qt5-default
+$ sudo apt-get install qtcreator
+```
+Yukarıdaki komutlar ile QT programını Raspberry üzerinde çalışabilir hale getirebilirsiniz. Sonrasında QT programında bazır ayarlamalar yapmak durumundasınız. QT default olarak GCC compiler’ı ile gelmiyor. Bundan dolayı QT üzerinde derleyici olarak compiler seçmek zorundasınız. QT üzerinde aşağıdaki adımları takip ederek bu ayarları yapabilirsiniz. 
+*Tools->Options->Build & Run* sekmesinde aşağıdaki adımları yapabilirsiniz:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/15.jpg)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/16.jpg)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/17.jpg)
+
+Kaynak: http://pe2a.com/blog/2017/02/19/qt-ile-basit-masaustu-uygulamasi/
+
+Bu ayarları yaptıktan sonra C++  kodunuzu derleyip çalıştırabilirsiniz. 
+
+## Raspbian OS Üzerinde Python ile Çalışmak  ##
+
+MedIOEx shield’inde birçok örneği C kodu ile anlattık ve kullanıcılar bu koddan yararlanarak kendi kütüphanelerini farklı platformlarda yazmayı başardı. MedIOEx’de birden fazla SPI entegresi olduğundan dolayı GPIO kontrolü MiniIOEx’e göre biraz daha zor olmaktaydı. MiniIOEx Digital Input ve Digital Output’lar Raspberry pinlerine doğrudan “pin-to-pin” bağlantısı olduğundan dolayı IO’ların kontrolü çok daha kolay. Bundan dolayı bu dokumanda da çoğu örneği Python üzerinden verdik. Bu bölümde ilk başta python kodlarımın nasıl çalıştırılacağını görecek sonrasında da MiniIOEx üzerinde bulunan RUN led’i ile ilgili çalışmalar gerçekleştireceğiz. 
+
+Herhangi bir Linux/GNU türevinde Python kodunu çalıştırmak için herhangi bir IDE yüklenmesine gerek yoktur. Terminal ekranında “python” yazarsanız doğrudan python kodlarını çalıştırabilirsiniz. Raspbian işletim sisteminde de hazır olarak Python IDE’leri gelmektedir. Bu IDE’yi kullanılabileceğiniz gibi terminal ekranından da python kodunuzu yazabilirsiniz. Eğer Windows bir bilgisiyardan çalışmak istiyorsanız da Pycharm IDE’sini indirerek kodunuzu Raspbian üzerinde SSH üzerinden bağlanarak çalıştırabilirsiniz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/18.jpg)
+
+Python kodları uzantısı “.py” dir. Bundan dolayı çalıştıracağımız python kodlarına “.py” uzantılı isimler vermemiz gerekmektedir. 
+Aşağıda terminalde yazacağımız komut ile ilk python kodumuzu oluşturabiliriz.
+
+**helloWorld.py**
+```sh
+def myPrint():
+    for i in range(0,10):
+        print("Hello World")
+myPrint()
+
+```
+Python bir “script” dili olduğundan dolayı programı “compile” etmeye gerek yoktur. Doğrudan kodunuzu çalıştırabilir ve kodda bir herhangi bir neden ile hata var ise bu da yine “real time” da ortaya çıkmaktadır. 
+
+Python ile dosyayı çalıştırmak için:
+```sh
+$ sudo python helloWorld.py
+```
+
+Python3 ile dosyayı çalıştırmak için:
+```sh
+$ sudo python3 helloWorld.py
+```
+
+Python, script tabanlı bir dil olduğundan kodu derlemeye gerek olmamaktadır. Doğrudan çalışabilen kod, çalışma zamanında derlenecek ve çıktı üretecektir. Eğer herhangi bir hata olmadı ise programınızda, program 10 adet “Hello World” çıktısı verecektir.
+
+**led.py**
+```sh
+#miniIOEx RUN LED 
+#update 08.2018
+import RPi.GPIO as GPIO
+import time
+
+#definition DIGITAL OUPUT 
+RASP_DIG_tr_LED_1 = 26 #Pin P1-37 
+#init function
+GPIO.setmode(GPIO.BCM) #bcm library
+GPIO.setup(RASP_DIG_tr_LED_1,GPIO.OUT)
+
+while 1:
+    GPIO.output(RASP_DIG_tr_LED_1, GPIO.HIGH)  # will be ON
+    time.sleep(0.25) #250ms
+    GPIO.output(RASP_DIG_tr_LED_1, GPIO.LOW)  # will be OFF
+    time.sleep(0.25) #250ms
+
+```
+Dosyayı çalıştırmak için:
+
+```sh
+$ sudo python3 led.py
+```
+
+Program çalıştığında RUN Led’inin 250ms aralıklarla yanıp söndüğü(flash) yaptığı görülecektir. RUN led’inin kullanıcıya bilgi vermesi açısından kullanabilirsiniz. Örnek olarak internetten veri kullanıcıya işlerin yolunda gitti belirtilmek isteniyorsa hızlı bir flash yapılabilir. Eğer herhangi bir veri iletişimi koptu ise yüksek aralıklarla flash yaptıralabilir.  
+Yukarıdaki led.c programında programın nasıl çalıştığı ana hatlarıyla verilmişti. led.py dosyasında da benzer tanımlamalar ve benzer fonksiyonlar kullanılmıştır. Bu başlıkta C ve Python ile Raspberry üzerinde nasıl kod yazılıp derleneceği ile bilgili verildi. Fiziksel olarak Raspberry üzerindeki bir GPIO’nın nasıl kullanılacağı ile uygulama örneği paylaşıldı. 
+
+### Tkinter ile Raspbian OS Üzerinde Çalışmak   ###
+
+Raspberry üzerinde birçok amaçla GUI tasarlamak ve bunu gerçekleştirmek mümkün. Örnek olarak bir kahve makinesi yaptığınızı düşünün. Suyu ısıtıp, valfleri kontrol ederek sıcak suyu bardağa boşaltacak ve yine valf kontrolü ile sıcak suyun üstüne kahve boşaltacaksınız. Tabi bunları yaparken de ürününüzün modern görünmesini isterseniz ve tabiki daha fazla kullanılmasını isterseniz iyi bir GUI tasarımına ihtiyacınız var demektir. 
+
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/19.jpg)
+
+Yukarıdaki resimdeki gibi bir kahve makinesi yapmak istersek Raspberry mükemmel bir seçim olabilir. Üzerindeki GPIO’lar ile ısıtma/boşaltma gibi kontakları kontrol edebiliriz. MiniIOEx üzerindeki Analog Input ile de sıcaklık/basınç gibi parametreleri okuyabiliriz/kontrol edebiliriz. Raspberry ve MiniIOEx üzerinde bulunan ethernet/wireless/3G ile de makine kullanılma istatistiklerini merkez sunuculara bildirebilir ve eğer kahve/süt boşaldıysa alarm oluşturabiliriz. Raspberry üzerindeki “Display” çıkışıyla da dokunmatik bir ekranda Tkinter veya QT’de tasarladığımız GUI’yi kullanıcıya gösterebiliriz. Raspberry bu gibi işleri rahatlıkla yapabilir. Hatta programınızı biraz daha geliştirebilir ve kullanıcının kimlik kartıyla kahve almasını sağlayabilirsiniz. Kullanıcı kartını bir yere tanıtır ve üzerindeki TAG MiniIOEx üzerinde bulunan RS232 haberleşme modülü sayesinde Raspberry’nin kullanabileceği bir bilgiye dönüşebilir. 
+Bu bilgileri GUI tasarımı ile nasıl bitmiş proje yaratılır bunun örneğini vermek için kullandık. Raspbian işletim sistemlerinde Tkinter hazır yüklü olarak gelmektedir. Python ile çalışan birçok GUI tasarım aracı vardır ama kolay prototip oluşturabileceğiniz ve internette birçok kaynak bulabileceğiniz Tkinter modülü sayesinde yukarıda senaryosunu yazdığımız programı hayata geçirebilirsiniz.
+Tkinter, Raspbian ile birlikte beraber gelir. Bundan dolayı herhangi bir yükleme işlemine gerek yoktur. Terminal ekranında “python3” komutu ile gelen ekranda aşağıdaki komutları yazdığımızda Tkinter test ekranı karşımıza gelecektir. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/20.jpg)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/21.jpg)
+
+İlerleyen bölümlerde Tkinter ile GPIO’ların beraber kullanıldığı örnekler verildi. 
+
+### Python ile Grafik Çizdirme ve Loglama   ###
+
+Python ile rahatlıkla projelerinizdeki input’ların grafiği çizdirilebilir. Analog Input veya buna bağlı Digital Input’ların grafiği çizdirilerek bu mail yoluyla gönderilebilir veya bu bilgiler loglanabilir. Bu başlık altında MiniIOEx’in gerilim değerinin loglanması ve bilgilerin grafiğe dönüştürülmesi ile ilgili temel projeler gerçekleştireceğiz. Özellikle endüstriyel uygulamalarda grafik çizdirilmesi hatanın bulunması açısından önemlidir. Sistemdeki bir hata grafik ile bulunabilir. Örnek olarak bir kontak geldiğinde analog input’dan gelen bir değer aşırı artıyorsa hata arama faaliyetini ilgili kontak üzerinde yoğunlaşabiliriz. Bu geçişler de genel olarak “trigger” olarak adlandırılabilir. 
+Python ile grafik çizebilmek için “matplotlib” kütüphanesini kullanıyoruz. Bu kütüphaneyi indirmek için aşağıdaki komutu girmemiz yeterlidir:
+
+```sh
+$ sudo apt-get install python3-matplotlib
+```
+Kaynak: https://matplotlib.org/users/installing.html#installing-an-official-release
+“matplotlib” kütüphanesini yükledikten sonra ilk örnek programı çalıştırabiliriz. 
+Sonrasında komut satırında “test.py” dosyasını oluşturuyoruz. 
+
+```sh
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data for plotting
+t = np.arange(0.0, 2.0, 0.1)
+s = 1 + np.sin(2 * np.pi * t)
+
+fig, ax = plt.subplots()
+
+ax.plot(t, s)
+
+ax.set(xlabel='time (s)', ylabel='voltage (mV)',
+       title='About as simple as it gets, folks')
+ax.grid()
+
+fig.savefig("test.png")
+plt.show()
+
+```
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/22.jpg)
+
+Bu grafiği gerçek değerler ile de çizdirebiliriz. Bunun için kodda ufak tefek bazı değişiklikler yapmamız gerekecektir. 
+Grafiğe hazırlanırken random değerler ile 10 adet verinin grafiğini çizdirelim. Sonrasında bu random değerler gerçek gerilim değerleri ile değişecek. 
+
+
+```sh
+import matplotlib.pyplot as plt
+import random
+import time
+# Data for plotting
+s = []
+counter = 0
+while counter < 10:
+
+    s.append(random.random()*10)
+    counter+=1
+    time.sleep(0.10)
+plt.plot(s)
+plt.ylabel("Power In Voltage")
+plt.show()
+```
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/23.jpg)
+
+Python dosyası 10 adet random değer üretti ve bunun grafiğini çizdik. Analog Input için mcp3208 entegresi kullanıyoruz. Entegre ve Raspberry aralarında SPI haberleşme protokolü ile veri alış verişi sağlanıyor. Raspberry Pi bir master CPU olarak entegreden sorgulama yapıyor ve cevap alıyor.  Analog Input başlığında bu konu detaylıca işlenmiştir. Buradaki amacımız basit bir grafik oluşturmak olduğundan ayrıntıya girilmemiştir. 
+Aşağıdaki programı “python3 powerIN.py” komutu ile çalıştırdığımızda 1sn süreyle Raspberry’nin gerilim grafiğini çizecektir. Raspberry üzerinde Analog Input okumak için gerekli PIN’ler yoktur. Bu bilgiyi MiniIOEx üzerindeki SPI entegresi yardımıyla almaktayız. Yani gerilim değerini MiniIOEx üzerindeki entegre okuyor ve SPI haberleşmesiyle Raspberry’nin anlayacağı BIT’e dönüştürüyor. 
+
+```sh
+import spidev
+import matplotlib.pyplot as plt
+import time
+
+#analog input 6 -> Raspberry 5V
+#analog input 7 -> Raspberry 24V
+def readAI(ch):
+        if 7 <= ch <= 0:
+            raise Exception('MCP3208 channel must be 0-7: ' + str(ch))
+
+        cmd = 128  # 1000 0000
+        cmd += 64  # 1100 0000
+        cmd += ((ch & 0x07) << 3)
+        ret = spi.xfer2([cmd, 0x0, 0x0])
+
+        # get the 12b out of the return
+        val = (ret[0] & 0x01) << 11  
+        val |= ret[1] << 3           
+        val |= ret[2] >> 5           
+
+        return (val & 0x0FFF)  
+
+def fADCconv(val):
+    return val * 33.0 / 4095.0 #Voltage 
+
+#definition SPI parameter
+spi = spidev.SpiDev()
+spi.open(0, 0)
+spi.max_speed_hz = 7629
+#definition Analog Input Var. 
+
+# Data for plotting
+s = []
+counter = 0
+while counter < 10:
+
+    s.append(fADCconv(readAI(6)))
+    counter+=1
+    time.sleep(0.10)
+plt.plot(s)
+plt.ylabel("Power In Voltage")
+plt.show()
+
+```
+Grafikte dalgalanmalar büyük görünse de aslında max. 30mV civarında seyir ediyor. Bu değerin çok fazla oynanaması normaldir. Bunun nedeni Raspberry’ye gelen gerilimin MiniIOEx üzerindeki lineer regülatörden geçmesidir. Lineer regülatör gerilimi sabit tutmaktadır.  Aşağıdaki grafik daha farklı şekillerde “matplotlib” kütüphanesi yardımıyla da çizilebilir. Threshold değerlerinde farklı gösterimler yapılabilir veya çizgi lineer, logaritmik gibi eğimlerde seçilebilir. Şimdilik en basit haliyle çiziyoruz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/24.jpg)
+
+Gelen değerin grafiğini çizdirdikten sonra değerlerin kayıt edilmesi ile ilgili birkaç program paylaşacağız. Değerlerin grafiğinin çizdirilmesiyle beraber hata durumlarında veya normal durumlarda bu değerlerin gerçek değerlerine erişmek de önemlidir. Bu değerler veritabanına kayıt edilebileceği gibi basit “.csv” formatlı dosyalar da kayıt edilebilir. Bu örnekte Raspberry Pi 5V gerilim değerinin 500ms aralıklarla “.csv” formatında kayıt edilmesi ile ilgili örnek uygulama paylaşılmıştır. 
+
+```sh
+import csv
+import spidev
+from time import sleep, strftime, time
+
+#analog input 6 -> Raspberry 5V
+#analog input 7 -> Raspberry 24V
+def readAI(ch):
+        if 7 <= ch <= 0:
+            raise Exception('MCP3208 channel must be 0-7: ' + str(ch))
+
+        cmd = 128  # 1000 0000
+        cmd += 64  # 1100 0000
+        cmd += ((ch & 0x07) << 3)
+        ret = spi.xfer2([cmd, 0x0, 0x0])
+
+        # get the 12b out of the return
+        val = (ret[0] & 0x01) << 11  
+        val |= ret[1] << 3           
+        val |= ret[2] >> 5           
+
+        return (val & 0x0FFF)  
+
+def fADCconv(val):
+    return val * 33.0 / 4095.0 #Voltage 
+
+#definition SPI parameter
+spi = spidev.SpiDev()
+spi.open(0, 0)
+spi.max_speed_hz = 7629
+#definition Analog Input Var. 
+
+counter  = 0
+with open("/home/pi/Desktop/rpi_voltage.csv", "a") as log:
+    while counter < 10:
+        sleep(0.1)
+        log.write("{0},{1},{2}\n".format(strftime("%Y-%m-%d %H:%M:%S"),str(readAI(6)),str(fADCconv(readAI(6)))))
+        counter+=1
+```
+Programın çıktısı olarak 5V besleme geriliminin zamana bağlı digital ve gerilim değerleri .csv formatında kayıt edilmektedir. .csv uzantılı dosyayı Raspberry’de açmak isterseniz UTF-8 formatında açmanız gerekmektedir. Bunun dışında yazılar anlamsız görülecektir. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/25.jpg)
+
+Yazacağınız basit script’ler ile de bu dosyaları mail ile de hata durumlarında kullanıcılara gönderebilirsiniz. 
+Eğer MiniIOEx kullanmıyorsanız ve bu işlemleri gerçek değerler ile yapmak istiyorsanız gpiozero kütüphanesinde bulunan CPU sıcaklık değerini kullanabilirsiniz. Aşağıda bulunan kod ile CPU sıcaklık değerini izleyebilir ve yine üstte yer alan örnekler ile yine değerlerinizi “.csv” formatında kayıt edebilirsiniz. 
+
+
+```sh
+from gpiozero import CPUTemperature
+from time import sleep, strftime, time
+
+cpu = CPUTemperature()
+temp = cpu.temperature
+
+counter  = 0
+while counter < 100:
+    print(temp)
+    counter+=1
+    sleep(0.25)
+```
