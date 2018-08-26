@@ -143,7 +143,7 @@ MiniIOEx’e enerji verdiğinizde Raspberry’ye de çalışma gerilimi için ge
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/11.jpg)
 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
-**Note** 
+Note
 Raspberry Pi'yi ÇALIŞTIRMAK için fişini takmanız yeterlidir. Üzerinde bir açma-kapama düğmesi mevcut değildir. Çalışan programlarınızı ya da işletim sisteminizi kapattıktan sonra cihazın fişini çekebilirsiniz.
 
 
@@ -154,11 +154,12 @@ Raspberry’nin internet üzerinden uygulama güncelleştirmelerini yüklemek ö
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/13.jpg)
 
 Terminal ekranında güncelleştirmeler için aşağıdaki komutları giriyoruz:
-'''
-sudo apt update
-sudo apt upgrade
-sudo rpi-update
-'''
+
+```sh
+$ sudo apt update
+$ sudo apt upgrade
+$ sudo rpi-update
+```
 
 Sonrasında güncelleştirmeler başlayacak ve sistem en güncel haline getirilecektir. Bunu yapmak önemlidir. Kütüphane, sistem dosyaları ve eğer varsa güvenlik açıkları bu yolla minimuma indirilebilir. 
 
