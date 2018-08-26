@@ -1204,9 +1204,275 @@ while 1:
 
 ```
 
-## MiniIOEx3G Analog Giriş (Analog Input) Kontrolü ##
+# MiniIOEx3G Analog Giriş (Analog Input) Kontrolü #
+
+MiniIOEx’de mcp3208-Analog Input entegresi bulunur. Bu entegre ile sahadan gerilim/akım bilgisini 12bit çözünürlüğünde almak ve Raspberry üzerinde bu verileri işlemek mümkündür. Raspberry ve ADC entegresi birbirleriyle SPI üzerinden haberleşmektedir. Raspberry 2 adet Chip Select barındırmaktadır. Bu bus hatlarında istenildiği gibi programlama yapılabilmektedir. ADC entegresi CS0’a bağlıdır. Default olarak SPI bus ‘disable’ edilmiştir. Kullanılacak kütüphaneye göre “raspi-config” veya manuel olarak “raspi-blacklist.conf” dosyası üzerinden bu enable/disable edilebilir. 
+
+MCP3208 ADC entegresi ile saniyede ~75000 data almak mümkündür. 3.3V’da ADC entegresi ~63kSPS kapasitesine sahiptir. Bu değer üzerinden de SCLK değeri 24bits * 63 000 = 1.5MHz bir değer çıkmaktadır. 16 us’de ADC entegresi okuma/yazma yapabilmektedir. eğer bu kadar kısa aralıkta örnekleme almak istiyorsanız üzerinde işletim sistemi çalışan gömülü sistem platformları için sorun olabilir. Bundan dolayı Raspberry üzerindeki ADC programlarımızda ~1ms ‘delay’  ile verileri alma programın sürdürülebilirliği açısından doğru olacaktır. Konu ile ilgili kodumuzda ne gibi değişiklikler yapabiliriz örnekler verilecektir. 
+
+Aşağıdaki tabloda Raspberry üzerindeki hangi PIN’lerin kullanıldığı verilmiştir:
+
+| PIN İsmi  	| Raspberry GPIO Yeri | 
+| --- | --- |
+| Chip Select |	CS0 - 24 |
+| SDO	| 19 |
+| SDI	| 21 |
+| SCLK	| 23 |
+	
+Tablodaki bu verilere göre harici bir SPI ADC haberleşme kütüphanesi de MiniIOEx için oluşturulabilir. ADC verilerini okuyabilmek için aşağıdaki adımlar takip edilmelidir:
+-	SPI kütüphanesi yükleme 
+-	Yüklenen kütüphaneye göre Raspberry SPI enable/disable 
+-	Klemense kablo montajı veya giriş beslemelerin okunması 
+
+Raspberry’de SPI kütüphaneleri kullanırken farklı yazılım kütüphanelerinde farklı konfigürasyon ayarları yapılması gerekmektedir. 
+
+| Kütüphane İsmi	| SPI Enable / Disable | 
+| --- | --- |
+| bcm2835 (C) 	| Disable |
+| Wiring Pi  (C) | 	Enable |
+| SpiDev (Python) |	Disable |
+
+Yukarıdaki kütüphaneleri kullandığımızda Raspberry’de de o gerekli ayarları yapmamız gerekmektedir. Yani eğer bcm2835 kütüphanesi kullanıyor isek **SPI -> Disable** olmalı. Aksi takdirde programınız ‘Compile Time’da bir hata almasa bile ‘Run Time’da ‘fatal error’ almanız muhtemeldir. 
+Raspberry’nin yeni modellerinde *BCM2836* ve *BCM2837* chip’leri kullanılıyor. Bundan dolayı bcm2835 kütüphanesinin çalışmayacağını düşünmeyin. Kütüphane, *bcmXX* modelleri ile uyumlu çalışıyor. 
 
 
+## MiniIOEx Analog Giriş Okuma ##
+
+MiniIOEx üzerinde bulunan entegre ile sahadan 2 adet analog giriş alınabilir. MiniIOEx dahili olarak 5V ve 24V besleme taraflarındaki gerilimleri de okumaktadır. Sahadan gelecek gerilim değeri max. 33V olmalıdır. MiniIOEx’e 4-20mA değişken akım kaynağı bulunan sensörler de montaj edilebilir. Daha yüksek gerilimlere çıktığınızda Raspberry’nin veya MiniIOEx’in zarar görme ihtimaline karşı dikkatli olmak gerekmektedir. Aşağıdaki görselde MiniIOEx ve Raspberrya arasındaki Analog Input modeli anlatılmaktadır. Bu modelde de görüleceği gibi 5V ve 24V okunması MiniIOEx üzerinde bulunan gerilim bölücülerle gerçekleşmekte ve sahadan da MiniIOEx’in okuyabileceği 2 adet Analog Input girişi bulunmaktadır. MiniIOEx giriş gerilimlerini ilgili kütüphaneden okuyabilirsiniz ve işlemlerinizde kullanabilirsiniz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/35.jpg)
+*MiniIOEx Analog Giriş*
+
+Aşağıdaki tabloda sahadan gelecek analog verilerin girmesi gereken klemens numaraları bulunmaktadır. 
 
 
+| Fiziksel Input | MiniIOEx Klemens No | 
+| --- | --- |
+| Analog Input 1 |	14 |
+| Analog Input 2 |	12 |
+| Analog Input GND |	13 |
+| Analog Input GND |	11 |
 
+MiniIOEx Analog Giriş modülünü aşağıdaki klemenslere kablo girişi yaparak kullanabilirsiniz:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/36.jpg)
+*MiniIOEx Analog Input Klemens Numaraları*
+
+Analog Input modülünü 4-20mA sensör girişi olarak kullanabilmek için aşağıdaki butonları **ON** yönüne doğru çekilmesi gerekmektedir. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/37.jpg)
+*MiniIOEx 4-20mA Seçim Butonu ON yönüne doğru çekilecektir*
+
+Sahada gördüğümüz uygulamalarda Raspberry’nin giriş gerilimini veya batarya gerilimi ölçme isteği bulunmaktaydı. Bundan dolayı 5V ve 24V güç giriş beslemelerini harici herhangi bir kablolamaya ihtiyaç duymadan doğrudan Raspberry üzerinden MiniIOEx üzerinden ölçebilirsiniz. 
+
+<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
+**Not**
+24V veya 5V besleme kaynağınızdan herhangi bir uç alıp MiniIOEX konnektörüne girmenize gerek yoktur. Bu giriş beslemeleri dahili olarak MiniIOEx üzerinde ölçülmektedir. 
+
+Örnek bir senaryo ile anlatmak gerekirse; sahada MiniIOEx’i batarya ile beslediniz ve batarya gerilimi düşüyor. Eğer bu gerilim hiç takip edilmez ise Raspberry kapandığında sadece bunu anlayabilirsiniz. Batarya gerilimini takip ettiğiniz takdirde ise batarya gerilimi düşmeye başladığında uyarı verebilir ve kritik seviyenin altına indiğinde ise Raspberry üzerinde çalışan tüm dosyaları kayıt ederek kapatabilirsiniz. 
+
+Endüstride kullanılan sensörlerin genelde çıkışları *0-10V* ve *4-20mA*’dir. Yukarıda da bahsedildiği gibi batarya giriş gerilimlerin ölçülmesi için MiniIOEX 33V’a kadar müsaade ediyor. Bundan dolayı satın alacağınız Analog Çıkışlı sensörleri MiniIOEx ile rahatlıkla ölçebilirsiniz. 
+
+Mikroişlemcilerde işlem yaparken herşeyin değeri **DİGİTAL** olarak ölçülür. Yani sensörlerin çıkışları gerilim olsa da bu ADC entegrelerine, çözünürlüğüne göre **DİGİTAL** değer olarak yansır.  Raspberry’de de yazdığımız fonksiyonlarda sahadan gelen gerilim bilgisini digital olarak ölçüyoruz. Bu gelen **DİGİTAL** değeri ise yazacağımız basit fonksiyonlar ile öncelikle gerilim/akım değerine sonra da sensörlerin anlamlı verisine (*Basınç, Sıcaklık, CO2*) bilgilere dönüştürebiliriz. 
+
+Aşağıdaki tabloda *MiniIOEx Analog Input* okuma verisi için gerilim sınır değerleri ve bunlara karşılık gelen **DİGİTAL** değerler bulunmaktadır. 
+
+
+| Analog Giriş Gerilimi Min. 	| Analog Digital Engtegre(ADC) Sayısal Değer |
+| --- | --- |
+| 0V	| 0 |
+
+
+| Analog Giriş Gerilimi Max. 	| Analog Digital Engtegre(ADC) Sayısal Değer |
+| --- | --- |
+| 33V	| 4095 |
+
+Buradan yola çıkarak yazılımda gerekli fonksiyonlar yazılabilir. Bu dokumanda sensör verisi nasıl okunur ve anlamlı değerlere çevrilir örneklerle anlatılacaktır. 
+
+ADC entegresi MiniIOEx ile SPI üzerinden veri alışverişini sağlamaktadır. Bundan dolayı mcp3208 kütüphanesinde Raspberry SPI kütüphaneleri de kullanılmıştır. Bu kütüphanelerin nasıl kullanıldığı da farklı programlama dili örnekleriyle yine bu dokumanda paylaşılmıştır. MCP3208 entegresi 8 adet kanalı ölçmektedir. MiniIOEx’de bu kanalların sadece 4’ü kullanılmıştır. 
+
+| Fiziksel Giriş	| Mcp3208 Kanal İsmi |
+| --- | --- |
+| Analog Input 1	| 0 .  |
+| Analog Input 2	| 1 .  |
+| Analog Input 3 (Raspberry Besleme - 5V) |	6. |
+| Analog Input 4 (MiniIOEx Besleme - 24V) |	7. |
+
+
+Yukarıdaki tabloda görüleceği gibi MCP3208 entegresinin 6. ve 7. Bacakları Raspberry üzerindeki gerilimleri ölçmek için kullanılmıştır. MiniIOEx konnektörlerine hiçbirşey bağlamasanız bile 24V veya 5V gerilim bağladıysanız Raspberry üzerindeki gerilimi görmeniz gerekmektedir.
+
+Python’da yazılmış Analog Input test kodunu çalıştırdığınızda 6.kanalda yaklaşık ~620 değerlerini görmeniz gerekir. Bu değer yukarıdaki tabloda verilen Raspberry besleme giriş gerilimidir. Basit bir hesap ile bu digital değeri gerçek anlamlı bir değere dönüştürmek mümkündür. 
+
+## Analog Giriş Okuma Fonksiyon Ayarlarının Yapılması ##
+
+Aşağıdaki değerler MiniIOEx Analog Okuma fonksiyonları için sabit değerlerdir. Siz de kendi fonksiyonunuzu yazdığınızda aşağıdaki sınır değerlerini kullanabilirsiniz. 
+
+-	Entegre’den Okunan Digital Değer (x), 
+-	Max. 12bit ADC Digital Değer -> 4095 (2^12),
+-	Max. Saha Giriş Gerilimi -> 33V .
+
+Sonuç olarak Raspberry’nin beslendiği güç kaynağının gerilim değerini bulmak ister isek aşağıdaki denklemi çözmemiz gerekiyor:
+
+
+-	*eq1.* Güç Kaynağı Giriş Gerilimi = (Okunan Digital Data(x) * Max.  Saha Giriş Gerilimi)/ (Max.Digital Data )
+-	*eq2.* Güç Kaynağı Giriş Gerilimi =(620 * 33V)/(4095 ) = 4.996V 
+
+MCP3208 entegresinden digital değer okumak için aşağıda kod bloğu paylaşılmış ve dokumanın ilerleyen başlıklarında ise bu değerin gerilim ve sensör datalarına çevirme işlemleri ayrıntılı olarak işlenmiştir.
+
+
+```sh
+def readAI(ch):
+        if 7 <= ch <= 0:
+            raise Exception('MCP3208 channel must be 0-7: ' + str(ch))
+
+        cmd = 128  # 1000 0000
+        cmd += 64  # 1100 0000
+        cmd += ((ch & 0x07) << 3)
+        ret = spi.xfer2([cmd, 0x0, 0x0])
+
+        # get the 12b out of the return
+        val = (ret[0] & 0x01) << 11  
+        val |= ret[1] << 3           
+        val |= ret[2] >> 5           
+
+        return (val & 0x0FFF)  
+```
+Yukarıda karşılığı verilen Python kodunun C dilinde yazılmış eşdeğeri aşağıdaki gibidir. Çalışmalarınızda hangi programlama dili ile çalışacaksanız ilgili kod bloğunu seçebilirsiniz.  
+
+```sh
+//AI reading channel val
+int smallex_getVal(const int channel){
+    char tbuf[3]; //transmitting values to mcp3208
+    char rbuf[3]; //reading value from mcp3208
+    
+    int adc = 0;
+    int adcDigNumber = 0;
+    
+    if(channel == 0){
+        
+        //ch0
+        tbuf[0] = 0b00000110;
+        tbuf[1] = 0b00000000;
+        tbuf[2] = 0b00000000;
+        
+    }
+    if(channel == 1){
+        //ch1
+        tbuf[0] = 0b00000110;
+        tbuf[1] = 0b01000000;
+        tbuf[2] = 0b00000000;  
+    }
+                    
+    if(channel == 6){
+        
+        //ch6
+        tbuf[0] = 0b00000111;
+        tbuf[1] = 0b10000000;
+        tbuf[2] = 0b00000000;
+            
+    }
+    
+    if(channel == 7){
+        
+        //ch7
+        tbuf[0] = 0b00000111;
+        tbuf[1] = 0b11000000;
+        tbuf[2] = 0b00000000;
+        
+    }
+    
+    bcm2835_spi_transfernb(tbuf, rbuf,sizeof(tbuf));
+    adcDigNumber = (rbuf[1] << 8) + rbuf[2];
+    adcDigNumber &= 0xFFF;
+    
+    return adcDigNumber; //should be 0 - 4095
+```
+
+Bu fonksiyon bloğunu programınızda kullanabilirsiniz. Herhangi bir gerilim ölçüm aleti (multimetre) ile de bu değeri kontrol edebilirsiniz. 
+5V hattında MiniIOEx üzerinde herhangi bir gerilim düşürücü eleman bulunmadığı için bu değer doğrudan Raspberry’nin beslendiği gerilimdir. 24V değerini ölçtüğünüzde bulunan gerilim değerine yaklaşık olarak 1.4V (0.7V * 2) eklemeniz gerekmektedir 24V hattında aşağıdaki köprü diyot olduğundan dolayı. Aşağıdaki resimde MiniIOEx güç besleme girişi köprü diyot bağlantısını görebilirsiniz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/38.jpg)
+
+Bu yapılan hesaplarının benzerlerini sensörlerin çıkış gerilim değerlerinin anlamlı datalara dönüştürülmesinde de kullanabiliriz. Elimizde bir basınç sensörü olduğunu düşünelim. Basınç sensörünün değerleri belirtilmiş olur. Örnek bir basınç sensörü için aşağıdaki bilgiler ışığında bir örnek çözelim.
+
+
+Basınç sensörü değerleri:
+-	Basınç Min. Değer = 0 Bar
+-	Basınç Max. Değer = 16 Bar
+
+**Not**
+Bu sensör değerleri sensörün çeşidine göre farklılık gösterebilir. Her basınç sensörü aynı başlangıç değerlerine sahip olmamaktadır.  
+
+Bu ifadelere göre sensör gerilim çıkışını anlamlı sensör datasına dönüştürmek için aşağıdaki gibi formalize edebiliriz: 
+
+### Analog Gerilim Çıkışlı Sensör Örneği: ###
+Output  =(Input-0V) * ((Basınç Max.  - Basınç Min.)/(10V-0V )) + Basınç Min. 
+
+Sensörden aşağıdaki değerlere geldiğini varsayar isek ilgili basınç değerlerini bulabiliriz. 
+
+Input = 0V: 	Output=  (0V-0V) * ((16Bar  -(0)Bar )/(10V-0V )) + (0)Bar   = 0 Bar
+Input = 6V: 	Output=  (6V-0V) * ((16Bar  -(0)Bar )/(10V-0V )) + (0)Bar   =  9.6 Bar
+Input = 9.9V: 	Output =  (9.9V-0V) * ((16Bar  -(0)Bar )/(10V-0V )) + (0)Bar =  15.84 Bar
+
+MiniIOEx, Analog Input modülüne girecek 33V modülün entegrede digital olarak 4095 değerini vereceğinden bahsetmiştik. Bu bilgiye göre aşağıdaki referans gerilim noktalarında ilgili digital değerleri hesaplanmıştır. 
+
+0V   ->  0 
+6V   -> 4095 * 6V/33V = 745 
+10V -> 4095 * 10V/33V = 1241 
+
+Yukarıdaki orantı orantıyı ADC/gerilim fonksiyonuna çevirmeye çalıştığımızda aşağıdaki gibi bir fonksiyona çevirebiliriz. 
+
+```sh
+def fADCconv(val):
+    return val * 33.0 / 4095.0 #Voltage 
+```
+
+Bu fonksiyonun ürettiği değerler artık anlamlı gerilim datasıdır. val değeri, ADC’den gelen digital değerdir. return fonksiyonu ile de  val  değeri üzerinde basit bir çevirme işlemi uyguladık. Yukarıda yapılan çözümleri herhangi bir gerilim çıkışı veren sensör datası üzerinden uygulama yapmak da mümkündür. 24V ve 5V giriş beslemeleri bu basit fonksiyon ile ölçebilirsiniz. Sensör dataları okunurken aşağıdaki adımların yapılması sensör okumayı kolaylaştırır:
+
+-	Entegreden okunan digital değer anlamlı gerilim değerine dönüştürülür
+-	Anlamlı gerilim değeri sensörün min./max. sınırları çerçevesinde gerçek dataya dönüştürülür. 
+
+
+Gerilim çıkışlı sensörlerin MiniIOEx’de kullanılması ile ilgili örnekler verildi. Bu başlık altında **“Akım Çıkışlı”** sensörlerin hesaplamasında uygulanacak yöntemlerden bahsedilecektir.
+
+### Analog Akım Ölçüm Örneği ###
+
+4-20mA veya 0-20mA akım çıkışlı sensörler genelde gerilim hattında gürültü bulunan sistemlerde kullanılır. Örnek olarak; güçlü bir pompaya sahip sistem çalışmaya başlarken sensör dataları üzerinde parazitler oluşturabilir. Eğer gerilim çıkışlı bir sensör tercih edilirse gerilimde oluşacak oynamalar daha fazla olacağı için gelen dataların ölçümünde sorun yaşanabilir. Bu dokumanda kablolaların yerleşimleri, seçilmesi gereken kablo ve tesisat bu dokumanın konusu olmadığından sadece hesaplamaların nasıl yapılacağı anlatılacaktır. 
+
+Basınç sensörü sınır değerleri:
+-	Basınç Min. Değer = 0 Bar
+-	Basınç Max. Değer = 16Bar
+
+Analog Akım Çıkışlı Sensör Ölçüm Örneği:
+ 
+Output  =(Input-4mA) * ((Basınç Max.  - Basınç Min.)/(20mA-4mA )) + Basınç Min. 
+Input = *0mA*: 	Output=  (0mA-4mA) * ((16Bar  -(0)Bar )/(20mA-4mA )) + (0)Bar   = 0 Bar
+Input = *12mA*: 	Output=  (12mA-4mA) * ((16Bar  -(0)Bar )/(20mA-4mA)) + (0)Bar   =  8 Bar
+Input = *20mA*: 	Output =  (20mA-4mA) * ((16Bar  -(0)Bar )/(20mA-4mA )) + (0)Bar =  16 Bar
+
+### CO2 Sensörü İle Yapılmış Gerçek Bir Uygulama ###
+
+Bu başlıkta “Siemens QPA2002” CO2 / Hava kalitesi sensöründen gelen veri işlenecektir. Böylelikle anlatılan işlemler gerçek bir sistem ile karşılaştırılacaktır. 
+
+•	Test sırasında sensör ve MiniIOEX beslemesi 24V’dur. Gerekli kablolamalar da buna göre yapılmıştır. 
+•	Sensör, gerilim çıkışlı (U1) 0-10V modeli tercih edilmiştir.
+Siemens QPA2002 Sensör bilgileri:
+*Min. CO2*  = (0) ppm
+*Max. CO2* = 2000 ppm  
+-	3 No’lu Pin : G
+-	4 No’lu Pin : G0
+-	5 No’lu Pin:  U1
+U1 No’lu pin çıkışı sensör gerilim çıkışıdır. 
+Sensörün çıkış gerilimini aşağıdaki gibi formalize edebiliriz:
+
+Output  =(Input-0V) * ((CO2 ppm max.  - CO2ppm min.)/(10V-0V )) + CO2 ppm Min. 
+Output  =(Input) * ((2000ppm - 0ppm)/(10V-0V )) + 0ppm
+
+Yukarıdaki denkleme bağlı olarak da CO2 sensörünün fonksiyonunu aşağıdaki gibi gerçekleştirebiliriz:
+
+```sh
+def co2_sensor_converter(val):
+    return val * 200.0
+```
+
+Sensör datası ile ilgili fonksiyon yazıldıktan sonra ise kodun tamamını yukarıdaki örneklerde de verildiği gibi gerçekleştirebiliriz. 
