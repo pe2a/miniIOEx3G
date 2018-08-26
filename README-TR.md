@@ -236,5 +236,181 @@ int main(){
 }
 
 ```
+Kayıt etmek için “nano” editörü üzerinde **CTRL + X** ile çıkıp **“Y”** tuşuna basmamız gerekiyor. Bu şekilde dosya ilgili klasörün altında oluşturulacaktır. 
+Kodumuzu derlemek için yine terminal ekranında aşağıdaki komut satırını girmemiz gerekiyor:
+```sh
+$ gcc -o helloWorld helloWorld.c 
+```
+
+Eğer kodumuzda bir hata yoksa “mesaj” veya “başarıyla derlendi” mesajı almayız. Terminal ekranında bir alt satıra inilmesi gerekmektedir. Normal şartlar altında bu programın doğru derlenmesi gerekmektedir. Program derlendiğinde aynı zamanda “executable-çalışabilir” bir dosya da oluşturacaktır. Bu dosyanı adı “helloWorld” olmaktadır. Programı derlerken de “helloWorld.c” dosyasının “helloWorld” çalışabilir dosyasını oluşturması komutunu veriyoruz. 
+
+Programı çalıştırmak için ise aşağıdaki komutu çalıştırmamız yeterlidir:
+```sh
+$ ./helloWorld  
+```
+
+Program  “Hello World” çıktısını üretecektir. Ürettimiz **helloWorld** çalışabilir dosya **C99** standartlarına göre üretilmiş bir dosyadır. Eğer C11 standartlarında çalışmak istiyor isek bir parametre daha girmemiz gereklidir. 
+
+### C11 Standartlarına Göre C Programlama Dili ve Derlenmesi ###
+
+Eğer C11 standartlarına göre programın derlenmesini ve çalışabilir bir dosyanın oluşturulmasını istiyor isek **“-std=c11”** komut parametrisini girmemiz gereklidir. 
+
+Aşağıdaki kodu derlemeye çalışalım:
+
+```sh
+#include <stdio.h>
+
+int main(){
+
+    for(int i = 0; i < 100; ++i)
+        printf("Hello World\n");
+
+    return 0;
+} 
+```
+
+Normal şartlar altında aşağıdaki gibi derliyorduk:
+**C11 Standartları için Hatalı Derleme:**
+```sh
+$ gcc -o helloWorld helloWorld.c  
+```
+
+Bu kodu bu şekilde derlediğimizde hata mesajı ile karşılaşırız: FOR döngüsünün içinde bir değişken ilk defa tanımlandığı için.
+Bundan dolayı **“-std=c11”** komut parametresini girmemiz gerekiyor. 
+
+C11 Standartları için Doğru Derleme:
+```sh
+$ gcc -o helloWorld helloWorld.c -std=c11  
+```
+
+Parametreyi eklediğimizden dolayı artık hata mesajı almadan programımızı çalıştırabiliriz: 
+
+```sh
+$ ./helloWorld  
+```
+
+Ekrana 100 adet “Hello World” yazısı yazdırılacaktır. 
+
+C koduyla çalışırken genelde başka kütüpnalerden fonksiyonlar da kullanıyoruz. Örnek olarak MedIOEx(http://www.medioex.com) shield ile çalışırken MedIOEx’in C koduyla yazılmış dosyasını aynı klasör altında derlemeye çalışmış olmalısınız. Tüm kodu aynı dosyada yazmak kodun ilerleleyen dönemlerinde okunmasını, bakımını ve modülerliğini azaltmaktadır. Bundan dolayı bu başlık altında birden çok C kütüphanesi ile çalışmayı ve bunların derlenmesi ile ilgili örnekler verebiliriz. 
+Kendi kütüphanenizi oluşturmak için yeniden nano editörü ile bir dosya oluşturabilirsiniz. Bu örnekte **pmedex** kütüphasini oluşturacağız ve **test.c** programında bu kütüphanenin örnek fonksiyonunu kullanacağız. 
+İlk olarak “pmedex.h” kütüphanesini oluşturuyoruz. 
+Sonrasında ise kullanacağımız fonksiyonları ve değişkenleri tanımlıyoruz. 
+**pmedex.h**
+```sh
+#include <stdio.h>
+static int myCounter = 0;
+void fCounter();
+```
+Kütüphanemizde sadece fonksiyon ve kullanacağımız standart kütüphane fonksiyonlarını tanımladık. 
+
+Bu fonksiyonların gövdelerini ise **pmedex.c** programına yazıyoruz. 
 
 
+```sh
+#include "pmedex.h"
+
+void fCounter(){
+    myCounter++;
+    printf("myCounter  = %d \n",myCounter);
+}
+
+```
+
+**“pmedex.h”** kütüphanesini oluşturduk ve fonksiyonların yazımını gerçekleştirdik. Bu fonksiyonları “main.c” dosyası altında kullanabiliriz. “main.c” dosyasını oluşturuyoruz ve bu program içinde **“fCounter()”** fonksiyonunu çağırıyoruz. 
+
+```sh
+#include <stdio.h>
+#include "pmedex.h"
+int main(){
+    fCounter();
+    return 0;
+}
+
+```
+
+Derlemek için ise aşağıdaki komut satırını kullanabilirsiniz. 
+
+```sh
+$ gcc main main.c pmedex.c -std=gnu11
+```
+
+### MiniIOEx Üzerinde C Programlama Dili ile Raspberry Üzerinde LED Kontrolü ###
+
+Genelde Raspberry ile yapılan ilk örnek LED kontrolü olur. Bunun için bir adet transistör, LED ve direnç ile Raspberry üzerindeki ilgili GPIO’ya bağlantı yapılarak LED on/off yaptırılır. Biz de bu geleneği bozmayalım. Yalnız burada transistör, LED, direnç gibi temel elektronik ekipmanlara ihtiyacınız yok. Örneklerin hepsinin MiniIOEx-3G endüstriyel Raspberry Shield üzerinden yapacağımızı belirtmiştik. İlk uygulama örneğimizi de bu shield üzerinden gerçekleştiriyoruz. Önceki başlıklarda bcm2835 kütüphanesinin yüklenmesini ve nasıl derleneceğini öğrenmiştik. Bu örnekte de bcm2835 kütüphanesine ihtiyacımız olacaktır. Bu kütüphaneyi yüklediyseniz ilk örneğimize geçebiliriz. Raspberry üzerindeki GPIO numaraları ile bcm2835 kütüphanesinin GPIO numaraları farklıdır. Bu farklılığın nedeni bcm2835 kütüphanesinin Raspberry A modeli için yazılmış olmasıdır. Sonraki güncelleştirmelerle yeni model Raspberry’lere de uyumlu hale getirilmiştir. Bu nedenlerden dolayı Raspberry üzerindeki kullanacağımız GPIO’yu bcm2835 kütüphanesinin karşılık gelen PIN ile eşleştirmemiz gerekiyor. Programda bcm2835 kütüphanesindeki PIN adresini kullanacağız. Biraz karışık gelse de ilk örnekten sonra daha iyi anlaşabileceğini düşünüyorum. 
+
+Aşağıdaki tabloda Raspberry üzerindeki GPIO’ya bağlı olan LED ve buna karşılık olarak da bu GPIO’ya karşılık gelen bcm2835 PIN numarası görülmektedir. Aşağıda yazacağımız bu basit uygulamada bcm2835 üzerindeki PIN adresini kullanacağız. 
+
+
+| Raspberry Üzerindeki GPIO	| BCM2835 GPIO |
+| ------ | ------ |
+| 37	| BCM26 |
+
+Programı aşağıdaki gibi oluşturabiliriz:
+
+```sh
+#include <stdio.h>
+#include <bcm2835.h>
+
+#define RASP_DIG_tr_LED_1 RPI_V2_GPIO_P1_37 
+//miniIOEx RUN LED 
+//update 08.2018
+int main(){
+    
+     if (!bcm2835_init())
+      return 1;
+     // Set the pin to be an output
+    bcm2835_gpio_fsel(RASP_DIG_tr_LED_1, BCM2835_GPIO_FSEL_OUTP);
+    while (1)
+    {
+    // Turn it on
+    bcm2835_gpio_write(RASP_DIG_tr_LED_1, HIGH);
+    // wait a bit
+    bcm2835_delay(250);
+    // turn it off
+    bcm2835_gpio_write(RASP_DIG_tr_LED_1, LOW);
+    // wait a bit
+    bcm2835_delay(250);
+    }
+    bcm2835_close();
+    return 0;   
+}
+
+```
+Programı aşağıdaki komutlar ile derleyip/çalıştırabiliriz:
+
+```sh
+$ gcc -o led led.c -lbcm2835 -std=gnu11 
+$ ./led
+```
+Sonrasında MiniIOEx-3G üzerindeki LED’in flash yaptığını görebileceksiniz. Bu uygulama sayesinde bcm2835 kütüphanesinin doğru yüklenip yüklenmediğini de görebileceğiz. 
+
+Programı anlamak için öncelikle bunu açıklamak gerekecektir. Her ne kadar basit bir kod gibi görünse de aslında program birçok işlemi gerçekleştirmektedir. Programda ilk olarak Raspberry üzerindeki GPIO kullanacağımız için kullanacağımız PIN tanımlanmıştır. Bu PIN, MiniIOEx üzerinde LED pinidir. Bu pinin Raspberry’nin hangi bacağına bağlı oldu yukarıda verilmişti. 
+
+```sh
+$ #define RASP_DIG_tr_LED_1 RPI_V2_GPIO_P1_37 
+```
+
+RPI_V2_GPIO_P1_37, bcm2835.h kütüphanesinde tanımlanmıştır. Bunu daha anlaşılır hale gelmesi için kendimiz bu ismi tanımlayacak başka bir isim tanımladık. 
+
+```sh
+     if (!bcm2835_init())
+      return 1;
+```
+bcm2835 kütüphanesi bir sebepten doalyı çalışmıyor ise burada hata döndürülecektir. Bu hata yüksek ihtimalle GPIO’ların aynı anda kullanılması gibi sebeplerden olabilir veya memory hatası sık karşılaşılan problemlerdendir. Kütüphane, stabil bir kütüphane olduğundan dolayı eğer bir hata mesajı alıyorsanız yüksek ihtimalle sorun kodunuzdadır. 
+
+```sh
+bcm2835_gpio_fsel(RASP_DIG_tr_LED_1, BCM2835_GPIO_FSEL_OUTP);
+```
+Bu fonksiyon yardımı ile de Raspberry’nin 37. Bacağında olan LED’imizi çıkış olarak tanımlıyoruz. 
+
+```sh
+bcm2835_gpio_write(RASP_DIG_tr_LED_1, HIGH);
+```
+Yukarıdaki fonksiyon yardımıyla da PIN’imizi aktif veya pasif hale getirebiliyoruz. HIGH, konumunu LOW ile değiştirdiğimiz takdirde ise LED’imizin söndüğünü görebiliriz. 
+
+```sh
+bcm2835_gpio_write(RASP_DIG_tr_LED_1, LOW);
+```
+### C++ Programlama Dili ve Derlenmesi: ###
+
+C++ dilini C diline benzer bir şekilde derleyebilir ve çalıştırabiliriz. Komut satırında “.cpp” uzantılı dosya yaratalım. 
