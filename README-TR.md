@@ -167,6 +167,13 @@ Sonrasında güncelleştirmeler başlayacak ve sistem en güncel haline getirile
 Bu Linux komutları, en çok kullanılan Linux komutları arasında olsa da sizin de kullanacağınız birçok Linux komutu olabilir ve bu da Linux işletim sistemi üzerinde yaptığınız işlemlerin hızlanmasına yol açar.  Linux büyük/küçük harf duyarlı olduğu için komutları yazarken buna dikkat etmek gereklidir. 
 
 
+Raspberry Pi’yi eğer yeniden başlatmak veya kapatmak istiyorsak aşağıdaki komutları uygulamamız yeterlidir. 
 
+| Raspberry Shutdown / Reboot	 | Açıklama |
+| ------ | ------ |
+|shutdown -h	| Düzgün kapatmak için bu komutu kullanabiliriz. Açık dosyaları kapatır ve işletim sistemi kapanmaya hazır hale gelir. “shutdown -h +1” komutu ile 1dk sonra kapatabilirsiniz. | 
+| reboot	| Yeniden başlatma |
+| poweroff	| Komutu yazar yazmaz işletim sistemi kapanır. Açık dosyalarınız ve hali hazırda çalışan programlarınız var ise bu komut önerilmez. | 
 
+Raspberry’yi komut ekranından kapattığınızda yeniden açmak için enerjisini kesip tekrar enerjisini vermeniz yeterlidir. 
 
