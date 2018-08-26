@@ -713,3 +713,260 @@ while counter < 100:
     counter+=1
     sleep(0.25)
 ```
+
+
+## MiniIOEx için Ek Kütüphaneler ##
+Raspberry IO’ların çalışabilmesi için bazı kütüphanelerin yüklenmesi gerekmektedir. Birçok alternatif IO kütüphanesi bulunmasına rağmen bu içerikte [C] programlama dili örneklerinde kullanacağımız bcm2835.h ve [PYTHON] programlama dili üzerindeki örnekler içinde SpiDev ve GPIO kütüphaneleri üzerinden gideceğimiz için bu kütüphanenin öncelikle yüklenmesi gerekmektedir. Çalışmalarımızda aşağıdaki kütüphaneleri yükleyeceğiz:
+
+Kütüphane İsmi	Amaç
+bcm2835	IO’ların kullanılması
+Tkinter	GUI Tasarımı
+Raspbian işletim sisteminde hazır gelmektedir.
+Firebase-admin	WEB tabanlı proje geliştirmek
+SQLite	Veritabanı kullanımı 
+Spidev	Python SPI Kullanımı
+
+*Bağlantılı kütüphaneler listelenmemiştir.* 
+
+### C GPIO/SPI bcm2835 Kütüphanesini Kurulumu ###
+Raspberry’de IO’ları (Digital Input / Output /Analog Input vs.) çalıştırabilmek için broadcom çipi üzerinde yazılan bir kütüphaneye ihtiyaç duyarız. Bu kütüphane önceden yazılmış olduğu için bize sadece kurulumu ve yüklemesi kalır. 
+“bcm2835.h” kütüphanesinin kurulumu, MedIOEx shield internet sitesinde yer alan dokumanda anlatıldığı gibidir. Bu dokumanda da yine de bilgi olarak verilebilir. 
+(Ayrıntılı bilgi: http://pe2a.com/MedIOEx/TR/MedIOEx-Baslangic-TR.html) 
+
+Terminal ekranında aşağıdaki komutları sıralı bir biçimde girmek gereklidir. Bu işlemler yapıldığında internet bağlantısının olduğundan emin olmalısınız. 
+
+
+```sh
+pi@raspberrypi:~ $ sudo su
+root@raspberrypi:/home/pi# mkdir medIOEx
+root@raspberrypi:/home/pi# cd medIOEx
+root@raspberrypi:/home/pi/medIOEx # git clone git://github.com/pe2a/MedIOEx.git
+root@raspberrypi:/home/pi/medIOEx /MedIOEx# cd MedIOEx
+root@raspberrypi:/home/pi/medIOEx /MedIOEx# tar zxvf bcm2835-1.50.tar.gz
+root@raspberrypi:/home/pi/medIOEx /MedIOEx# cd bcm2835-1.50
+root@raspberrypi:/home/pi/medIOEx /MedIOEx/bcm2835-1.50# ./configure
+root@raspberrypi:/home/pi/medIOEx /MedIOEx/bcm2835-1.50# make
+root@raspberrypi:/home/pi/medIOEx /MedIOEx/bcm2835-1.50# make check
+root@raspberrypi:/home/pi/medIOEx /MedIOEx/bcm2835-1.50# make install
+```
+
+Bu yapılan işlemler sonucunda “bcm2835.h” kütüphanesi *“/usr/lib”* dizini altına yüklendiğinden Raspberry içerisinde herhangi bir dizinde bu kütüphaneyi kullanabilirsiniz. 
+
+### 1.1.2	PYTHON SpiDev Kütüphanesini Kurulumu ###
+
+bcm2835.h kütüphanesinin kurulması yukarıda anlatılmıştı. Eğer projenizde Python ile kod yazmak istiyorsanız ve SPI kullanacaksanız SpiDev kütüphanesini yüklemeniz gerekmektedir. Aşağıdaki adımları gerçekleştirerek SPI kütüphanesini yükleyebilirsiniz. 
+
+**1.    Adım** [PYTHON] için SPI Haberleşme Ayarını Aktif Etme 
+```sh
+$sudo raspi-config 
+INTERFACING Options -> SPI -> “YES”    -> REBOOT
+```
+**2.	Adım:** [PYTHON] SPIDEV modülünün Raspberry’ye Yüklenmesi
+Terminalde aşağıdaki komutları girerek SPIDEV modülünün Raspberry’ye yüklenmesini sağlayabilirsiniz. 
+```sh
+$sudo apt-get update
+$sudo apt-get upgrade
+$sudo apt-get install python-dev python3-dev
+$cd ~
+$sudo git clone https://github.com/doceme/py-spidev.git
+$cd py-spidev
+$sudo make
+$sudo make install
+```
+**3.	Adım:** [PYTHON] SPIDEV modülünün Testi
+
+```sh
+def readAI(ch):
+        if 7 <= ch <= 0:
+            raise Exception('MCP3208 channel must be 0-7: ' + str(ch))
+
+        cmd = 128  # 1000 0000
+        cmd += 64  # 1100 0000
+        cmd += ((ch & 0x07) << 3)
+        ret = spi.xfer2([cmd, 0x0, 0x0])
+
+        # get the 12b out of the return
+        val = (ret[0] & 0x01) << 11  
+        val |= ret[1] << 3           
+        val |= ret[2] >> 5           
+
+        return (val & 0x0FFF)  
+
+```
+
+Dosya yolunun olduğu dizinde terminalde aşağıdaki komutları girerek programı çalıştırabilirsiniz:
+
+
+```sh
+sudo chmod +x spi-test.py
+sudo python3 spi-test.py
+```
+
+Sonrasında terminal ekranında MiniIOEx üzerindeki giriş gerilimlerini DIGITAL sayı ve gerilim olarak görebilirsiniz. 
+
+
+### PYTHON GPIO Kütüphanesinin Kurulumu ### 
+
+Terminal ekranında aşağıdaki komutları girerek bu kütüphaneyi yükleyebilirsiniz.
+```sh
+sudo apt-get install python-dev python-rpi.gpio 
+```
+
+Tüm bu işlemler bittikten sonra aşağıdaki kodu çalıştırarak MiniIOEx3G üzerindeki IO’lara ‘GUI’ ile ulaşabilirsiniz. Bu sayede kartınızı hemen test edebilirsiniz. Programı çalıştırmadan önce aşağıdaki kütüphanelerin yüklendiğinden emin olmanız gerekmektedir:
+
+- GPIO
+- Spidev
+Eğer bu kütüphaneler yüklü ise aşağıdaki komutu terminal üzerinde çalıştırarak veya python compiler’ı kullanarak GUI’yi kullanabilirsiniz. 
+
+Kodu çalıştırmak aşağıdaki adımları uygulamanız yeterlidir:
+```sh
+$sudo chmod +x test.py
+$sudo python3 test.py
+```
+Kodu çalıştırdığınızda aşağıdaki gibi bir GUI ekranı karşılamaktadır:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/26.jpg)
+*MiniIOEx3G GUI test Ekranı*
+**Not**
+*Kod revize edildiğinde GUI şekildeki gibi görünmeyebilir.*
+Kontrol etmek istediğiniz Digital Çıkışları ‘textbox’ların içerisini ‘1’ yaptıktan  sonra ‘Submit’ tuşuna basarak kontrol edebilirsiniz. Bu sırada da Rölelerin ve Transistor Çıkışların LED’lerinin yandığını görebilirsiniz.  
+GUI programın en güncel haline https://github.com/pe2a/MiniIOEx3G klasörünün altında erişebilirsiniz.  
+
+### Raspbian OS Üzerine Firebase Kurulumu ###
+
+Firebase, herhangi bir sunucu programlamaya gerek olmadan Google sunucuları üzerinde ve altyapı desteğinde dinamik bir veritabanı sunar. Bu veritabanına birçok Raspberry tabanlı veya başka IOT cihazlarınız güvenli bir protokolde bağlanabilir ve ilgili veriyi kullanabilir. Örnek olarak bir WEB sitesi uygulaması yapmak istiyorsunuz ve Raspberry’den aldığınız bu verileri bir WEB sunucusunda göstermek istiyorsunuz. Bunu bir sunucu ile yapmaya çalışırsanız sunucu ile ilgili birçok ayar yapmak zorunda ve her kullanıcı için ayrı uğraşmak durumundasınız. Buradaki sunucu programlama ise ayrı bir zor iştir. Her cihazdan veri almak ve bu verilerin çok hızlı bir şekilde işlenmesi, veritabanına kaydı gibi işlemler hem yorucu hem de zahmetli işlerdir. Firebase, bizi bu zor altyapı problemlerinden kurtarmakta ve bunu da hemen hemen bedavaya yapmaktadır. Herhangi bir veritabanı lisans ücreti veya işletim sistemi için ayrıca lisans ücreti ödemenize gerek kalmamaktadır. Google altyapısını kullandığından dolayı da veriler çok hızlı bir biçimde veritabanına işlenmektedir. 
+
+Firebase fiyatları ilgili site üzerinden incelenebilir: https://firebase.google.com/pricing/
+
+Firebase şu anda Raspberry’de sadece Python ile programlamaya destek vermektedir. Bundan dolayı işlenen konular Python üzerinden verilecektir. 
+
+#### Firebase Python Kütüphanesi Yüklenmesi ####
+
+Aşağıdaki komutları terminalde yazmamız gereklidir:
+
+```sh
+$sudo pip3 install pyrebase
+```
+Eğer *‘opentype’* hatası alırsanız aşağıdaki kütüphaneleri de kurmanız gerekecektir:
+
+```sh
+$pip3 install pyasn1
+$pip3 install pyasn1-modules
+$pip3 install –upgrade google-auth-oauthlib
+```
+
+Açık kaynak kodlu pyrebase kütüphanesini incelemek için aşağıdaki link incelenebilir:
+https://github.com/thisbejim/Pyrebase
+
+Bu aşamadan sonra herhangi bir uygulama oluşturup kütüphanenin yüklenip/yüklenmediği kontrol edilebilir. Konuyla alakalı örnekler sonraki konularda işlenecektir. 
+
+Bu bölümde basit olarak bir Raspberry’yi nasıl kuracağımızı ve gerekli kütüphaneleri yükleyebileceğimizi öğrendik. Bu işlemlerin PLC/Gömülü PC’ye göre çok daha basit olduğunu hatırlatmak isterim. PLC’lerdeki IO atama gibi işlemlerin burada yazılımda hali hazırda rahatlıkla yapılabildiği ve bir GUI’nin çok kısa bir sürede hazırlanabildiği görülmektedir. PLC’lerde bu GUI’yi hazırlamak bile yüksek ihtimalle herhangi bir lisansın (licence price) konusu olabilir. Raspberry’de tüm bu işlemler ücretsizdir ve internet’de bu konularla ilgili yüzlerce örnek kod ve kaynak bulmak olasıdır. Raspberry aynı zamanda güçlü bir bilgisiyar olduğundan dolayı sahadan aldığınız verileri işlemek ve buna göre bir karar almak da oldukça kolaydır. İstenirse hiçbir ayrıca ücret gerektirmeden bu verilerin ‘cloud’a aktarılması da mümkündür. İlerleyen konularda da bununla ilgili basit örnekler paylaşılmıştır. 
+
+# MiniIOEx Üzerinde Fiziksel Giriş/Çıkışların (Digital Input/Output) Kontrolü #
+
+MiniIOEx’de 4 adet Digital Output ve 2 adet Digital Input mevcut bulunmaktadır. Bu Input/Output’lar ile ilgili örnekler verilecek ve nasıl kullanıldığı mevcut dokumanda anlatılacaktır. MiniIOEx, Digital Input ve Output’lar doğrudan Raspberry üzerinden sürülür. Yani herhangi bir haberleşme bağlantısı mevcut değildir. Digital Input/Output için aşağıdaki pinler kullanılmıştır:
+
+
+| PIN İsmi  	| Raspberry GPIO Yeri | 
+| --- | --- |
+| Digital Input 1 	| 31 |
+| Digital Input 2	| 33 |
+| Digital Output Relay 1	| 35 |
+| Digital Output Relay 2	| 36 |
+| Digital Output Transistor 1	| 38 |
+| Digital Output Transistor 2	| 40 |
+| Digital Output RUN LED	| 37 |
+	
+Yukarıdaki tablodaki PIN’leri kullanarak kendi GPIO kütüphanenizi yazabilirsiniz. Bu dokumanda da ayrıntılı olarak bu PIN’lerin nasıl kullanılacağı ile örnekler verilmiştir. 
+
+##Digital Input Kullanımı ##
+
+MiniIOEx’de 2 adet Digital Input olduğundan söz etmiştik. Digital Input ile herhangi bir kontak’dan veri alabilirsiniz. Digital Input çalışma karakteristikleri aşağıda verilmiştir:
+
+
+| Teknik Data  	| Digital Input |
+| --- | --- |
+| Konnektör Bağlantısı 	| 2 kablo |
+| Digital Input Sayısı	| 2 |
+| Nominal Gerilim	| 24V |
+| “0” Sinyal Gerilimi	| 0..3.9V |
+| “1” Sinyal Gerilimi 	| 4.2V..30V |
+| Input Filter	| - |
+| Konfigürasyon	| GPIO veya bcm28354 kütüphanesinin yüklenmesi |
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/27.jpg)
+*MiniIOEx Digital Input Klemens No*
+
+Buton veya yardımcı kontaktan çıkan sinyal bilgisini MiniIOEx 16 ve 18 No’lu klemenslere girebilirsiniz. 
+
+Raspberry üzerinde 31 ve 33 No’lu pinlerin Digital Input için kullanıldığı yukarıda bahsedilmişti. Bu konuyla ilgili örnek yapalım. Eğer bir butonu (acil stop/start/stop vs.) MiniIOEx bağlarsanız aşağıdaki gibi bu butondan alınan veriyi kontrol edebilirsiniz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/28.jpg)
+*MiniIOEx Digital Input Bağlantısı*
+
+Yukarıdaki devreyi gerçekleştirerek GUI üzerinden Digital Input değişkeninin anahtar aç/kapa konumlarında değişip değişmediğine bakabilirsiniz. 
+
+Aşağıdaki yazılım ile Digital Input’lara gelen kontakları izleyebilirsiniz. 
+
+```sh
+import RPi.GPIO as GPIO
+import time
+
+#definition GPIO
+RASP_DIG_IN_1 = 6   #DI_1
+RASP_DIG_IN_2 = 13  #DI_2
+
+#init function
+GPIO.setmode(GPIO.BCM) #bcm library
+#for digital inputs
+GPIO.setup(RASP_DIG_IN_1,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(RASP_DIG_IN_2,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+GPIO.setwarnings(False)
+
+while 1:
+    DI_In1 = not GPIO.input(RASP_DIG_IN_1)
+    DI_In2 = not GPIO.input(RASP_DIG_IN_2)
+    
+    if  DI_In1:
+        print(“DI_IN_1 : True”)
+    if DI_In2:
+        print(“DI_IN_2 : True”)
+    time.sleep(1) #for holding time   
+```
+Yukarıdaki yazılım ile Digital Input kodunu çalıştırabilirsiniz. İlgili klemens girişlerine gerilim uyguladığınızda *“True”* ifadesinin komut satırında belireceğini görmelisiniz. 
+
+## Digital Output Kullanımı ## 
+
+MiniIOEx’de 4 adet Digital Output mevcut bulunmaktadır. Bununla sahadaki röle ve kontaktörleri anahtarlayabilirsiniz. 4 adet Digital Output’dan 2 adet röle ve 2 adet’de 24VDC çıkşlı transistörlerdir. Transistörlerin fazla akım çekmemesi için yük dirençleri koyulmuştur ve maksimum 80mA akım çekilmesine izin verilmiştir. Eğer daha fazla yük ihtiyacınız var ise MiniIOEX üzerindeki röleleri veya bu transistörlere bağlayacağınız harici röleleri kullanabilirsiniz. 
+MiniIOEx üzerinde bulunan Digital Çıkışları aşağıdaki tabloda görebilirsiniz:
+
+
+| Raspberry Pin Çıkışı	| MiniIOEx3G | 
+| --- | --- |
+| 35	| Digital Output Röle - 1 |
+| 36	| Digital Output Röle - 2 |
+| 37	| Digital Output RUN LED |
+| 38	| Digital Output Transistor 2 |
+| 40	| Digital Output Transistor 1 |
+
+**Not**
+MiniIOEx’i 24V ile beslediğiniz takdirde tüm Digital Output pinlerini kullanabilirsiniz. Eğer 5V USB ile doğrudan Raspberry üzerinden beslerseniz sadece Röle çıkışlarını kullanabilirsiniz. 
+
+| Teknik Data  	| Digital Output | 
+| --- | --- |
+| Konnektör Bağlantısı |	2 kablo |
+| Digital Output Röle | 	2ch |
+| Digital Output Transistor 	| 2ch |
+| Röle Kontak Akımı ve Gerilimi	| 1A,24VDC |
+| Transistör Kontak Akımı ve Gerilimi	| 80mA, 24VDC |
+| Konfigürasyon	| GPIO veya bcm28354 kütüphanesinin yüklenmesi |
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/29.jpg)
+*Röle Datasheet Bilgileri*
+Digital Input ve Digital Output kullanılarak aslıdan birçok örnek yapılabilir. Otomasyonun temeli Input ve Output’dur 😊 MiniIOEx ile birçok temel düzeyde otomasyon işlemleri gerçekleştirilebilir. Örnek olarak bir cihazdan/makineden RS485/RS232 üzerinden çalışma verisi alınıp merkez sunuculara gönderilebilir sonrasında da bu bilgiler ile cihaz çalıştırılabilir/durdurulabilir performans takip edilebilir vs. Dokumanın geneline baktığımızda da bunun gibi birçok örnek paylaşılmıştır. 
+
+Aşağıdaki kodda MiniIOEx üzerindeki tüm Digital Çıkışlar kullanılmıştır. 
+
+
+
+
