@@ -963,10 +963,108 @@ MiniIOEx’i 24V ile beslediğiniz takdirde tüm Digital Output pinlerini kullan
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/29.jpg)
 *Röle Datasheet Bilgileri*
+
 Digital Input ve Digital Output kullanılarak aslıdan birçok örnek yapılabilir. Otomasyonun temeli Input ve Output’dur 😊 MiniIOEx ile birçok temel düzeyde otomasyon işlemleri gerçekleştirilebilir. Örnek olarak bir cihazdan/makineden RS485/RS232 üzerinden çalışma verisi alınıp merkez sunuculara gönderilebilir sonrasında da bu bilgiler ile cihaz çalıştırılabilir/durdurulabilir performans takip edilebilir vs. Dokumanın geneline baktığımızda da bunun gibi birçok örnek paylaşılmıştır. 
 
-Aşağıdaki kodda MiniIOEx üzerindeki tüm Digital Çıkışlar kullanılmıştır. 
+Aşağıdaki kodda **MiniIOEx3G** üzerindeki tüm **Digital Çıkışlar** kullanılmıştır. 
+
+--asdasdasdasdaBOŞBOŞ******
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/UYGICON.jpg)
+**Uygulama Örneği #1 – Start/Stop Butonu ile FAN Motoru Kontrolü:**
+
+Aşağıda iki Digital Input ve bir adet Digital Output kullanarak oluşturabileceğimiz güzel bir örnek bulunmaktadır. ‘Start’ ve ‘Stop’ butonlarından veri alınarak ‘FAN’ çalıştırılmaktadır.  Aslında bu FAN büyük bir fan veya asansör motoru da gerçek hayatta olabilirdi. Aşağıdaki resimdeki gibi bu uygulamada küçük bir fan tercih edilmiş ve bu fan çıkışı transistor output çıkışına bağlanarak Transistor’in HIGH durumunda FAN çalıştırılmıştır. 
+
+Bu uygulamada gerekli olan ekipmanlar:
+
+-	1 Adet 24VDC FAN [24VDC 80mA]
+-	1 Adet Start Butonu - Normally Open (NO)
+-	1 Adet Stop Butonu – Normally Close (NC)
+-	24VDC 30W Güç Kaynağı [Phoenix UNO Power tercih edilmiştir]
+-	Raspberry Pi 3 
+-	Class 10 16GB SD Kart [GPIO ve SpiDev kütüphanesi yüklenmesi]
+Senaryo:
+*Start butonuna 1sn basılırsa FAN motoru çalışsın; 1sn Stop butonuna basılırsa FAN Motoru dursun.*
+Senaryo basit gibi görünse de aslında burada Raspberry ile çalışrken birçok öğrendiğimiz uygulamayı da beraber yapmış olacağız. İlk başta senaryoyu Python ile kodlayıp işin içine WEB de taşıyacağız ve biraz Javascript ekleyerek her yerden ulaşılabilir bir FAN motoru WEB sitesi tasarlayacağız. Böylelikle gerçek bir uygulamayı ‘0’ yazılım maliyeti ile (sunucu kullanım ücreti, Raspberry İşletim sistemi lisans ücreti, WEB ücreti, HMI ücreti vs. olmadan) bir uygulamayı ayağa kaldıracağız. Belki burada hatırlatmakta fayda var birçok PLC üreticisi verilerinizi WEB’e göndermek veya bir GUI uygulaması çalıştırmak için lisans ücreti istiyor. Yani siz bilgisiyar alıyorsunuz ama internete girmek için bilgisayar firmasına para ödemek zorunda kalıyorsunuz 😊 MiniIOEx veya ürettiğimiz diğer shield’lerin en büyük faydası zaten büyük sermayeleri olmayan otomasyon firmalarını bu gibi lisans ücretlerinden kurtarmak oldu. Yani HMI lisans parası yerine 1 adet MiniIOEx alabilir veya WEB lisans ücreti yerine onlarca MiniIOEx alabilirsiniz. Tabi eğer makine üretiyorsanız ürettiğiniz adet kadar bu lisans ücretlerini ödemek zorundasınız. 
+
+Senaryoyu bir grafiğe dökecek olursak aşağıdaki gibi bir grafik elde edebiliriz. Bu grafiğe göre de programlama yapmamız gerekir:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/300.jpg)
+
+Yukarıdaki grafikte de görüleceği üzere Start butonu veya Stop butonuna 1sn süreyle basıldığında FAN motorunun değeri yükselen veya düşen kenar olarak değişmesi gerekiyor. 1sn süresi aslında ‘digital filtre’imkanı da sağlıyor. Yani herhangi bir parazit yüzünden Start butonunun Xms enerjili kalması FAN motorunun harekete geçmesini sağlamıyor. Bu gibi filtreler yazılım uygulamasının donanım ile beraber çalışması açısından önemlidir. Analog Input konusunda da yine başka filtre uygulamalarından bahsedilecektir. 
+Bağlantılarda aşağıdaki klemens numaraları kullanılmıştır:
 
 
+| Klemens No |	Açıklama |
+| --- | --- |
+| 18 |	Digital Input - 1 | 
+| 16 |	Digital Input - 2 |
+| 10 | 	Transistor Output 1 |
+
+*Bu uygulamada röle kullanılmamıştır. Bunun nedeni anahtarlanacak yükün yüksek akım gerektirmemesidir.*
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/30.jpg)
+*Fan Motoru Çalıştırılması- 1*
+
+Yukarıdaki şekildeki gibi kablolamaları yapabiliriz. FAN GND’si güç kaynağı GND’si ile kısa devre edilmiştir. Gerilimi ise transistor ucundan yazılım tarafından anahtarlanarak verilmiştir. Aşağıdaki resimde kablo uçları paylaşılmıştır:
+*Fan Motoru Klemens Kablo*
 
 
+```sh
+import RPi.GPIO as GPIO
+import time
+
+#definition GPIO
+RASP_DIG_IN_1 = 6 #START BUTTON
+RASP_DIG_IN_2 = 13  #STOP BUTTON
+RASP_DIG_tr_OUT_1 = 21 #TRANSISTOR Output 
+
+#init function
+GPIO.setmode(GPIO.BCM) #bcm library
+#for digital inputs
+GPIO.setup(RASP_DIG_IN_1,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(RASP_DIG_IN_2,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(RASP_DIG_tr_OUT_1,GPIO.OUT)
+GPIO.setwarnings(False)
+
+while 1:
+    DI_In1 = not GPIO.input(RASP_DIG_IN_1)
+    DI_In2 = not GPIO.input(RASP_DIG_IN_2)
+    
+    if  DI_In1:
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.HIGH)
+
+    if not DI_In2:
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.LOW)
+    
+    time.sleep(1) #for holding time   
+
+```
+Kodu inceleyecek olursak:
+
+```sh
+    DI_In1 = not GPIO.input(RASP_DIG_IN_1)
+    DI_In2 = not GPIO.input(RASP_DIG_IN_2)
+```
+
+Buradaki kodun amacı Digital Input’larımız **PULL_UP** olduğu için Raspberry açılış anında buradaki butonlara basılmasa bile **PULL_UP** ’da olduğu için *1* geldiğini varsayıyor. Biz buradaki inputları *‘değil’*leyerek fiziksel değerine döndürüyoruz. 
+
+
+```sh
+if  DI_In1:
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.HIGH)
+
+if not DI_In2:
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.LOW)
+```
+
+Bu yapıda da Start butonuna basılıyor ve FAN motoru çalışmaya başlıyor. Bu çalışmanın kesilmesi için tek koşul : *Stop* butonuna 1sn süreyle basılmasıdır. *Stop* butonu Normally Close(NC) olduğundan dolayı sürekli Input değeri 1'dir. *Stop* butonuna basıldığında PIN kendini 0’a çekiyor. Kodun bunu anlaması için de aşağıdaki gibi fiziksel değişken koşuluna **not** ekliyoruz.
+```sh
+if not DI_In2:
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.LOW)
+```
+1sn basma ise sıkça kullanılan time.sleep yapısıyla yapıyoruz. Kod büyüdüğünde böyle bir yapı tüm programı bekleteceğinden ayrı thread’ler kullanmamız gerekecek ama ilk aşamada basit olarak bu yapıyı kullanabiliriz. Bu süreyi uzatırsak daha fazla zaman butona basılması gerekecek. 
+
+```sh
+    time.sleep(1) #for holding time   
+```
