@@ -88,12 +88,12 @@ Endüstriyel otomasyon projeleri geliştirirken en çok aradığımız özellik:
 
 MiniIOEx projelerinde PLC’den Linux/GNU’ya geçmek isteyen kullanıcılar için aslında bire bir. Piyasada birçok Raspberry Pi eğitim kartları bulunmakta ama bu kartların hiçbirini endüstriyel projelerimizde kullanamamaktayız. Bundan dolayı ilk hevesle alınan birçok Raspberry’nin tekrar çekmecelere konduğuna şahidim. Bu dokumanda da aslında Raspberry ile nelerin yapılabileceğini gösteriyoruz. Enerki analizöründen veri okuyoruz, AC motorumuza hız referansı gönderiyoruz, sensörlerden veri okuyoruz ve bunları bir sunucuya göndererek verilerimize dışarıdan erişilmesine fırsat tanıyoruz. Yani tüm bunları özetleyecek olursak MiniIOEx kimin için?
 
-Endüstriyel otomasyon firmaları,
-IOT projeleri geliştiren start-up’lar,
-Gateway tabanlı proje geliştiren firmalar (RS485 / Ethernet -> Web Service vs.),
-Hızlı prototipleme ihtiyacı olan kullanıcılar,
-Gömülü Linux tabanlı uygulama geliştirmek isteyen öğrenciler/akademisyenler,
-Ve tabiki Hobi kullanıcıları.
+-	Endüstriyel otomasyon firmaları,
+-	IOT projeleri geliştiren start-up’lar,
+-	Gateway tabanlı proje geliştiren firmalar (RS485 / Ethernet -> Web Service vs.),
+-	Hızlı prototipleme ihtiyacı olan kullanıcılar,
+-	Gömülü Linux tabanlı uygulama geliştirmek isteyen öğrenciler/akademisyenler,
+-	Ve tabiki Hobi kullanıcıları.
 
 ## Raspbian İşletim Sistemi Kurulumu ##
 
@@ -949,6 +949,8 @@ MiniIOEx üzerinde bulunan Digital Çıkışları aşağıdaki tabloda görebili
 | 38	| Digital Output Transistor 2 |
 | 40	| Digital Output Transistor 1 |
 
+
+<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteICON.jpg" alt="drawing" width="35"/>
 **Not**
 MiniIOEx’i 24V ile beslediğiniz takdirde tüm Digital Output pinlerini kullanabilirsiniz. Eğer 5V USB ile doğrudan Raspberry üzerinden beslerseniz sadece Röle çıkışlarını kullanabilirsiniz. 
 
@@ -970,7 +972,8 @@ Aşağıdaki kodda **MiniIOEx3G** üzerindeki tüm **Digital Çıkışlar** kull
 
 --asdasdasdasdaBOŞBOŞ******
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/UYGICON.jpg)
+
+<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/UYGICON.jpg" alt="drawing" width="35"/>
 **Uygulama Örneği #1 – Start/Stop Butonu ile FAN Motoru Kontrolü:**
 
 Aşağıda iki Digital Input ve bir adet Digital Output kullanarak oluşturabileceğimiz güzel bir örnek bulunmaktadır. ‘Start’ ve ‘Stop’ butonlarından veri alınarak ‘FAN’ çalıştırılmaktadır.  Aslında bu FAN büyük bir fan veya asansör motoru da gerçek hayatta olabilirdi. Aşağıdaki resimdeki gibi bu uygulamada küçük bir fan tercih edilmiş ve bu fan çıkışı transistor output çıkışına bağlanarak Transistor’in HIGH durumunda FAN çalıştırılmıştır. 
@@ -1007,6 +1010,8 @@ Bağlantılarda aşağıdaki klemens numaraları kullanılmıştır:
 *Fan Motoru Çalıştırılması- 1*
 
 Yukarıdaki şekildeki gibi kablolamaları yapabiliriz. FAN GND’si güç kaynağı GND’si ile kısa devre edilmiştir. Gerilimi ise transistor ucundan yazılım tarafından anahtarlanarak verilmiştir. Aşağıdaki resimde kablo uçları paylaşılmıştır:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/31.jpg)
 *Fan Motoru Klemens Kablo*
 
 
@@ -1068,3 +1073,140 @@ if not DI_In2:
 ```sh
     time.sleep(1) #for holding time   
 ```
+
+### RASPBERRY REBOOT Edildikten Sonra Programın Otomatik Çalıştırılması ###
+
+Yazdığımız otomasyon programlarını Raspberry ‘reboot’ ettikten sonra çalıştırmamız gerekiyor. Yani, Raspberry enerjisi gidip geldiğinde ‘button’ programımız gerekli ayarlamaları yaptığımızda çalışmaya başlayacak. Bunu yapmak oldukça kolaydır. Terminal ekranına girerek ilgili kodumuza çalışma haklarının hepsini vermemiz gerekiyor. Sonrasında da “rc.local” klasöründe dosya yolunu vererek ilgili kodun linkini vermemiz gerekiyor. Hepsi bu kadar :)
+
+```sh
+$ sudo chmod +x button.py
+$ sudo nano /etc/rc.local
+```
+**“rc.local”** dosyasının içini açtıktan sonra programımızın PATH’ini girmemiz gerekiyor. Button.py dosyamız masaüstünde olduğu için ilgili PATH: /home/pi/Desktop . Program python3’de çalıştırılmasını istediğimiz içinde parametre olarak ‘python3’ giriyoruz. Raspberry, reboot edildikten sonra artık programımız her Raspberry başlangıcında otomatik olarak çalışacaktır. Yalnız program ‘while 1’ yani sonsuz döngüde çalıştığı için hiçbir şekilde durmayacaktır. Sadece ‘top’ komutu ile ilgili ‘process’i bulup ‘kill -6 “ProcessID”’ komutunu işlememiz gerekmektedir.  
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/32.jpg)
+*Auto-Boot Çalıştırma*
+
+
+Bu uygulamayı öğrendiğimiz konularla beraber daha fazla geliştireceğiz. Dokumanın başında verdiğimiz *‘serverless’* sunucusuz çalıştırma servislerinden **Firebase** kullanarak uygulamamızı internet üzerinden bir uygulama olarak kullanabileceğiz. 
+
+## Uygulama Örneği #2 – Start/Stop Butonu ve WEB Referans Değer ile FAN Motoru Kontrolü ##
+
+Bu uygulamada Start/Stop butonuna ek olarak WEB üzerinden referans bir değer geldiğinde de FAN motorunun çalışma bitinin değiştirilmesi konusu üzerinde duracağız. Bu uygulamada aşağıdaki kütüphanelerin yüklü olması gerekiyor:
+-	GPIO
+-	Firebase
+Bu kütüphaneler yüklü ise uygulamayı ayağa kaldırabiliriz. Senaryomuzda işin içine WEB uygulamada gireceği için ufak tefek değişiklikler olacak. 
+Senaryo:
+*Start butonuna 1sn basılırsa veya WEB Start butonu aktif edilirse FAN motoru çalışsın; 1sn Stop butonuna basılırsa [VEYA] WEB Stop Butonu aktif edilirse FAN Motoru dursun.*
+
+Firebase üzerinde **WEBSample** adında bir veritabanı ismi oluşturuyoruz ve bunların alt kümesi **“StartButton”** ve **“StopButton”** oluyor. Bu değerler WEB’den geldiği için de programımızı ona göre ayarlamamız gerekiyor. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/33.jpg)
+*Firebase WEB Referans Değerleri*
+
+WEB üzerinden gelecek StopButton’da Normalde Kapalı gibi bir özellik olmadığından dolayı bunu normal bir değişken gibi alabiliriz. Firebase’da kayıtlı olan değişkenlerimiz string olduğu için buna göre hareket etmemiz gereklidir. Doğrudan string olarak da kullanabilirsiniz veya int’a çevirebilirsiniz. Web Referansı değeri veya fiziksel buton değeri FAN motorunun çalışması için gerekli olduğundan bu iki değeri **‘OR’**luyoruz. 
+
+
+```sh
+if (DI_In1 or myConnect.WEB_REF_1 == '1'):
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.HIGH)
+        print("web ref_1")
+                    #stop comes from firebase DB
+if (not DI_In2 or myConnect.WEB_REF_2 == '1'):
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.LOW)
+```
+
+Yazılımımız şu anda WEB’den gelen değer ve fiziksel butondan gelen değerlere bağlı olarak çalışıyor. Programımı tekrardan çalıştırdığımızda da iki türlü de çalıştığını görebilirsiniz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/34.jpg)
+*Firebase WEB Referans Değerleri*
+
+Firebase console ekranından StarButton’ın değerini değiştirdiğimizde FAN motorunun dönmeye başladığını görebilirsiniz. Tabiki bu yapıyı değiştirip kullanıcıya göre atama da yapılabilir. Yani her kullanıcı kümesi FAN motorunu çalıştırmasın diye bir senaryo da eklenebilir ama bu dokumanın esas mantığından bizi uzaklaştıracağı için bu senaryolara girmiyoruz. 
+Programımız artık bir WEB veritabanı üzerinden çalışmaya başlayacak. Bu da bize artık Raspberry’nin dışındaki bir dünyadan Raspberry’ye ulaşmamızı sağlayacak. Örnek olarak bu veritabanına gerekli servisler yazıldığında mobil uygulama üzerinden veya WEB uygulama üzerinden Raspberry’ye erişebilirsiniz. Bir sunucu üzerinden Raspberry’ye erişmek güvenlik zaafiyeti de doğurabilir. Sonuçta güvenlik ayarlamaları ve olası saldıralara karşı sunucunuzun güvenlik yapılandırmasını sizin yapmanız gerekiyor. Firebase gibi servislerde ise böyle bir sorun ile karşılaşma olasılığınız çok düşüktür. 
+
+Aşağıda Firebase üzerinden de FAN motorunu kontrol edebileceğiniz uygulama mevcuttur. Burada Firebase üzerinden gelecek bazı parametrelere ihtiyaç bulunmaktadır. Firebase’e giriş yaptıktan sonra bu bilgileri ana sayfadan rahatlıkla alabilirsiniz. Yazdığınız uygulamalarda bu parametreleri kullanmanız gerekmektedir. 
+Bu parametrelerin neler olduğu aşağıda belirtilmiştir:
+
+```sh
+myFirebaseConfig = {
+              "apiKey": "",
+              "authDomain": "",
+              "databaseURL": "",
+              "projectId": "",
+              "storageBucket": "",
+              "messagingSenderId": "",
+        }
+```
+
+```sh
+import RPi.GPIO as GPIO
+import time
+import spidev
+import pyrebase
+
+RASP_DIG_IN_1 = 6 #START BUTTON
+RASP_DIG_IN_2 = 13  #STOP BUTTON
+RASP_DIG_tr_OUT_1 = 21 #RPI PIN: 40
+
+#init function
+GPIO.setmode(GPIO.BCM) #bcm library
+#for digital inputs
+GPIO.setup(RASP_DIG_IN_1,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(RASP_DIG_IN_2,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+#transistor output definition
+GPIO.setup(RASP_DIG_tr_OUT_1,GPIO.OUT)
+GPIO.setwarnings(False)
+
+#firebase connection 
+class connectCloudPolly():
+    
+    def __init__(self,myConfig):
+        
+        self.myCloudConfig = myConfig
+        self.cloud = pyrebase.initialize_app(self.myCloudConfig)
+        self.db = self.cloud.database()
+       
+       
+    
+    def ReadButtonInf(self):
+        self.WEB_REF_1 = self.db.child("/WEBSample/StartButton/").get().val()
+        self.WEB_REF_2 = self.db.child("/WEBSample/StopButton/").get().val()
+        
+        print(bWEB_REF_1,bWEB_REF_2)
+        
+#firebase connection struct 
+#you can easily get the values from firebase console
+myFirebaseConfig = {
+              "apiKey": "",
+              "authDomain": "",
+              "databaseURL": "",
+              "projectId": "",
+              "storageBucket": "",
+              "messagingSenderId": "",
+        }
+#firebase connection
+myConnect = connectCloudPolly(myFirebaseConfig)
+
+while 1:
+    DI_In1 = not GPIO.input(RASP_DIG_IN_1)
+    DI_In2 = not GPIO.input(RASP_DIG_IN_2)
+    
+    myConnect.ReadButtonInf()
+                #start comes from firebase DB
+    if (DI_In1 or myConnect.WEB_REF_1 == '1'):
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.HIGH)
+        print("web ref_1")
+                    #stop comes from firebase DB
+    if (not DI_In2 or myConnect.WEB_REF_2 == '1'):
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.LOW)
+    
+    time.sleep(1) #for holding time
+
+```
+
+## MiniIOEx3G Analog Giriş (Analog Input) Kontrolü ##
+
+
+
+
+
