@@ -128,8 +128,74 @@ Raspberry ISO Link: https://www.raspberrypi.org/downloads/raspbian/
 
 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
-Note__ Raspberry’yi görüntü işleme veya yoğun process işlemlerde kullanıyor iseniz MiniIOEX üzerinden 24V ile Raspberry’yi beslemeniz önerilir. 
+**Note__** 
+Raspberry’yi görüntü işleme veya yoğun process işlemlerde kullanıyor iseniz MiniIOEX üzerinden 24V ile Raspberry’yi beslemeniz önerilir. 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
-Note__ Raspberry Pi üzerinde çalışacak SD kartı, formatlanmış bir şekilde mağazamızdan satın alabilirsiniz. 
+**Note__** 
+Raspberry Pi üzerinde çalışacak SD kartı, formatlanmış bir şekilde mağazamızdan satın alabilirsiniz. 
+
+## Raspberry Üzerinde Basit Linux Komutları ## 
+
+SD kartı Raspberry’ye taktıktan sonra Raspberry wireless USB klavye/Mouse bağlayabilir ve HDMI konnektörünü kullanarak monitörünüze Raspberry üzerindeki görüntüyü aktarabilirsiniz. Bu başlık altında Linux/GNU üzerinde çalışabilen komutlar üzerine yoğunlaşacağız. Raspberry’de kullandığımız işletim sistemi Debian tabanlı Raspbian işletim sistemi Linux/GNU çekirdeğini kullandığı için bazı komutları bilmemiz gerekiyor. Bu dokumanı okuyan ve genelde otomasyon sektöründe PLC’ler için kod yazan okuyucular belki zorlanabilir ama temel Linux/GNU terminal komutlarını öğrendiklerinde birçok işlerini çok rahat çözebildiklerini görecekler. 
+
+MiniIOEx’e enerji verdiğinizde Raspberry’ye de çalışma gerilimi için gerekli gerelim regülatörlerden geçecek ve Raspberry çalışmaya başlayacak. Her işletim sistemi gibi Raspberry’nin de bir açılış ekranı var ve ilk açılış ekranında işletim sistemi üzerinde çalışan servislerin açılıp açılmadığını bu ekrandan izleyeyebilirsiniz. Eğer açılış zamanında bir hata ile de karşılaşırsanız yine bu ekran üzerinden görebilirsiniz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/11.jpg)
+
+<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
+**Note__** 
+Raspberry Pi'yi ÇALIŞTIRMAK için fişini takmanız yeterlidir. Üzerinde bir açma-kapama düğmesi mevcut değildir. Çalışan programlarınızı ya da işletim sisteminizi kapattıktan sonra cihazın fişini çekebilirsiniz.
+
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/12.jpg)
+
+Raspberry’nin internet üzerinden uygulama güncelleştirmelerini yüklemek önemlidir. Bundan dolayı Wireless ayarlarını yaptıktan sonra güncelleştirme yüklenmesi için terminal ekranında komut girmemiz gereklidir. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/13.jpg)
+
+Terminal ekranında güncelleştirmeler için aşağıdaki komutları giriyoruz:
+'''
+sudo apt update
+sudo apt upgrade
+sudo rpi-update
+'''
+
+Sonrasında güncelleştirmeler başlayacak ve sistem en güncel haline getirilecektir. Bunu yapmak önemlidir. Kütüphane, sistem dosyaları ve eğer varsa güvenlik açıkları bu yolla minimuma indirilebilir. 
+
+| Temel Linux Komutları	| Açıklama |
+| ------------- | ------------- |
+| ls	| İlgili klasördeki dosyaları listeler
+| setxkbmap tr	| RPI eğer Türkçe değil ise klavyeyi TR Q’ya çevirir
+| mkdir	| Yanına alacağı parametre ile klasör oluşturur
+Örnek : mkdir medioex
+| rmdir	| İçinde herhangi bir dosya olmayan klasörü siler Örnek : rmdir medioex
+| man	| Terminal komutlarının ilave alacağı parametrelerin ve komutun ne işe yaradığı ile ilgili kapsamlı bilgi verir.
+Örnek: man ls
+| lsusb	| Raspberry’ye takılı USB cihazların driver isimlerini verir
+| lsusb -v	| Raspberry’ye takılı USB cihazların driver’larının ayrıntılı bilgisini verir. Örnek olarak her USB portundan ne kadar mA akım çekiliyor, driver sürücü markası vs. 
+| nano	| Basit bir editör programıdır. Yazacağınız basit programlar/script’ler bu editör vasıtasıyla yazılabilir. Yazılan dilin cinsine göre anahtar kelimeleri renklendirir. 
+Örnek : nano mytest.c 
+              nano mytest.py
+       CTRL + X   kaydet 
+| clear	| Terminalde yer alan komutların çıktılarını temizler 
+| history	| Terminalde girdiğiniz son 100 komutu verir. Böylelikle daha önceden unuttuğunuz komutları hatırlamanıza yardımcı olur. |
+| cd 	| İlgili dosyaya geçmenize yardımcı olur.
+Örnek: cd /home/pi/Desktop
+Örnek: cd ..                ->Bir üst klasöre geçer | 
+| ifconfig	| İşletim sistemi üzerindeki Ethernet driver’larını ve ilgili bilgileri (IP, DNS vs.) listeler. |
+| ping 	| İlgili porta veya IP numarasına paket alıp vermenizi sağlar. |
+Örnek: ping 127.0.0.1 |
+| cp	| Dosya kopyalar. Örnek cp text.py text1.py |
+| rm	| Dosya silme komutudur. Örnek: rm test.c 
+Eğer “-r” parametresi eklenirse dosyaları içindeki dosyalarla beraber siler. 
+Örnek: rm -r test |
+mv	| Dosyaları istenilen yere taşır. 
+Örnek: mv /home/pi/test.c  /home/pi/Desktop |
+| cal	| Tarih gösterir. 
+Örnek: cal 08 2018 |
+
+
+
+
 
 
