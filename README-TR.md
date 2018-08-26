@@ -1476,6 +1476,7 @@ U1 No’lu pin çıkışı sensör gerilim çıkışıdır.
 Sensörün çıkış gerilimini aşağıdaki gibi formalize edebiliriz:
 
 Output  =(Input-0V) * ((CO2 ppm max.  - CO2ppm min.)/(10V-0V )) + CO2 ppm Min. 
+
 Output  =(Input) * ((2000ppm - 0ppm)/(10V-0V )) + 0ppm
 
 Yukarıdaki denkleme bağlı olarak da CO2 sensörünün fonksiyonunu aşağıdaki gibi gerçekleştirebiliriz:
@@ -1486,3 +1487,475 @@ def co2_sensor_converter(val):
 ```
 
 Sensör datası ile ilgili fonksiyon yazıldıktan sonra ise kodun tamamını yukarıdaki örneklerde de verildiği gibi gerçekleştirebiliriz. 
+
+**Not:**
+İç mekanlarda hava kalitesinin iyi olması için 1000ppm’i aşmaması önerilir. Siz de yazacağınız program bu değerlerle ilgili histerisiz eğrileri oluşturabilir ve buna göre havalandırma fanını *ON/OFF* kontrol edebilirsiniz.
+
+Aşağıda bu sensör ile ilgili yazılmış örnek bir kod bloğu bulunmaktadır. CO2 sensörü, MiniIOEx J2:12 nolu pine takılmış ve GND’ler birbirine kısa devre yapılmıştır. Eğer hava kalitesi sensörünün içerisine üflerseniz de nefesinizdeki CO2 den dolayı sensörün ürettiği ‘ppm’ datasının değiştiğini görebilirsiniz. Üflemeden sonra bu değer artacaktır. 
+
+```sh
+import spidev
+import time
+
+#definition SPI parameter
+spi = spidev.SpiDev()
+spi.open(0, 0)
+spi.max_speed_hz = 7629
+#definition Analog Input Var. 
+AI_ANIN2 = 0 #J2, pin:12 and always GND is common with sensor
+#definition co2 sensor data
+co2SensorData = 0
+#mcp3208 ADC
+def readAI(ch):
+        if 7 <= ch <= 0:
+            raise Exception('MCP3208 channel must be 0-7: ' + str(ch))
+
+        cmd = 128  # 1000 0000
+        cmd += 64  # 1100 0000
+        cmd += ((ch & 0x07) << 3)
+        ret = spi.xfer2([cmd, 0x0, 0x0])
+
+        # get the 12b out of the return
+        val = (ret[0] & 0x01) << 11  
+        val |= ret[1] << 3           
+        val |= ret[2] >> 5           
+
+        return (val & 0x0FFF)  
+
+#converts digital number to voltage
+def dig_vol_converter(val):
+    return val*33.0/4095.0
+
+#0 ppm -> 0V 2000ppm -> 10V
+#Siemens QPA2002
+#assume val is co2sensor voltage output : (val-0V) *[(2000ppm-0ppm / 10V-0V) + 0V]
+def co2_sensor_converter(val):
+    return val * 200
+    
+print('-' * 55)
+# Main program loop.
+while True:
+    print('\n')
+    print('{} | {} '.format('Sensor Voltage[V]','Sensor Data[ppm]'))
+   
+    # The read_adc function
+    AI_ANIN2 = dig_vol_converter(readAI(1)) #Voltage
+    #lets convert co2 value
+    co2SensorData = round(co2_sensor_converter(AI_ANIN2),1) #ppm
+    
+    print('{:6f}  {:21f} '.format(AI_ANIN2,co2SensorData))
+    time.sleep(1)
+```
+
+Şu ana kadar verilen örneklerin hepsi sensörlerin lineer olma koşulu ile ilgiliydi ama bazı sensörler lineer olmayabilir. Yani gerilim ve sensör değeri lineer orantılı olmayabilir. Bu tarz durumlarda sensör değerlerini kayıt ederek değerleri lineerleştirebiliriz. Değerleri kayıt ettikten sonra http://www.wolframalpha.com/  sitesinde hesaplayabiliriz. 
+
+Bir örnekle bu durumu daha net açıklayabiliriz. Örnek değerler, **“Exploring Raspberry Pi, M. Derek, 2016”** kitabından alınmıştır. 
+3925 digital değerine karşılık 10cm, 2790 digital değerine karşı 15cm geldiğini varsayalım. Burada değerlerde lineer bir azalma olmadığı görülüyor. Lineer olmayan bir denklemi ise Raspebrry üzerinde kullanamayız. Bundan dolayı bu değeri lineerleştirmeye yaklaştırmak için çeşitli teoremler üretilmiştir. (Marquardt-Levenberg) Wolfram programı bu değeri otomatik olarak lineerleştirecektir. Tek yapmamız gereken aşağıdaki denklem setini Wolfram programına yazmamız:
+
+*exponential fit {3925,10}, {2790,15}, {2200,20}, {1755,25}, {1528,30},{1273,40}, {851,50}, {726,60}, {620,70}, {528,80}*
+
+Bu program sonucunda aşağıdaki gibi bir grafik ve denklem elde edebiliriz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/39.jpg)
+
+Eğer bu tarz bir nonlineer çıkışlı bir sensör setine sahip olursanız bu teoremden faydalanabilirsiniz. 
+
+## Seri Port Kullanımı ve RS485/RS232 Protokolleri #
+
+Seri haberleşme, telekom standartlarında belirtilmiş fiziksel kabuk üzerinde standartlarda belirtilmiş yazılım protokelleriyle çalışan ve çift taraflı veri iletişimine imkân veren bir haberleşme çeşididir. Endüstriyel sistemlerde seri haberleşme denilince genel olarak RS232 ve RS485 protokelleri akla gelir. MiniIOEx, RS232 ve RS485 fiziksel haberleşme seri yollarını destekler. RS-232 kısa mesafeli iletişim için tasarlanmış bir seri iletişim standardıdır. RX ve TX üzerinden iletilen bilgiler referans seviyesi olan GND’ye göre belirlenmektedir. RS-232 ile kısa mesafeli ve 115.2 Kbit/sn gibi hızlara ulaşılabilmektedir. Bu standart gürültülü ortamlar için uygun değildir. RS-232 sürücüleri birçok alıcıyı aynı anda sürebilecek şekilde tasarlanmamıştır.
+
+UART (*Universal Asynchronous Receiver/Transmitter*) seri bus standart olarak Raspberry üzerinde iki kablo ile seri haberleşmeyi sağlar. cmdline.txt’de seri port değişkenleri görülebilir. Raspberry 3 ile beraber seri port ayarları “raspi-config”ekranında yapılabilir. Bu değişiklikler yapıldıktan sonra Raspberry yeniden başlatılmalıdır. Bu dokumanda bu ayarların nasıl yapılabileceği anlatılmıştır. Raspberry Pi üzerindeki Tx ve Rx pinleri seri haberleşmeden sorumludur. Başka bir seri port donanımı üzerinde bulunan bir cihaz ile raspberry kolaylıkla haberleşebilir.  Eğer Raspberry başka bir seri port cihazı ile haberleşecekse “console login” özelliği kaldırılmalıdır. Bu değişlikliklerden de bahsedilecektir. 
+
+RS-485 daha uzun mesafelerde, gürültülü ortamlarda, daha yüksek hız gerektiren yerlerde, daha çok alıcı vericinin gerektiği yerlerde kullanılmak üzere geliştirilmiş bir seri iletim ortamıdır. MiniIOEx bu iki seri iletim yolunu da destekler. 
+Aşağıda MiniIOEx üzerinde bulunan seri port pin tablosu paylaşılmıştır:
+MiniIOEx Seri Port Pin Tablosu:
+
+
+| Seri Port Pin | MiniIOEx Klemens No | 
+| --- | --- |
+| RS232RX	| 19 |
+| RS232TX	| 20 |
+| RS485B	| 19 |
+| RS485A	| 20 |
+| RS GND	| 17 |
+
+Raspberry’de tek bir UART çıkışı olduğundan dolayı MiniIOEx’de 2 adet seri port converter kullanıyoruz: UART/RS232 ve UART/RS485. Bu iki converter’ı aynı anda kullanamadığımız ziçin seçim yapmamız gereklidir. Aşağıdaki gibi kullanacağınız seri port’a göre seçim yapabilirsiniz: RS485 için yukarı yönde switch’leri ileri itebilir, RS232 için diğer yönde seçim yapabilirsiniz. 
+
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/40.jpg)
+*RS485 Seçimi*
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/41.jpg)
+*RS232 Seçimi*
+
+Seri port klemens uçları bir cihaza takılı iken seri port seçim butonları ile değişim yapmak: MiniIOex üzerindeki entegreleri bozabilir. Bundan dolayı hangi seri port seçimi yapılacaksa cihaza takılmadan önce butonların o yönde ayarlanması gereklidir. 
+
+Terminal ekranında daha önceden de kullandığımız **“raspi-config”** komutunu terminale girmemiz gerekiyor. 
+
+```sh
+$raspi-config > Interfacing Options > Serial 
+```
+
+Bu menüye girildiğinde ise **“Serial”** menüsünde “enter”tuşuna basıldıktan sonra aşağıdaki adımların takip edilmesi gereklidir. 
+
+**Login menüsünde Seri Port kullanımını > Kapalı (No) **
+
+Bu menü eğer gözden kaçırılırsa seri port kullanan program çalışmaya başladığında hata verecektir. Bundan dolayı Login kullanımı için seri port’un kapalı olması gereklidir. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/42.jpg)
+*Seri Port Kullanımı Login Shell*
+
+**Seri Port Donanım Kullanımı -> Açık /(Yes)**
+
+Raspberry seri port uçlarının programlanabilir hale getirmektedir. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/43.jpg)
+*Seri Port Kullanımı Donanım*
+
+Tüm işlemler bittiğinde ise aşağıdaki gibi bir ekranla karşılaşmamız gerekmektedir:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/44.jpg)
+*Seri Port Kullanım Bilgileri*
+
+Raspberry üzerinde çalışabilen “minicom” programı ile Raspberry’ye seri port üzerinden gelen değişkenleri görebilir veya bu program üzerinden herhangi bir referans verebilirsiniz. 
+
+Minicom programı yüklemek istiyorsanız aşağıdaki adımları takip edebilirsiniz:
+
+**1. Minicom Yükleme:**
+
+```sh
+$sudo apt-get install minicom 
+```
+
+**2. Minicom Programını Başlatma**
+Eğer Raspberry Pi 3’den önce çıkmış bir Raspberry serisini kullanıyor iseniz port adresiniz: “ttyAMA0” olmalıdır. 
+
+```sh
+$sudo minicom -b 9600 -o -D /dev/ttyAMA0 
+```
+
+Raspberry Pi 3 ve sonrası için ise seri port “ttys0” olarak değişmiştir. Aşağıdaki komutu girmemiz gereklidir:
+
+```sh
+$sudo minicom -b 9600 -o -D /dev/ttyS0
+
+```
+Parametreye girilen 9600 sayısı baudrate hızıdır. Bu hızı standart hızlara göre değiştirebilirsiniz. Genelllikle bu değer 115200’de  de kullanılır. Bu işlemler sonrasında ise herhangi bir PC’den veya başka bir cihazdan seri port kullanarak Raspberry’ye veri gönderebilir veya veri alabilirsiniz.  Bu dokumanda örnek olarak RS485 kullanarak **“Entes MPR63 Enerji Analizörü”** vasıtasıyla veri alabildiğimizi uygulamalı örneklerle anlatacağız. 
+
+## RS485 Üzerinden Entes Enerji Analizöründen Veri Okuma  ##
+
+RS485 sayesinde birçok cihaza bağlanabilir ve bunlardan veri okuyabiliriz.  Raspberry ve MiniIOEx ile bu verileri 3G veya Ethernet/Wireless üzerinden merkeze gönderebilir, bu verilerin sayesinde IO’ları kullanarak eyleme geçebilir veya bu verileri yüksek çözünürlükte depolayabiliriz. Bu tarz bir işlem kolay gibi görünse de PLC veya gömülü PC’lerde oldukça yüksek maliyetler çıkmaktadır. 
+Aşağıda sistemde kullandığımız topoloji gözükmektedir. Topolojide harici bir bilgisayar da gözükmektedir. Bilgisayarı kullanmamızdaki amaç RS485 fiziksel seri yolu üzerinden MODBUS RTU protokolü ile veri alış/verişi yaptığımız için bu verileri nasıl aldığımızı göstermektir. Yani enerji analizöründen veri alırken hangi sorgularla aslında bu verileri alıyoruz bunu harici bir bilgisayar üzerinden rahatlıkla görebileceğiz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/45.jpg)
+*RS485 Cihaz Topoloji*
+
+Yukarıdaki sistemde Bilgisiyar master/slave , MiniIOEx master ve Analizör slave ‘dir. RS485, *A* ve *B* uçları sistemde kısa devredir. Bilgisiyar’da kurulu olan **“Modbus Master”** ve **“Terminal v1.9b”** programları sayesinde Entes Analizör’den veri okumak için gitmesi gereken referans kodları görebiliyoruz. Tabi bunu yapmadan önce Analizör’ün hangi register’larında hangi bilgiler var bunları bilmemiz gereklidir. Bunu da Entes Analizör’ün analizör dokuman internet sayfasında bulunan **“Data Mapping”** dokümanından çıkartabiliriz.
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/46.jpg)
+*Entes Analizör Register Tablosu*
+
+Buradaki tabloda görüldüğü gibi *cosq* değerleri *19,20,21* nolu register’larında yer almaktadır. (Register tablosunda ilk değerin 0’dan başladığı görülmektedir.) cosq değeri için çözünürlük 1000 olduğu için gelen değerin gerçek cosq değerinde olması için 1000’e bölünmesi gereklidir. Örnek olarak 999 değeri geldiğinde bu değerin cosq = 999/1000 = 0.99 olması gerekmektedir. Entes analizöre herhangi Akım/Gerilim uçları bağlanmadığı için arada faz farkı oluşmamakta ve bundan dolayı cosq = 1 değeri görmemiz gereklidir. Sahada uygulama yapıldığında bu dokuman kullanarak diğer bilgiler (gerilim, akım vs.) de alınabilir. 
+Analizörü bilgisiyar ve MiniIOEx klemens uçlarına bağladığımızda veri okuma işlemlerine geçebiliriz. 
+
+
+| MiniIOEx Klemens Ucu |MPBR63 Analizör Haberleşme Klemens Ucu | 
+| --- | --- |
+| RS485-B, 19	| RS485-B, 15 |
+| RS485-A, 20	| RS485-A, 14 |
+
+İlk olarak bilgisayarda kurulu olan **MODBUS MASTER** programında kaç adet register okumak istediğimizi, node/slave adresi gibi temel bilgileri yazmamız gerekiyor. Aşağıdaki ekran görüntüsünden de örnek bilgiler edinilebilir:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/47.jpg)
+*HEX Formatında Analizör Sorgu ve Cevap*
+
+Bilgisayarın gönderdiği sorgu : **01 03 00 00 1E C5 C2** şeklindedir. Bu sorguya göre ise Analizör uzun bir cevap vermiştir. Rx, bilgisiyarın gönderdiği sorgu; Tx ise analizörden gelen cevaptır. RS485 üzerinde sorgulamadan veri alınamaz. RS232 ile bu yönde de ayrılırlar. Bu uzun cevaplar aslında Analizörün ölçtüğü Gerilim/Akım/Frekans/Güç faktörü gibi parametrelerdir. Biz bu parametrelerden cosq’yu kullanacağımız için ilk başta Analizörün gönderdiği sorguyu inceleyelim. Analizör bize sıralı olarak 03 E8 cevaplarını göndermiştir. Bu cevap aslında HEX 0x3E8 ‘dir. Ondalık sayı sisteminde ise “1000” ile ifade edilir. Yani analizöre yaptığımız sorgu sonucunda cosq register’ında 1000 ifademiz ise 1000/1000 = 1 olarak ifade edilir. Eğer 999(0x3E7) değeri gelseydi 999 / 1000 = 0.99 olacaktı. Bu yapılan işlemler en temel düzeyde RS485 seri yolunda gerçekleşen olaylardır. Biz protokoller kullanarak bu işlemleri basit hale getiriyoruz. Eğer Raspberry’den bilgisiyar gibi bir sorgu yapmak istersek aşağıdaki kodu kullanabiliriz. Aşağıdaki kodda “python serial” kütüphanesi olduğu görülmektedir. Bu kütüphaneyi terminalde aşağıdaki komutu yazarak kurabilirsiniz.
+
+```sh
+$sudo apt-get install python-serial
+```
+Kütüphaneyi yükledikten sonra ilgili sorguyu aşağıdaki programı çalıştırarak gönderebiliriz. 
+
+```sh
+import os,time
+import serial
+      
+ser = serial.Serial(
+              
+    port='/dev/ttyS0',
+    baudrate = 9600,
+    parity=serial.PARITY_NONE,
+    stopbits=serial.STOPBITS_ONE,
+    bytesize=serial.EIGHTBITS,
+    timeout=1
+            )
+
+ser.write(serial.to_bytes([0x01,0x03,0x00,0x00,0x00,0x1E,0xC5,0xC2]))
+
+```
+
+Analizörden veri almamız için analizöre ilgili parametreyi göndermemiz gerektiğini yukarıda belirtmiştik: 01 03 00 00 1E C5 C2 bu parametreyi seri port üzerinden Analizör’e gönderdiğimizde ise bize yine HEX olarak üzerindeki parametreleri döndürmektedir. Bunu da yine bilgisayar üzerinden **“Terminal v1.9b”** programı sayesinde görebilmekteyiz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/48.jpg)
+*RS485 Sorgu ve Cevabı*
+
+Yukarıdaki resimde, Analizör’e giden sorgu **( 01 03 00 00 1E C5 C2 )** ve analizörden gelen sorgu ve bu sorguya göre de analizörden gelen cevaplar yer almaktadır. Bu sorguda aslında çok da karışık değildir. Örnek olarak “01” Node adresini tanımlar; “1E”’de kaç adet register tanımlanmış onu gösterir. RS485 protokolünde ilk sorgu sonra da onun cevabı yer alır. RS485 seri port üzerinden Yazma ve Okuma ikisi senkronize bir şekilde sorgulanamaz. Bu durum hataya sebep verir. 
+Bu temel kodu çalıştırdığımızda Analizör yukarıdaki gibi bir sonuç verecektir. Bu kodu ModbusRTU protokolü ile yazdığımızda parametrelerin anlaşılması, Check-Sum hesapları, CRC hesapları daha rahat olmaktadır. 
+Raspberry’de çalışan birçok açık kaynaklı ModbusRTU kütüphanesi mevcut bulunmaktadır. İnternette bu konuyla ilgili birçok dokuman da bulunmaktadır. ModbusRTU, bir protokol olduğundan isterseniz bu protokolü siz de oluşturabilirsiniz ama yazılım gibi çoğu alanda da geçerli olan “tekerliği yeniden icat etme” ye burada da gerek yoktur.  Bu dokumanda “pymodbus” kütüphanesi kullanılmıştır. Pymodbus kütüphanesini aşağıdaki terminale komutu girerek yükleyebilirsiniz. 
+
+
+```sh
+$sudo pip install  -U pymodbus
+```
+
+**“pymodbus”** kütüphanesi yüklendiğinde ise ModbusRTU protokolünü kullanarak Analizörden sahadan aldığı parametreleri çekebiliriz. Buradaki örnekte kullanılan analizöre hiçbir gerilim veya akım kaynağı bağlanmamıştır. Bundan dolayı sadece “cosq” verisini sorgulayabileceğiz. “cosq” verisini alabilmek demek zaten diğer verilere de rahatlıkla ulaşılabileceği anlamına gelmektedir. Diğer bilgileri alabilmek için sadece doğru “register” adreslerini bilmek gereklidir. 
+
+
+```sh
+import serial
+import pymodbus
+from pymodbus.pdu import ModbusRequest
+from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+from pymodbus.transaction import ModbusRtuFramer
+import time
+
+client = ModbusClient(method = 'rtu', port = '/dev/ttyS0',baudrate = 9600,timeout = 1, parity = 'N')
+client.connect()
+
+while 1:
+
+    try:
+        result = client.read_holding_registers(0x00,40,unit = 0x01)
+        #print(result.registers)
+        print("cosqL1 : {}, cosqL2 : {}, cosqL3 : {}".format(result.registers[19]/1000.0,result.registers[20]/1000.0,result.registers[21]/1000.0))
+    except:
+        pass
+    time.sleep(1)
+
+```
+
+Programın içerisindeki *read_holding_registers* kullanımı:
+
+```sh
+result = client.read_holding_registers(0x00,40,unit = 0x01)
+```
+
+Yukarıdaki yazılım örneğinde analizörün üzerindeki 0 ve 40. Register’lar arasındaki register’lar sorgulanıyor. Yukarıda da register tablosu verilmişti ve bu register’lar arasında birçok parametrenin olduğunu görmüştük. Analizörün haberleşme node “1” olduğu için “client.read_holding_registers” fonksiyonun  parametresine de “0x01” veya sadece “1” ID sorgu parametresini de ekliyoruz. Yani aslında unit ID’si 1 olan analizör, 0 ve 40. Registerlar arasındaki paramatrelerini göndermesini istiyoruz. Bu parametreler arasında agerilim, akım, cosq, enerji gibi değerler de mevcut. Eğer bu ID numaralı bir analizör yoksa *timeout*’da sistem bekleyecektir. 
+
+Kodun çıktısı ise faz Aktif Güçlerindeki cosq’ların değeri olmaktadır. Eğer gerilim/akım gibi bilgiler alınacaksa ilgili Register tablosundan sorgulama yapılmalıdır. Cosq’ları Analizörden aldığımız diğer bilgiler vasıtasıyla da hesaplayabiliriz.
+
+-	P = VIcosq  == cosq=P/VI
+ 
+-	Örnek P = 3.4kW, V=400V, I=10A
+
+-	Cosq = 3400W / (400Vx10A)
+
+-	Cosq = 0.85
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/49.jpg)
+
+
+Buradan cosq’yu *0.85* olarak hesaplayabiliriz. Tabiki cosq’nun her zaman 1’e yakın olmasını isteriz. Analizörden Gerilim, Akım, Aktif Güç değerlerini de alabildiğimiz için cosq’yu ve buna bağlı olarak açı hesaplarını yapabiliriz. Eğer sistemde cosq 1 olmuyorsa Reaktif Kullanım yüğzünden para cezası ödenebilir. Bundan dolayı güç faktörü hesaplarının takibinin iyi yapılması gerekmekte ve böyle bir durumda Reaktör veya Kapasite bankaları ile cosq’yu 1(>0.98) ’e çekmemiz gerekmektedir. Kullanıcı bilgilendirme gibi işlemleri Raspberry yüzünden rahatça yapılabilir. Yazacağınız koda birkaç satır ekleyerek mail atma, “push-in notification” gibi özellikleri ekleyebilirsiniz.  
+
+Analizörden Tüketilen enerji ve Üretilen enerjiyi de görebilirsiniz. Eğer bir güneş santraliniz var ise Harcanan ve Üretilen Enerji bilgilerini de alabilir ve günlük/haftalık/aylık bazda veritabına kayıt edebilir ve sunucunuza MiniIOEx üzerindeki 3G module’i da kullanarak herhangi bir internet servis sağlayıcı olmaksızın verilerinizi gönderebilirsiniz. Enerji üretimi olduğunda Akım’ın işareti değişecektir. Buna dikklat edilmelidir. 
+
+## RS485 Üzerinden Modbus RTU Protokolünü Kullanarak ABB Motor Sürücüsü Kontrolü  ##
+
+MiniIOEx ile Analizörden veri okumayı rahatlıkla yapabildiğimizi bir önceki bölümde gördük. MiniIOEx endüstriyel bir geliştirme kartı olduğundan dolayı endüstriyel ortamlarda da kullanılması için tasarlandı. Endüstriyel ortamlar denilince de akla tabiki motor kontrolü ve uygulamaları ilk sıralarda geliyor. Bu uygulamamızda herhangi bir PWM üreterek motor kontrolünden ziyade motor sürücülerine RS485 üzerinden referans değerlerini vererek motor sürmeye çalışacağız. Bu çalışmada da yine RS485 kullanılacak. Bundan dolayı aşağıdaki kütüphanelerin yüklü olduğunu varsayıyoruz:
+-	serial
+-	pymodbus
+Eğer bu kütüphaneleri yüklemediyseniz bir önceki örneğe bakarak yükleyebilirsiniz. “raspi-config” seri port ayarlarının açık olduğu kontrol edilmelidir. Buradaki amacımız motor sürücüsüne hız referansı vermek ve bu hızı Raspberry üzerinden kontrol etmek olacaktır. Bu çalışmada aşağıdaki ekipmanlar kullanılmıştır:
+
+-	ABB ACH550 3P 400V 7.5kW Motor Sürücü
+-	Siemens 2kW 3P 400V 1500rpm AC Motor 
+-	Raspberry Pi 3 B+
+-	MiniIOEx-3G 
+-	Phoenix Contact UNO Power 230V/24V Güç Kaynağı
+
+**Motorun ve sürücünün bağlantılarını deneyimli bir elektrik teknisyeni yardımıyla gerçekleştirin. 400V’da ölüm tehlikesi bulunduğu unutulmamalıdır.**
+
+ABB Sürücünün motor parametrelerini ayarlarını gerçekleştirdikten sonra “Haberleşme Parametre” ayarlarını girmemiz gereklidir. İlgili parametre ayarı sürücü klavuzunda mevcuttur. Parametreleri ayarladıktan sonra, MiniIOEx’in RS485 uçlarını ABB Motor Sürücüsüne montajını gerçekleştiriyoruz. 
+Terminal ekranında “abb.py” adında bir dosya oluşturuyoruz ve bu dosyada seri port ve IO işlemleri kullanılacağı için tüm hakları vermemiz gerekiyor. Terminalde yazacağımız “chmod +x abb.py” komutuyla bu hakları verebiliriz. Sürücünün motor bağlantıları ve haberleşme bağlantıları tamam ise ilgili yazılımımıza geçebiliriz. Sürücünün manuel sayfasını okuduğumuzda ilgili register’ları ediyoruz ve bu registerlarda ne bilgiler yer alıyor bunları kontrol etmemiz gerekiyor.  Sürücü tüketilen enerjiden, tasarruf edilen enerjiye kadar birçok bilgi verse de biz sadece aşağıdaki parametreleri kullanacağız:
+
+
+-	Motor Hızı[rpm]
+-	Motor Akımı[A]
+-	Motor Gücü[W]
+-	Sürücü DC Bara Gerilimi[V]
+-	Sürücü Sıcaklığı [Celcius]
+
+Bu değerleri ilgili registerları sorgulayarak alabiliriz. Örnek yazılımızda sadece Motor Hızı değişkenini kullandık. Koda bakılarak diğer bilgiler de alınabilir. Bu bilgilerden Motor Sıcaklığı parametresi önemlidir. Genelde motor sürücüleri belirli bir sıcaklıkta sadece belirli bir süre çalışabilir. İstemsiz duruşlar için bu değer sürekli kontrol edilmeli ve sıcaklık çok yüksek ise (çalışma sıcaklıklığı genellikle max. 400C )  sürücü bakıma alınabilir veya çevre koşulları değiştirilebilir. 
+Analizör ile RS485 üzerinden veri okuduk ama herhangi bir veri analizör üzerine yazmamıştık. Bu örnekte Modbus üzerinden nasıl veri yazılacağı da bulunmakta. 
+
+```sh
+client = ModbusClient(method = 'rtu', port = '/dev/ttyS0',baudrate = 9600,timeout = 1, parity = 'N')
+client.connect()
+
+try:
+    result = client.read_holding_registers(100,20,unit = 0x01)
+    print("Motor Speed : {}".format(result.registers[2]))
+
+```
+
+Analizör üzerinde veri okuması yaparken ‘0’ register’ı sorgulamıştık ama ACH550 sürücü bize 100. Register’ından itibaren okuma yapabileceğimizi söylediğinden dolayı 100. register’dan itibaren 20 adetlik register’ın sorgulamasını yaptık. “.read_holding_registers” fonksiyonun geri dönüş değeri ‘result’ dizisinde yukarıda bahsedilen tüm değişkenler yer almaktadır. 100.register’da ise Hız Değişkeni olduğundan dolayı bundan sonraki sorgulamalarda result[0] bize anlık hız değişkenini verecektir. 
+İlk sorgulamadan sonra değişkenlere bakarak motora ‘start’ verilip verilmeyeceği program tarafından karar verilir. Buradaki basit bir örnek olduğundan dolayı buı değişkenleri kontrol etmedik. Örnek olarak motorun başlangıç sıcaklığı, DC bara gerilimi kontrol edilebilir ve bu değerler istenilen değer aralıklarında değil ise motora start verilmemelidir. 
+
+Programın genel akış diyagramı:
+-	Motor ve sürücü parametrelerini oku
+-	“Sürücü start” ilk koşulların referansı ver
+-	“Sürücü start” 
+-	Sürücü motor hız referansı gönderilmesi [Hz] tipinde 
+-	Motor hız referansını arttır 
+-	Motor hız referansını 0 Hz’e çek 
+-	Sürücü start durumundan stop durumuna getir 
+
+İlk aşamada motor ve sürücü parametrelerini okuduk. Şimdi ise sürücüye start vermemiz gerekiyor. Sürücü manuelinde aşağıdaki şekilde devreye alınabileceği belirtilmektedir. 
+
+Analizör’de sadece okuma yaptığımızı burada ise yazma yapacağımızdan da bahsetmiştik. Aşağıdaki fonksiyonu kullanarak yaza işlemini gerçekleştirebiliriz:
+
+```sh
+result = client.write_registers(REGISTER_ADRESS,REGISTER_REF,unit = UNITID)
+```
+
+Bu fonksiyon sayesinde istediğimiz yazma işlemini gerçekleştirebiliriz. İlk önce 0. Register’daki Sürücü Start işlemini gerçekleştirmemiz sonrasında ise motora hız referansı göndermemiz gerekiyor. Tüm bunları **“write_registers”** fonksiyonu sayesinde yapabiliyoruz. 
+
+Sürücü Start Bit Referans Değerleri İlk Durum:
+
+| ACH550 Motor Sürücü Register Değeri[0]	| Bit Değeri |
+| --- | --- |
+| [0].1	| True |
+| [0].2	| True |
+| [0].3	| True |
+| [0].4	| True |
+| [0].5	| True |
+| [0].6	| True |
+| [0].7	| True |
+| [0].10 | True |
+| [0].0	| **False (Start Biti)** |
+
+İlk olarak tabloda yer alan refaransların gönderilmesi gerekiyor. Referansları DECIMAL türden gönderdiğimiz için bu tablodaki yer alan değerin DECIMAL karşılığı 1278 ‘dir.
+
+```sh
+result = client.write_registers(0,1278,unit = 1)
+```
+Sonrasında ise Start Biti’ini True yaparak motor sürücüyü **“HABERLEŞME”** üzerinden çalışır hale getireceğiz. 
+
+Sürücü Start Bit Referans Değerleri İkinci Durum:
+
+| ACH550 Motor Sürücü Register Değeri[0]	| Bit Değeri |
+| --- | --- |
+| [0].1	| True |
+| [0].2	| True |
+| [0].3	| True |
+| [0].4	| True |
+| [0].5	| True |
+| [0].6	| True |
+| [0].7	| True |
+| [0].10 | True |
+| [0].0	| **False (Start Biti)** |
+
+**[0].0** start bitinin değeri değiştiğinden dolayı register’a göndereceğimiz referans değeri artacaktır. 
+
+```sh
+result = client.write_registers(0,1279,unit = 1)
+```
+
+Bu referans değerinden sonra motor sürücü dışarıdan refarans almaya hazır hale gelecektir. Sürücü üzerinde de bir röle çekerek sürücü motor fanını açacaktır. İlk olarak 1279 değerini vermemiz istenmiyor. Bundan dolayı motor sürücüsünü kademeli olarak devreye aldık. Şimdi yeniden “write_registers” fonksiyonunu kullanarak motora hız referansını gönderelim. 
+
+```sh
+result = client.write_registers(1,speedRef,unit = 1)
+```
+
+ABB Motor Sürücü manuelinde 1 No’lu register’da “Hız Referansı” register’ının olduğunu belirtmektedir. “speedRef” değişkenini arttırarak motorun hızlanmasını sağlayabiliriz. AC Motor sürücünün hız referansı parametresi “Hz” olduğunu belirtmiştik. 
+
+| Referans Değeri(Decimal) | Hz Karşılığı |
+| --- | --- |
+| 0	| 0 Hz |
+| 10000	| 25Hz |
+| 20000	| 50Hz |
+
+*speedRef* değerini her cycle’da 10.000 arttırarak motorun hızlanmasını sağlıyoruz. 
+
+```sh
+myCounter = 5
+speedRef = 0
+    while myCounter:
+        
+        result = client.write_registers(1,speedRef,unit = 1)
+        time.sleep(1)
+        result = client.read_holding_registers(100,20,unit = 0x01)
+        print("Motor Speed : {} ".format(result.registers[0]))
+        myCounter = myCounter - 1 
+        speedRef = speedRef + 10000
+        time.sleep(10)
+```
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/50.jpg)
+*ABB Sürücü Hız Referansı*
+
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/51.jpg)
+*Tam Hızda Sürücü Kullanıcı Paneli [AUTO] Modda *
+
+Yukarıdaki ekran görüntüsünde görüldüğü gibi Hız rpm cinsinden kademeli olarak artmış ve sonrasında kademeli olarak azalmıştır. Motor üzerindeki kaymadan dolayı maksimum 1476rpm’e yükselmiştir. Bölüm başında hedeflediğimiz gibi ABB sürücü hız referansı verilerek motor İLERİ yönde döndürülmüş ve durdurulmuştur. Bütün bunları PYTHON dilini kullanarak rahatlıkla yapabilmek mümkün. Program geliştirilerek çok güzel grafikler çıkartılabilir, WEB’e veriler gönderilebilir veya çeşitli durumlarda WEB’den program çalıştırılabilir. Tabiki bütün bunlar yapılırken motorun dönme kuvvetinden dolayı herhangi bir canlıya zarar verilebileceği unutulmamlı ve sadece yazılım ile değil donanım ile de motorun dönmesi istendiğinde durdurulacak tesisatların yapılması gerekmektedir. Aşağıda ABB ACH550 Motor sürücüsünü kontrol etmek için gerekli kodu bulabilirsiniz.
+
+```sh
+client.close()
+```
+Modbus haberleşmesi “.close()” fonksiyonu ile kapatılabilir. 
+
+**abb.py**
+
+```sh
+import serial
+import pymodbus
+from pymodbus.pdu import ModbusRequest
+from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+from pymodbus.transaction import ModbusRtuFramer
+import time
+
+client = ModbusClient(method = 'rtu', port = '/dev/ttyS0',baudrate = 9600,timeout = 1, parity = 'N')
+client.connect()
+
+try:
+    result = client.read_holding_registers(100,20,unit = 0x01)
+    print("Motor Speed : {}".format(result.registers[2]))
+    time.sleep(1)
+    #start bit  0       
+    result = client.write_registers(0,1278,unit = 1)
+    time.sleep(1)
+    #start bit  1
+    result = client.write_registers(0,1279,unit = 1)
+    time.sleep(1) 
+    #after start operation 
+    print("operation starts:")
+    myCounter = 5
+    speedRef = 0
+    while myCounter:
+        
+        result = client.write_registers(1,speedRef,unit = 1)
+        time.sleep(1)
+        result = client.read_holding_registers(100,20,unit = 0x01)
+        print("Motor Speed : {} ".format(result.registers[0]))
+        myCounter = myCounter - 1 
+        speedRef = speedRef + 10000
+        time.sleep(10)
+    #Stop Operation
+    #speed ref will be 0 rpm
+    time.sleep(5)
+    result = client.write_registers(1,0,unit = 1)
+    time.sleep(20)
+    result = client.read_holding_registers(100,20,unit = 0x01)
+    print("Motor Speed : {}".format(result.registers[0]))
+    #driver start bit will be 0 and driver will stop
+    result = client.write_registers(0,0,unit = 1)
+    result = client.read_holding_registers(100,20,unit = 0x01)
+    print("Motor Speed : {}".format(result.registers[0]))
+
+except:
+    pass
+    
+time.sleep(1)
+client.close()
+
+```
