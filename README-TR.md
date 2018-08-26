@@ -1411,8 +1411,11 @@ Output  =(Input-0V) * ((Basınç Max.  - Basınç Min.)/(10V-0V )) + Basınç Mi
 Sensörden aşağıdaki değerlere geldiğini varsayar isek ilgili basınç değerlerini bulabiliriz. 
 
 Input = 0V: 	Output=  (0V-0V) * ((16Bar  -(0)Bar )/(10V-0V )) + (0)Bar   = 0 Bar
+
 Input = 6V: 	Output=  (6V-0V) * ((16Bar  -(0)Bar )/(10V-0V )) + (0)Bar   =  9.6 Bar
+
 Input = 9.9V: 	Output =  (9.9V-0V) * ((16Bar  -(0)Bar )/(10V-0V )) + (0)Bar =  15.84 Bar
+
 
 MiniIOEx, Analog Input modülüne girecek 33V modülün entegrede digital olarak 4095 değerini vereceğinden bahsetmiştik. Bu bilgiye göre aşağıdaki referans gerilim noktalarında ilgili digital değerleri hesaplanmıştır. 
 
@@ -1446,9 +1449,16 @@ Basınç sensörü sınır değerleri:
 Analog Akım Çıkışlı Sensör Ölçüm Örneği:
  
 Output  =(Input-4mA) * ((Basınç Max.  - Basınç Min.)/(20mA-4mA )) + Basınç Min. 
+
+
 Input = *0mA*: 	Output=  (0mA-4mA) * ((16Bar  -(0)Bar )/(20mA-4mA )) + (0)Bar   = 0 Bar
+
+
 Input = *12mA*: 	Output=  (12mA-4mA) * ((16Bar  -(0)Bar )/(20mA-4mA)) + (0)Bar   =  8 Bar
+
+
 Input = *20mA*: 	Output =  (20mA-4mA) * ((16Bar  -(0)Bar )/(20mA-4mA )) + (0)Bar =  16 Bar
+
 
 ### CO2 Sensörü İle Yapılmış Gerçek Bir Uygulama ###
 
