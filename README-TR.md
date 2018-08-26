@@ -220,12 +220,12 @@ $ sudo chmod a+w "DOSYA ADI"
 
 Raspbian işletims sistemlerinde C ve C++ kodlarını derlemek için hazır olarak GCC derleyici gelmektedir. Terminali açtıktan sonra “nano” editörü yardımıyla kodumuzu yazabiliriz.  
 Terminal ekranında:
-'''sh
+```sh
 $ nano helloWorld.c
-'''
+```
 
 **helloWorld.c**
-'''sh
+```sh
 #include <stdio.h>
 void foo(){
     printf("Hello World\n");
@@ -234,6 +234,7 @@ int main(){
     foo();
     return 0;
 }
-'''
+
+```
 
 
