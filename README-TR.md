@@ -2019,5 +2019,252 @@ Fiziksel olarak modülün ve Raspberry’nin montajı yapıldıktan sonra ilgili
 
 Yükleme işlemleri bittikten sonra terminal açılır ve **lsusb** komutu işletilir. Bu komut o anda USB’ye bağlı cihazları gösterir. Eğer herhangi bir durum yoksa aşağıdaki gibi bir ekranla karşılaşmanız gerekir. Quectel’i göremiyorsak bunun nedeni Quectel UC20 modulü veya USB kablonun kendisinden olabilir. Quectel 3G modulünü terminal ekranından göremiyorsanız modulü takıp çıkartmanız yarar sağlayabilir. **Modül üzerinde montaj işlemleri yaparken enerjisiz çalışmaya özen gösterilmesi gerekmektedir.**
 
-<font color="red">USB Kabloyu değiştirdikten sonra halen Quectel modulü USB üzerinden görülemiyorsa lütfen tarafımıza bildiriniz!</font>
+<span style="color:blue">USB Kabloyu değiştirdikten sonra halen Quectel modulü USB üzerinden görülemiyorsa lütfen tarafımıza bildiriniz! text</span>
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/54.jpg)
+
+*Ekranda görülen diğer USB portları kablosuz klavye/mouse veya taşınabilir USB disk olabilir.*
+
+Fiziksel olarak USB bağlı olduğuna göre minicom üzerinde yapılacak setup ayarları ile ATkomutları modüle gönderebiliriz. Minicom ayrı bir terminalde açılarak aşağıdaki adresten miniIOEx-3G-test.py dosyası çalıştırılarak AT komutları cevapları görülebilir. Bu cevaplar aşağıda açıklanacaktır. AT komutları 3G modül ile haberleşmeden kullanılır. Bu komutlar ile cihaz üzerindeki bilgilerin sorgulanabileceği gibi SMS, Arama gibi özellikler de bu komutlar sayesinde gerçekleştirilebilir.
+
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/55.jpg)
+
+Çalıştırılan python scripti sonrasında minicom ekranında yukarıdaki gibi bir çıktı elde edilir. Kırmızı blok içine alınmış script’lerin açıklaması aşağıda verilmiştir.
+
+1-) Quectel cihaz seri no numarası -> **ATI**
+
+2-) Cihaz üzerinde Sim Kilidi ile ilgili bir sıkıntı yoksa Sim kartının kullanıma hazır olduğunu belirtir. Sim kartı yeni aldı iseniz herhangi bir cep telefonunda Sim kartı PIN özelliğini devreden çıkartabilirsiniz: **AT+CPIN?**
+
+3-) Şebekenin hazır olup olmadığını belirtir. Eğer şebeke hazır değil ise CME Error hatası döndürür ve ekteki dokumandan hangi hata olduğunu inceleyebilirsiniz: **AT+CREG?**
+
+4-) Şebekenin çekim kapasitesidir. Antenin kalitesi, baz istasyonun yakınlığı ve çevresel faktörlere göre bu oran değişir. 30‘un aşağısı kabul edilebilir değerdir. 99,99 şebeke çekiminin olmadığını gösterir: **AT+CSQ**
+
+5-) Kart üzerindeki SIM kartının operatörünü gösterir. Testler sırasında Vodafone SIM kartı kullanılmıştır. Türk Telekom veya Turkcell‘de IOT uygunluğu olan SIM kartı üretmektedir. Eğer burada SIM kartı yeri boş veya şebeke bağlantısı 99 gösteriyorsa SIM kartında veya servis sağlayıcısında bir problem olabilir. Lütfen başka bir SIM kartıyla aynı işlemleri tekrardan deneyin: **AT+COPS?**
+
+Satın aldığınız cihazın IMEI numarasını ise edevlet üzerinden sorgulayabilirsiniz. (https://www.turkiye.gov.tr/imei-sorgulama ) Bu sorgulama sadece Türkiye için geçerlidir. **IMEI** kayıtlı değil ise lütfen modülleri satın aldığınız firma ile iletişim kurunuz.
+
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/56.jpg)
+
+Eğer modulün IMEI numarası kayıtlı ise yukarıdaki gibi bir cevap almamız gereklidir.
+
+**Not : Cihaz yurtdışında kullanılacak ise lütfen tarafımıza bildiriniz.**
+
+SIM kartı ve USB testleri bitirildikten sonra aşağıdaki script çalıştırılarak shield ile internete çıkabilirsiniz.
+
+
+
+```sh
+sudo chmod +x ./pe2a_miniIOEx.sh
+sudo ./pe2a_miniIOEx.sh internet ttyUSB3
+```
+
+ttyUSB2, Raspberry’nin üzerindeki USB’lerden hangisine bağladığınıza göre değişecektir. ttyUSB’nin yanlış seçilmesi durumunda cihaz internete çıkmayacaktır. Genellikle, Vodafone için default APN **‘internet’** dir. Bulunan ülkeye göre ve servis aldığınız operatöre göre bu değişir. Yanlış APN’de cihaz internete bağlanamaz. Turkcell için APN "mgbs" 'dir. Ayrıntılı bilgiye ekte ulaşılabilir: https://www.turkcell.com.tr/kurumsal/kurumsal-cozumler/statik-ip/sikca-sorulan-sorular
+
+Bu işlemlerden sonra internet bağlantılarını kapatmayı unutmayınız:
+
+```sh
+sudo ifconfig eth0 down
+sudo ifconfig wlan0 down
+```
+
+APN ayarlarından sonra ise aşağıdaki komut ile internete çıkabilirsiniz:
+
+```sh
+sudo pppd call gprs
+```
+Komutun arka planda çalışmasını istiyorsanız aşağıdaki gibi ‘&’ karakterini komut satırına ek yapabilirsiniz. 
+
+```sh
+sudo pppd call gprs&
+```
+
+**“sudo pppd call gprs”** komutundan sonra aşağıdaki gibi bir ekranla karşılaşmamız gerekmektedir:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/57.jpg)
+
+Eğer cihaz internete çıkmıyorsa “script failed” hatası verecektir. En çok karşılaşılan problemler SIM kartı APN adresinin yanlış olması, PIN kodu, SIM kartın internete çıkmaması, SIM kartın internet hakkının olmaması vs. Dokuman başlarında anlatılan USB testleri ve SIM kart testleri başarılı ise fiziksel olarak modülde bir sıkıntı olmaması gerekir. 
+Cihaz internete çıktığında aşağıdaki komutu işleyerek cihazın IP’sine erişebilirsiniz. 
+
+```sh
+sudo ifconfig
+```
+
+Cihaz internete çıktığında ise eğer internet hızını görmek istiyorsak **speedtest-cli** programı yüklememiz gereklidir. Bu program üzerinden internete çıkış hızımızı görebiliriz. Aşağıda konuyla ilgili örnek ekran görüntüsü bulunmaktadır:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/58.jpg)
+
+## GPS Devreye Alma ##
+
+MiniIOEx, GPRS bağlantısının yanı sıra GPS konum tabanlı uygulamalar için de kullanılabilir. GPS uydularından alınan konum verisi ve GPS’den gelecek saat uygulamalarda kullanılabilir. Bununla ilgili piyasada birçok uygulamaya rastlamak mümkündür. GPS ve GPRS’de kullanılan antenler farklı olduğundan dolayı aynı antenlerin kullanılması verilerin düzgün alınmamasına veya hiç veri gelmemesine yol açacaktır.
+
+UC20 shield’i üzerinden GPS verileri alındığı için Bölüm 2.1.’de gerçekleştirilen uygulamaların da GPS verilerini alınması için yüklenmesi ve çalıştırılması tavsiye edilir. Özellikle
+“lsusb” komutuyla modulün MiniIOEx’e ve Raspberry’ye bağlandığından emin olunmalıdır. En sık karşılaşılan hatalardan bazıları USB adres yolunun yanlış verilmesidir. Bunu da yine “lsusb-v” komutuyla ayrıntılı olarak USB cihazların hangi USB’lere bağlandığını görebilirsiniz.
+
+Bu bölümde GPS verilerinden gelen datalar incelenecektir ve örnek kod paylaşılacaktır. Buna göre işlemlerinizi gerçekleştirebilirsiniz.
+GPS antenini Quectel UC20 modulün GNSS konnektörüne bağlanması gerekmektedir. GitHub’dan MiniIOEx-gps.py kodu indirilmesi ve çalıştırılması gerekmektedir. UC20 modüle gönderilen “AT” komutlarını ekteki linkten ihtiyacınıza uygun komutları program üzerinden revize edebilirsiniz. 
+
+Quectel UC20 GNSS AT Komutları Dokuman Linki:
+http://www.quectel.com/UploadImage/Downlad/Quectel_UC20_GNSS_AT_Commands_Manual_V1.1.pdf
+
+Program çıktısı aşağıdaki gibi olacaktır:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/59.jpg)
+
+*GNSS Çıktıları*
+
+Program çalıştırıldıktan sonra gelen dataların: UTC Clock,Date,Coordinate gibi işlevleri Raspberry üzerinde kullanılabilir. Yukarıdaki şekilde de görüldüğü üzere koordinat sık sık yer değiştirmektedir. Bundan dolayı kullanıcıların koordinat verilerin daha doğru hesaplanması için bulunan yer üzerindeki koordinatların optimizasyonu gibi fonksiyonları kullanması gerekmektedir. Bu sayede daha kesin sonuç alınması mümkündür. Location coordinate verisini GOOGLE MAPS veri girişini yaptığımızda bulunduğunuz yer yaklaşık olarak ortaya çıkacaktır. UTC clock verisini ise Raspberry CPU saati olarak RTC ile beraber kullanabilirsiniz.
+
+## Real Time Clock ve EEPROM Kullanımı ##
+
+Mikroişlemcilerde yapılan işlemlerde saatin devamlılığı önemlidir. Raspberry’de Real Time Clock (Gerçek Zaman Saati) bulunmadığından dolayı Raspberry’nin enerjisi gittiğinde saatiniz ‘fake’ bir saatte veya en son kaldığınız bir saatte başlayabilir. Bu da yapılacak otomasyon işlerinin zamanın değişmesine yol açar. Örnek olarak her gün 13:00’da bir pompayı çalıştırmanız gerekirse siz bu pompayı normal saatinden 5 saat sonra 18:00’da çalıştırabilirsiniz. Bu gibi sebeplerden dolayı MiniIOEx’e gerçek zaman saati entegre ettik. Zaman saatini kullanabilmek için aşağıdaki adımları takip edebilirsiniz. EEPROM ve RTC i2c üzerinden MiniIOEx ile haberleşmektedir. i2c, birçok cihazdan veri almak ve veri göndermek için oldukça popüler bir haberleşme protokolüdür. Sadece 2 kablo ile yüksek hızlarda veri alıp/göndermek mümkündür. i2c cihazlarını kontrol eden modüle ‘master’, kontrol edilen modüle ise ‘slave’ denir. Her i2c slave cihazın benzersiz bir adresi mevcuttur. Her i2c cihazı aynı SCL(serial clock) ve SDA(serial data) üzerinden haberleşir. i2c protokolü **START** ve **STOP** durumları içererek datanın başlayıp/bittiğini de master cihaza haber verir.
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/60.jpg)
+
+Aşağıdaki resimde ise SCL ve SDA’nın BIT tablosunu bulabilirsiniz. SCL, clock olduğu için birbirini takip eden referans sinyaller; SDA ise slave cihazın verisini üretmiştir. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/61.jpg)
+
+
+Terminalde **raspi-config-> Interface Options-> i2c->Enable** edildikten sonra Raspberry’yi tekrardan başlatmanız önerilir. 
+
+Bu adımları geçtikten sonra terminalde i2cdetect -y 1 veya eski bir Raspberry sürümü kullanıyorsanız i2cdetect -y 0 (en kısa zamanda yeni bir işletim sistemini yüklemeniz önerilir) ile sistemde bulunan i2c cihazlarını görebilirsiniz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/62.jpg)
+
+MiniIOEx üzerindeki **EEPROM** entegresinin **(24LC512)** unique adresi **0x50**’dir. Bu unique adresi yazılımda da kullanmamız gerekiyor. EEPROM’a, RTC verisi yazılıp Raspberry yeniden başladığında ise buradan RTC verisi okuması yapılabilir veya programınızın kopyalanmasını önleyecek bazı ‘gizli’ şifreler buraya yazılabilir ve yazdığınız program buradan aldığı bilgi ile çalışmaya başlar. Yani bir şekilde Raspberry’nin SD kartı üzerindeki işletim sistemi imaj’ı kopyalansa bile program kullanılamaz olacaktır. 
+
+Aşağıda *.c* koduyla yazılmış örnek program mevcuttur. Bu kodda EEPROM üzerine RTC’den alınan saat verisi yazdırılıp bu veri EEPROM üzerinden okunmuştur. 
+
+
+```sh
+#include <stdio.h>
+#include <sys/ioctl.h> // ioctl
+#include <fcntl.h>     // open
+#include <unistd.h>    // read/write usleep
+#include <time.h>
+#include <netinet/in.h> // htons
+#include <linux/i2c-dev.h>
+
+#pragma pack(1)
+
+#define PAGESIZE 32
+#define NPAGES  128
+#define NBYTES (NPAGES*PAGESIZE)
+
+#define ADDRESS 0x50  //  24LC512's address on I2C bus 
+
+typedef struct {
+    ushort AW;
+    char  buf[PAGESIZE+2];
+}WRITE;
+
+static WRITE AT = {0};
+
+int main() {
+  int fd;
+  char bufIN[180] = {0};
+  time_t clock=time(NULL);
+
+  snprintf(AT.buf, PAGESIZE+1, "%s: my first attempt to write", ctime(&clock)); //  the buffer to write, cut to 32 bytes
+
+  if ((fd = open("/dev/i2c-1", O_RDWR)) < 0) {  printf("Couldn't open device! %d\n", fd); return 1; }
+
+  if (ioctl(fd, I2C_SLAVE, ADDRESS) < 0)     { printf("Couldn't find device on address!\n"); return 1; }
+
+  AT.AW = htons(32);    //  I will write to start from byte 0 of page 1 ( 32nd byte of eeprom )
+
+  if (write(fd, &AT, PAGESIZE+2) != (PAGESIZE+2)) { perror("Write error !");    return 1; }
+  while (1) { char ap[4];  if (read(fd,&ap,1) != 1) usleep(500); else break; } //   wait on write's end 
+
+  if (write(fd, &AT, 2) != 2) {  perror("Error in sending the reading address");    return 1;  }
+
+  if (read(fd,bufIN,PAGESIZE) != PAGESIZE) { perror("reading error\n"); return 1;}
+  printf ("\n%s\n", bufIN);
+
+  close(fd);
+  return 0;
+}
+
+
+```
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/63.jpg)
+
+## Diğer Konular ##
+
+Bu bölümde doğrudan MiniIOEx ile ilgili olmayıp ama kullanıcının bilmesinde yarar olan konuları ele alacağız. Örnek olarak maliyeti düşürmek için eğer Ethernet/Audio gibi projenizde ihtiyaçlarınız yok ise Raspberry Zero otomasyon projelerinde kullanıalbilir. İlerleyen bölümde konu ayrıntılandırılmıştır.
+
+### Raspberry Zero ###
+
+Kasım 2015’de ilk versiyonu duyurulan Raspberry Zero ile Raspberry Pi ile gerçekleştirilen otomasyon uygulamaları rahatlıkla yapılabilir. Raspberry Zero W’da Wireless özelliği mevcuttur; Raspberry Zero’da Wireless özelliği yoktur. Raspberry Zero ’da aşağıdaki özellikler bulunmaktadır:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/64.jpg)
+
+*Kaynak: https://www.slant.co/versus/5737/15521/~raspberry-pi-zero_vs_raspberry-pi-3-model-b*
+
+Raspberry Zero W’de bu özelliklere ek olarak Wireless ve Bluetooth gibi özellikler eklenmektedir.  Üstteki resimde de görüldüğü gibi Raspberry Zero ve W’de Ethernet portu bulunmamaktadır. Raspberry Zero ve Raspberry Zero W performans olarak Raspberry 2&3’den düşük olsa da birçok uygulama yapılabilir. Maliyeti düşük olduğundan dolayı eğer Wireless üzerinden haberleşme imkânı mevcut ise endüstriyel otomasyon uygulamalarında Raspberry Zero W seçilebilir. 
+
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/65.jpg)
+
+Yukarıdaki resimde Raspberry Zero görülmektedir. PWR IN konnektörü enerji besleme konnektörüdür. 5V 1A besleme kaynağı ile Raspberry Zero2yu besleyebilirsiniz. Eğer 24V ile beslemek istiyorsanız MiniIOEx’e montaj edip MiniIOEx üzerinden ile besleyebilirsiniz.  
+
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/66.jpg)
+
+Pi Zero Wireless, Raspberry Pi Zero'nun en güncel versiyonudur. Raspberry Pi Zero'dan farklı olarak üzerinde kablosuz bağlantı ve Bluetooth bağlantı protokollleri bulunmaktadır.
+Raspberry Pi Zero Wireless Özellikleri
+-	1Ghz, Single-core İşlemci
+-	512MB RAM LPDDR2
+-	Mini HDMI
+-	USB On-The-Go Giriş
+-	Micro USB Güç Girişi
+-	HAT-uyumlu 40-pin header
+-	Composite video ve reset headerler
+-	CSI Kamera Konektörü
+-	802.11b/g/n Wireless LAN
+-	Bluetooth 4.1
+-	Bluetooth Low Energy (BLE)
+
+Satın almak için: https://market.samm.com/raspberry-pi-zero-w
+
+Raspberry Zero’ya da Raspbian tabanlı işletim sistemleri yüklenebilir olduğundan yukarıda anlatılanlardan hepsi RAspberry Zero için de geçerlidir. Raspberry 2&3’de yaptığınız tüm işlemleri Zero’da da yapabilirsiniz. Hatta burada çalışan işletim sisteminin image’ınuı alıp Zero’ya da takabilirsiniz. Zero’nun en büyük avantajı maliyet’dir. Yaklaşık olarak Raspberry’nin ¼ fiyatına ürünü bulmak mümkündür. Eğer “Ethernet” projeniz için zorunlu değil ise Zero ile projenize devam edebilirsiniz. Yalnız Raspberry’de çalıştığınız gibi ekran ile zero’da çalışmak işlem gücü kapasitesinden dolayı zor olmaktadır. Bundan dolayı SSH ile Zero’ya bağalabilirsiniz. Zero için önerimiz GUI versiyonlu Raspbian yerine Raspbian Lite yüklemek. Lite versiyonu ile Zero üzerinde çok daha performanslı ve verim odaklı çalışabilirsiniz. ,
+
+Raspberry Zero’ay Wireless üzerinden bağlanmak istiyorsanız ve Lite versiyonunu yüklediyseniz komut ekranından Wireless şifrenizi girebilirsiniz. Bu bölümde bunun nasıl yapılabildiği anlatılacak. 
+Terminal ekranında aşağıdaki komut ile Wireless SSID ve Wireless şifrenizi belirlenen dosyaya kayıt edebilirsiniz. 
+
+
+```sh
+$sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+```
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/67.jpg)
+
+Yukarıdaki resimdeki gibi şifre ve SSID’leri girmeniz gerekmektedir. Linux/GNU büyük/küçük harf duyarlı olduğu için buna dikkat etmeniz gerekmektedir. 
+
+```sh
+network = {
+	ssid = “homeOneSSID”
+	psk = “passwordOne”
+	priority = 1
+	id_str = “homeOne”
+}
+network = {
+	ssid = “homeTwoSSID”
+	psk = “passwordTwo”
+	priority = 2
+id_str = “homeTwo”
+}
+
+```
+
+Kaynak: https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md
+
+
+
+
+
+
 
