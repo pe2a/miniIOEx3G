@@ -1898,7 +1898,7 @@ Programı çalıştırdığımızda aşağıdaki gibi hız değerlerini elde edi
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/51.jpg)
 
-*Tam Hızda Sürücü Kullanıcı Paneli [AUTO] Modda*
+*Tam Hızda Sürücü Kullanıcı Paneli [AUTO] Modda *
 
 Yukarıdaki ekran görüntüsünde görüldüğü gibi Hız rpm cinsinden kademeli olarak artmış ve sonrasında kademeli olarak azalmıştır. Motor üzerindeki kaymadan dolayı maksimum 1476rpm’e yükselmiştir. Bölüm başında hedeflediğimiz gibi ABB sürücü hız referansı verilerek motor İLERİ yönde döndürülmüş ve durdurulmuştur. Bütün bunları PYTHON dilini kullanarak rahatlıkla yapabilmek mümkün. Program geliştirilerek çok güzel grafikler çıkartılabilir, WEB’e veriler gönderilebilir veya çeşitli durumlarda WEB’den program çalıştırılabilir. Tabiki bütün bunlar yapılırken motorun dönme kuvvetinden dolayı herhangi bir canlıya zarar verilebileceği unutulmamlı ve sadece yazılım ile değil donanım ile de motorun dönmesi istendiğinde durdurulacak tesisatların yapılması gerekmektedir. Aşağıda ABB ACH550 Motor sürücüsünü kontrol etmek için gerekli kodu bulabilirsiniz.
 
@@ -1962,3 +1962,62 @@ time.sleep(1)
 client.close()
 
 ```
+
+# 3G ve GPS Bağlantı Ayarları #
+
+MiniIOEx’in en önemli ve temel özelliklerinden birisi 3G ve 4G haberleşmeye uyumlu bir yapıya sahip olmasıdır. Yani eğer Wireless ve Ethernet imkanı olmayan bir yerdeyseniz veya sahada çalışmalar gerçekleştiriliyorsa 3G ile data haberleşmesi en uygun yöntemdir. Bu haberleşme seri port üzerinden değil USB üzerinden gerçekleştiğinden dolayı da 3G’nin data alış-veriş kapasitesinden tam olarak yararlanılabilir. Bazı servis sağlayacılarının 3G modemleri endüstriyel sahada tam performans veremediklerinden dolayı MiniIOEx’e 3G uyumluluğu eklenmiştir. MiniIOEx-3G, Raspberry V2, V3, Zero cihazlarla uyumludur ve yazılım testleri Jessie ve sonrası işletim sistemleri üzerinde test edilmiştir.  Quectel 3G Module 14.4 Mbps downlink ve 5.76 Mbps uplink hizmeti sağlayabilir. Küçük ve modüler yapısından dolayı MiniIOEx-3G ile beraber projelerinizde rahatlıkla kullanılabilir.  Eğer MiniIOEx’i 3G modül ile beraber almadıysanız ileride planlarınız dahilinde sadece 3G modül siparişi vermeniz yeterli olacaktır. 
+MiniIOEx-3G nerelerde kullanılabilir:
+
+-	IOT uygulamaları,
+-	HDMI üzerinden görüntü aktarma işlemler,
+-	Başka bir PLC veya PC’den verilerin dışarı aktarılması,
+-	Endüstriyel makinelerin uzaktan izlenmesi,
+-	Real Time Data stream işlemleri,
+-	Camera stream işlemleri vb.
+
+MiniIOEx’in 24V ile beslenebiliyor olması endüstriyel ortamlar için oldukça faydalı bir özelliktir. 3G gibi çok fazla güç harcayan ve anlık darbe akımları çeken bir uygulama için de 24V besleme alternatifinin olması haberleşmenin devamlılığı açısından oldukça önemlidir. Bu konu ile ilgili birçok test ve çalışma gerçekleştirilmiştir. Aşağıda 2 adet osiloskop ekran görüntüsü paylaşılmıştır. Bunlardan ilki 3G modemin ilk internete bağlanmaya çalıştığındaki gerilim grafiğidir. Bu grafikte de görülebileceği gibi kırmızı kutu içerisinde kalan kısımda akıma bağlı olarak gerilim düşmesi görülmektedir. Bu gerilim düşmesini mümkün olan en düşük gerilimde tutulmaya çalışılmıştır. Modül 3.3V hassas besleme gerilimi ile çalıştığından dolayı herhangi ciddi bir gerilim düşmesinde modül kendisini resetlyerek çalışmamaktadır. Bundan dolayı modül beslemesinde lineer bir gerilim grafiği elde edilmeye çalışılmıştır. 
+
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/52.jpg)
+
+*3G Modül Bağlantı Esnasında Akım Darbeleri Gerilim Grafiği*
+
+Aşağıda verilen osiloskop ekran görüntüsünde de görüleceği gibi internete bağlandıktan sonra veri indirme/yükleme işleri olsa bile gerilim “steady state” karakteri göstermektedir. 
+
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/53.jpg)
+
+*3G Bağlantıdan Sonraki Durumda Gerilim Grafiği*
+
+
+Bu yapılan çalışmalar sonucunda MiniIOEx ve 3G modül senkronize verimli bir şekilde çalışmaktadır. İlerleyen başlıklarda 3G modülün devreye alma işlemleri gösterilmiştir. Bu işlemleri gerçekleştirebilmek için aşağıdaki tabloda yer alan ürünlere ihtiyaç vardır.
+-	USB Kablo
+-	Anten
+-	Anten kablosu 
+
+Bu ürünler, MiniIOEx-3G aldığınızda ürün paketi içerisinde yollanmaktadır. Harici bir malzeme  alınmasına gerek yoktur. 
+
+## 3G Bağlantı Ayarları ##
+
+Quectel 3G modülü aşağıdaki adımları kullanarak test edebiliriz:
+1- Quectel modulün Shield üzerine takılması,
+2- Sim kartının modül üzerine yerleştirilmesi,
+3- Raspberry’nin Shield üzerine montajı,
+4- USB kablonun Raspberry’ye montajı,
+5- 3G antenin Quectel UC20 modulünün üzerine takılması.
+Fiziksel olarak modülün ve Raspberry’nin montajı yapıldıktan sonra ilgili ‘script’ler çalıştırılarak 3G modül devreye alınabilir. 3G modül beklenildiği gibi internete bağlanma aşamasında yüksek bir akım kaynağına ihtiyaç duymaktadır. Eğer bu akım karşılanmadığında gerilim düşerek modül kendini resetliyor. Bu konuyla ilgili sahada ve lab. Testlerinde birçok araştırma/geliştirme yaptık. MiniIOEX ve benzeri 3G ürünlerimizde de bu gerilim regülatör yapımızı koruyarak 3G bağlantısının daha stabil hale gelmesini sağladık. 
+6- İşletim sistemi üzerinde son güncel işletim sistemi çalıştırılması önerilir. Minicom programı, seri port soketlerinden alınan veriyi gösterir. RS232 ve USB bağlantısı için kullanabiliriz. SIM kartı ve Modül testleri için minicom oldukça kullanışlı bir programdır. Speedtest-cli programını ise cihazın internete bağlantı hızını test amacıyla kullanabilirsiniz.
+İlgili örnekler, dokuman devamında verilmiştir.
+
+-	sudo apt-get update
+-	sudo apt-get minicom
+-	sudo apt-get speedtest-cli
+-	sudo apt-get rpi-update
+-	sudo apt-get upgrade
+-	sudo reboot
+-	git clone git://github.com/pe2a/miniIOEx3G.git
+
+Yükleme işlemleri bittikten sonra terminal açılır ve **lsusb** komutu işletilir. Bu komut o anda USB’ye bağlı cihazları gösterir. Eğer herhangi bir durum yoksa aşağıdaki gibi bir ekranla karşılaşmanız gerekir. Quectel’i göremiyorsak bunun nedeni Quectel UC20 modulü veya USB kablonun kendisinden olabilir. Quectel 3G modulünü terminal ekranından göremiyorsanız modulü takıp çıkartmanız yarar sağlayabilir. **Modül üzerinde montaj işlemleri yaparken enerjisiz çalışmaya özen gösterilmesi gerekmektedir.**
+
+<font color="red">USB Kabloyu değiştirdikten sonra halen Quectel modulü USB üzerinden görülemiyorsa lütfen tarafımıza bildiriniz!</font>
+
