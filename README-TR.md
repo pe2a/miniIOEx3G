@@ -61,9 +61,13 @@ RS232/RS485 portunu sahadaki diğer cihazlarla haberleşmek için kullanabilirsi
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3373.jpg)
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3369.jpg)
-
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3380.jpg)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3383.jpg)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3378.jpg)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3367.jpg)
 
 MiniIOEx3G endüstriyel ortamlar göz önüne alınarak üretildiği için Metal Sac kutu içerisinde gelmektedir. metal Sac Kutu, DIN Rayı ile beraber geldiği için elektrik panolarında montaja uygundur. Eğer DIN Rayı dışında bir yere montaj etmek istenirse 3 adet M2.5 kulakçıklar akıllı vida ile montaj edilebilir. 
 
@@ -79,11 +83,11 @@ MiniIOEx Konnektör özellikleri:
 | Nominal Akım	| 8A |
 | Dayanma/Atlama Gerilimi	| 2000V |
 | Max. Kablo Kalınlığı	| 2.5mm2 |
-| Çalışma Sıcaklığı	| -400C   +1050C |
+| Çalışma Sıcaklığı	| -40C   +105C |
 
 Bu dokumanda Raspberry üzerinde çalışacak MiniIOEx’in nasıl kurulacağı ve Raspberry için gerekli olan SD kart formatı, Linux üzerinde çalışırken bilinmesi gereken temel Linux komutları ve ayarlarından da bahsedilecektir. MiniIOEx ile basit otomasyon uygulamaları da gerçekleştirilerek dokumanda anlatılanların gerçek hayatta da uygulanabilirliği gösterilecektir. 
 
-### MiniIOEx-3G Kimin İçin ###
+### MiniIOEx-3G Kimin İçin? ###
 
 
 Endüstriyel otomasyon projeleri geliştirirken en çok aradığımız özellik: PLC’de C/C++/Python/JAVA gibi yüksek seviye dillerini kullanmak, internete verileri aktarabilmek, PLC üzerinde local veritabanı kurarak SCADA üzerindeki yükü azaltmaktı. Raspberry Pi ilk çıktığında cihaza biraz mesafeli yaklaşsam da sonradan Raspberry Pi ile birçok endüstriyel otomasyon pprojeleri geliştirdim. Raspberry üzerinde GUI uygulamaları, verilerin seri port üzerinden veya doğrudan IO’lar üzerinden alınması ve bu verilerin bir sunucuya aktarılması/WEB uygulaması oluşturulması gibi işlemler oldukça kolaydır. Bunun nedeni Raspberry’nin üzerinde bir işletim sistemi çalışması ve Linux üzerinden programlama yapabilmemizdir. Bu dokumanda da bu başlığa birçok atıf yapacağız. Neden Linux/GNU kullanmamız gerektiği, PLC üzerinde yapması nerdeyse günler süren ve pahalı çözümlerin burada ne kadar yapılabildiğini de birçok başlık altında görebileceğiz. 
@@ -130,10 +134,15 @@ Raspberry ISO Link: https://www.raspberrypi.org/downloads/raspbian/
 
 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
+
 **Note** 
+
 Raspberry’yi görüntü işleme veya yoğun process işlemlerde kullanıyor iseniz MiniIOEX üzerinden 24V ile Raspberry’yi beslemeniz önerilir. 
+
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
+
 **Note** 
+
 Raspberry Pi üzerinde çalışacak SD kartı, formatlanmış bir şekilde mağazamızdan satın alabilirsiniz. 
 
 ## Raspberry Üzerinde Basit Linux Komutları ## 
@@ -142,7 +151,8 @@ SD kartı Raspberry’ye taktıktan sonra Raspberry wireless USB klavye/Mouse ba
 
 MiniIOEx’e enerji verdiğinizde Raspberry’ye de çalışma gerilimi için gerekli gerelim regülatörlerden geçecek ve Raspberry çalışmaya başlayacak. Her işletim sistemi gibi Raspberry’nin de bir açılış ekranı var ve ilk açılış ekranında işletim sistemi üzerinde çalışan servislerin açılıp açılmadığını bu ekrandan izleyeyebilirsiniz. Eğer açılış zamanında bir hata ile de karşılaşırsanız yine bu ekran üzerinden görebilirsiniz. 
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/11.jpg)
+
+<img src="https://https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/11.jpg" alt="drawing" width="500"/>
 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
 **Note**
@@ -389,7 +399,7 @@ Sonrasında MiniIOEx-3G üzerindeki LED’in flash yaptığını görebileceksin
 Programı anlamak için öncelikle bunu açıklamak gerekecektir. Her ne kadar basit bir kod gibi görünse de aslında program birçok işlemi gerçekleştirmektedir. Programda ilk olarak Raspberry üzerindeki GPIO kullanacağımız için kullanacağımız PIN tanımlanmıştır. Bu PIN, MiniIOEx üzerinde LED pinidir. Bu pinin Raspberry’nin hangi bacağına bağlı oldu yukarıda verilmişti. 
 
 ```sh
-$ #define RASP_DIG_tr_LED_1 RPI_V2_GPIO_P1_37 
+#define RASP_DIG_tr_LED_1 RPI_V2_GPIO_P1_37 
 ```
 
 RPI_V2_GPIO_P1_37, bcm2835.h kütüphanesinde tanımlanmıştır. Bunu daha anlaşılır hale gelmesi için kendimiz bu ismi tanımlayacak başka bir isim tanımladık. 
@@ -754,7 +764,7 @@ root@raspberrypi:/home/pi/medIOEx /MedIOEx/bcm2835-1.50# make install
 
 Bu yapılan işlemler sonucunda “bcm2835.h” kütüphanesi *“/usr/lib”* dizini altına yüklendiğinden Raspberry içerisinde herhangi bir dizinde bu kütüphaneyi kullanabilirsiniz. 
 
-### 1.1.2	PYTHON SpiDev Kütüphanesini Kurulumu ###
+### PYTHON SpiDev Kütüphanesini Kurulumu ###
 
 bcm2835.h kütüphanesinin kurulması yukarıda anlatılmıştı. Eğer projenizde Python ile kod yazmak istiyorsanız ve SPI kullanacaksanız SpiDev kütüphanesini yüklemeniz gerekmektedir. Aşağıdaki adımları gerçekleştirerek SPI kütüphanesini yükleyebilirsiniz. 
 
@@ -798,7 +808,6 @@ def readAI(ch):
 
 Dosya yolunun olduğu dizinde terminalde aşağıdaki komutları girerek programı çalıştırabilirsiniz:
 
-
 ```sh
 sudo chmod +x spi-test.py
 sudo python3 spi-test.py
@@ -818,6 +827,7 @@ Tüm bu işlemler bittikten sonra aşağıdaki kodu çalıştırarak MiniIOEx3G 
 
 - GPIO
 - Spidev
+
 Eğer bu kütüphaneler yüklü ise aşağıdaki komutu terminal üzerinde çalıştırarak veya python compiler’ı kullanarak GUI’yi kullanabilirsiniz. 
 
 Kodu çalıştırmak aşağıdaki adımları uygulamanız yeterlidir:
@@ -829,7 +839,9 @@ Kodu çalıştırdığınızda aşağıdaki gibi bir GUI ekranı karşılamaktad
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/26.jpg)
 *MiniIOEx3G GUI test Ekranı*
+
 **Not**
+
 *Kod revize edildiğinde GUI şekildeki gibi görünmeyebilir.*
 Kontrol etmek istediğiniz Digital Çıkışları ‘textbox’ların içerisini ‘1’ yaptıktan  sonra ‘Submit’ tuşuna basarak kontrol edebilirsiniz. Bu sırada da Rölelerin ve Transistor Çıkışların LED’lerinin yandığını görebilirsiniz.  
 GUI programın en güncel haline https://github.com/pe2a/MiniIOEx3G klasörünün altında erişebilirsiniz.  
@@ -881,7 +893,7 @@ MiniIOEx’de 4 adet Digital Output ve 2 adet Digital Input mevcut bulunmaktadı
 	
 Yukarıdaki tablodaki PIN’leri kullanarak kendi GPIO kütüphanenizi yazabilirsiniz. Bu dokumanda da ayrıntılı olarak bu PIN’lerin nasıl kullanılacağı ile örnekler verilmiştir. 
 
-##Digital Input Kullanımı ##
+## Digital Input Kullanımı ##
 
 MiniIOEx’de 2 adet Digital Input olduğundan söz etmiştik. Digital Input ile herhangi bir kontak’dan veri alabilirsiniz. Digital Input çalışma karakteristikleri aşağıda verilmiştir:
 
@@ -953,7 +965,9 @@ MiniIOEx üzerinde bulunan Digital Çıkışları aşağıdaki tabloda görebili
 
 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteICON.jpg" alt="drawing" width="35"/>
+
 **Not**
+
 MiniIOEx’i 24V ile beslediğiniz takdirde tüm Digital Output pinlerini kullanabilirsiniz. Eğer 5V USB ile doğrudan Raspberry üzerinden beslerseniz sadece Röle çıkışlarını kullanabilirsiniz. 
 
 | Teknik Data  	| Digital Output | 
@@ -973,7 +987,6 @@ Digital Input ve Digital Output kullanılarak aslıdan birçok örnek yapılabil
 Aşağıdaki kodda **MiniIOEx3G** üzerindeki tüm **Digital Çıkışlar** kullanılmıştır. 
 
 --asdasdasdasdaBOŞBOŞ******
-
 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/UYGICON.jpg" alt="drawing" width="35"/>
 **Uygulama Örneği #1 – Start/Stop Butonu ile FAN Motoru Kontrolü:**
@@ -1268,7 +1281,9 @@ Analog Input modülünü 4-20mA sensör girişi olarak kullanabilmek için aşa�
 Sahada gördüğümüz uygulamalarda Raspberry’nin giriş gerilimini veya batarya gerilimi ölçme isteği bulunmaktaydı. Bundan dolayı 5V ve 24V güç giriş beslemelerini harici herhangi bir kablolamaya ihtiyaç duymadan doğrudan Raspberry üzerinden MiniIOEx üzerinden ölçebilirsiniz. 
 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
+
 **Not**
+
 24V veya 5V besleme kaynağınızdan herhangi bir uç alıp MiniIOEX konnektörüne girmenize gerek yoktur. Bu giriş beslemeleri dahili olarak MiniIOEx üzerinde ölçülmektedir. 
 
 Örnek bir senaryo ile anlatmak gerekirse; sahada MiniIOEx’i batarya ile beslediniz ve batarya gerilimi düşüyor. Eğer bu gerilim hiç takip edilmez ise Raspberry kapandığında sadece bunu anlayabilirsiniz. Batarya gerilimini takip ettiğiniz takdirde ise batarya gerilimi düşmeye başladığında uyarı verebilir ve kritik seviyenin altına indiğinde ise Raspberry üzerinde çalışan tüm dosyaları kayıt ederek kapatabilirsiniz. 
@@ -1403,6 +1418,7 @@ Basınç sensörü değerleri:
 -	Basınç Max. Değer = 16 Bar
 
 **Not**
+
 Bu sensör değerleri sensörün çeşidine göre farklılık gösterebilir. Her basınç sensörü aynı başlangıç değerlerine sahip olmamaktadır.  
 
 Bu ifadelere göre sensör gerilim çıkışını anlamlı sensör datasına dönüştürmek için aşağıdaki gibi formalize edebiliriz: 
