@@ -203,34 +203,36 @@ Aşağıdaki kodda **MiniIOEx3G** üzerindeki tüm **Digital Çıkışlar** kull
 
 ## Analog Input ##
 
-MiniIOEx’de mcp3208-Analog Input entegresi bulunur. Bu entegre ile sahadan gerilim/akım bilgisini 12bit çözünürlüğünde almak ve Raspberry üzerinde bu verileri işlemek mümkündür. Raspberry ve ADC entegresi birbirleriyle SPI üzerinden haberleşmektedir. Raspberry 2 adet Chip Select barındırmaktadır. Bu bus hatlarında istenildiği gibi programlama yapılabilmektedir. ADC entegresi CS0’a bağlıdır. Default olarak SPI bus ‘disable’ edilmiştir. Kullanılacak kütüphaneye göre “raspi-config” veya manuel olarak “raspi-blacklist.conf” dosyası üzerinden bu enable/disable edilebilir. 
+The *MiniIOEx-3G* has the *MCP3208* Analog Input integration. With this integration, it is possible to receive voltage / current information from the field at **12bit** resolution and process this data on Raspberry. Raspberry and ADC integration communicate with each other via SPI. Raspberry has 2 Chip Selects. These bus lines can be programmed as desired. The ADC integration is connected to CS0. By default, the SPI bus is 'disabled'. This can be enabled / disabled via "raspi-config" or manually via the "raspi-blacklist.conf" file, depending on the library to be used.
 
-MCP3208 ADC entegresi ile saniyede ~75000 data almak mümkündür. 3.3V’da ADC entegresi ~63kSPS kapasitesine sahiptir. Bu değer üzerinden de SCLK değeri 24bits * 63 000 = 1.5MHz bir değer çıkmaktadır. 16 us’de ADC entegresi okuma/yazma yapabilmektedir. eğer bu kadar kısa aralıkta örnekleme almak istiyorsanız üzerinde işletim sistemi çalışan gömülü sistem platformları için sorun olabilir. Bundan dolayı Raspberry üzerindeki ADC programlarımızda ~1ms ‘delay’  ile verileri alma programın sürdürülebilirliği açısından doğru olacaktır. Konu ile ilgili kodumuzda ne gibi değişiklikler yapabiliriz örnekler verilecektir. 
+With the MCP3208 ADC integration it is possible to receive ~ 75000 data at the moment. At 3.3V, the ADC integration has ~ 63kSPS. From this value, the value of SCLK is 24bit * 63 000 = 1.5MHz. At 16 μs, the ADC integrate can read / write. If you want to take sampling in such a short interval, it might be a problem for embedded system platforms running on the operating system. Therefore, in our ADC programs on Raspberry ~ 1ms 'delay' data acquisition will be correct in terms of program sustainability. 
 
-Aşağıdaki tabloda Raspberry üzerindeki hangi PIN’lerin kullanıldığı verilmiştir:
+We will give some examples of what we can do in our code.
 
-| PIN İsmi  	| Raspberry GPIO Yeri | 
+The table below shows which PINs are used on Raspberry:
+
+| PIN Name  	| Raspberry GPIO Place | 
 | --- | --- |
 | Chip Select |	CS0 - 24 |
 | SDO	| 19 |
 | SDI	| 21 |
 | SCLK	| 23 |
 	
-Tablodaki bu verilere göre harici bir SPI ADC haberleşme kütüphanesi de MiniIOEx için oluşturulabilir. ADC verilerini okuyabilmek için aşağıdaki adımlar takip edilmelidir:
--	SPI kütüphanesi yükleme 
--	Yüklenen kütüphaneye göre Raspberry SPI enable/disable 
--	Klemense kablo montajı veya giriş beslemelerin okunması 
+According to this table, an external SPI ADC communication library can also be created for MiniIOEx. The following steps must be followed to read the ADC data:
+- Installing the SPI library
+- Raspberry SPI enable / disable based on installed library
+- Terminal cable installation or reading of input supplies
 
-Raspberry’de SPI kütüphaneleri kullanırken farklı yazılım kütüphanelerinde farklı konfigürasyon ayarları yapılması gerekmektedir. 
+When using SPI libraries in Raspberry, different configuration settings need to be made in different software libraries.
 
-| Kütüphane İsmi	| SPI Enable / Disable | 
+| Library Name	| SPI Enable / Disable | 
 | --- | --- |
-| bcm2835 (C) 	| Disable |
-| Wiring Pi  (C) | 	Enable |
-| SpiDev (Python) |	Disable |
+| bcm2835 (C) 	| **Disable** |
+| Wiring Pi  (C) | 	**Enable** |
+| SpiDev (Python) |	**Enable** |
 
-Yukarıdaki kütüphaneleri kullandığımızda Raspberry’de de o gerekli ayarları yapmamız gerekmektedir. Yani eğer bcm2835 kütüphanesi kullanıyor isek **SPI -> Disable** olmalı. Aksi takdirde programınız ‘Compile Time’da bir hata almasa bile ‘Run Time’da ‘fatal error’ almanız muhtemeldir. 
-Raspberry’nin yeni modellerinde *BCM2836* ve *BCM2837* chip’leri kullanılıyor. Bundan dolayı bcm2835 kütüphanesinin çalışmayacağını düşünmeyin. Kütüphane, *bcmXX* modelleri ile uyumlu çalışıyor. 
+When we use the above libraries, we also need to make the necessary settings in Raspberry Pi. So, if you are using the bcm2835 library **SPI -> Disable ** 
+Otherwise your program will likely get 'fatal error' at 'Run Time' even if it does not get an error in 'Compile Time'. Raspberry's new models  have **BCM2836 ** or **BCM2837** chips are used. So do not think bcm2835's library will not work. The bcm2835 ibrary is compatible with  all bcmXX  models.
 
 
 ## MiniIOEx Analog Giriş Okuma ##
