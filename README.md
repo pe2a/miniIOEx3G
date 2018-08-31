@@ -231,52 +231,53 @@ When using SPI libraries in Raspberry, different configuration settings need to 
 | Wiring Pi  (C) | 	**Enable** |
 | SpiDev (Python) |	**Enable** |
 
-When we use the above libraries, we also need to make the necessary settings in Raspberry Pi. So, if you are using the bcm2835 library **SPI -> Disable ** 
+When we use the above libraries, we also need to make the necessary settings in Raspberry Pi. So, if you are using the bcm2835 library **SPI -> Disable** 
 Otherwise your program will likely get 'fatal error' at 'Run Time' even if it does not get an error in 'Compile Time'. Raspberry's new models  have **BCM2836 ** or **BCM2837** chips are used. So do not think bcm2835's library will not work. The bcm2835 ibrary is compatible with  all bcmXX  models.
 
 
-## MiniIOEx Analog Giriş Okuma ##
+## MiniIOEx-3G Analog Input Read ##
 
-MiniIOEx üzerinde bulunan entegre ile sahadan 2 adet analog giriş alınabilir. MiniIOEx dahili olarak 5V ve 24V besleme taraflarındaki gerilimleri de okumaktadır. Sahadan gelecek gerilim değeri max. 33V olmalıdır. MiniIOEx’e 4-20mA değişken akım kaynağı bulunan sensörler de montaj edilebilir. Daha yüksek gerilimlere çıktığınızda Raspberry’nin veya MiniIOEx’in zarar görme ihtimaline karşı dikkatli olmak gerekmektedir. Aşağıdaki görselde MiniIOEx ve Raspberrya arasındaki Analog Input modeli anlatılmaktadır. Bu modelde de görüleceği gibi 5V ve 24V okunması MiniIOEx üzerinde bulunan gerilim bölücülerle gerçekleşmekte ve sahadan da MiniIOEx’in okuyabileceği 2 adet Analog Input girişi bulunmaktadır. MiniIOEx giriş gerilimlerini ilgili kütüphaneden okuyabilirsiniz ve işlemlerinizde kullanabilirsiniz. 
+MiniIOEx-3G can provide 2ch analog inputs can be received from the field. The MiniIOEx also reads the voltages on the 5V and 24V internal supply. The value of the field shall be max.**33.0V**. Sensors with a **4-20mA** variable current source can also be installed in the MiniIOEx-3G. Be careful with the possibility of damaging the Raspberry or MiniIOEx-3G when you are at higher voltages. 
+
+In the following image, the Analog Input model between MiniIOEx-3G and Raspberry Pi integration is explained. As seen in this model, the 5V and 24V readings are carried out with the voltage divider on the MiniIOEx and there are 2ch Analog Input inputs that MiniIOEx-3G can read from the field. You can read MiniIOEx-3G input voltages from the relevant library and use them in your operations.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/35.jpg)
-*MiniIOEx Analog Giriş*
+*MiniIOEx Analog Input*
 
-Aşağıdaki tabloda sahadan gelecek analog verilerin girmesi gereken klemens numaraları bulunmaktadır. 
+The following table contains the terminal numbers for the analog data to be input from the field. 
 
-
-| Fiziksel Input | MiniIOEx Klemens No | 
+| Physical Input | MiniIOEx-3G Terminal No | 
 | --- | --- |
 | Analog Input 1 |	14 |
 | Analog Input 2 |	12 |
 | Analog Input GND |	13 |
 | Analog Input GND |	11 |
 
-MiniIOEx Analog Giriş modülünü aşağıdaki klemenslere kablo girişi yaparak kullanabilirsiniz:
+You can use the MiniIOEx-3G Analogue Input Module by wiring the following terminals:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/36.jpg)
-*MiniIOEx Analog Input Klemens Numaraları*
+*MiniIOEx Analog Input Terminal Number*
 
-Analog Input modülünü 4-20mA sensör girişi olarak kullanabilmek için aşağıdaki butonları **ON** yönüne doğru çekilmesi gerekmektedir. 
+**IMPORTANT NOTE**
+To use the analog input module as a 4-20mA sensor input, the following buttons must be pulled in the direction of ** ON **.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/37.jpg)
-*MiniIOEx 4-20mA Seçim Butonu ON yönüne doğru çekilecektir*
+*MiniIOEx 4-20mA Selection Button will be pulled in the direction of ON*
 
-Sahada gördüğümüz uygulamalarda Raspberry’nin giriş gerilimini veya batarya gerilimi ölçme isteği bulunmaktaydı. Bundan dolayı 5V ve 24V güç giriş beslemelerini harici herhangi bir kablolamaya ihtiyaç duymadan doğrudan Raspberry üzerinden MiniIOEx üzerinden ölçebilirsiniz. 
+In the applications we saw on the field, there was a request to measure Raspberry's input voltage or battery voltage. Therefore, you can measure 5V and 24V power input supplies directly from Raspberry via MiniIOEx without any external cabling.
 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
 
-**Not**
+**Important Note**
+There is no need to take any end from your 24V or 5V supply source and enter the MiniIOEx connector. These input feeds are measured internally on MiniIOEx.
 
-24V veya 5V besleme kaynağınızdan herhangi bir uç alıp MiniIOEX konnektörüne girmenize gerek yoktur. Bu giriş beslemeleri dahili olarak MiniIOEx üzerinde ölçülmektedir. 
+To describe with a sample scenario; You feed the MiniIOEx with the battery and the battery voltage is dropping. If this voltage is never tracked, you can only understand it when Raspberry is shut down. If you follow the battery voltage, you may be warned when the battery voltage begins to fall and when it drops below the critical level, you can turn off all files running on the Raspberry.
 
-Örnek bir senaryo ile anlatmak gerekirse; sahada MiniIOEx’i batarya ile beslediniz ve batarya gerilimi düşüyor. Eğer bu gerilim hiç takip edilmez ise Raspberry kapandığında sadece bunu anlayabilirsiniz. Batarya gerilimini takip ettiğiniz takdirde ise batarya gerilimi düşmeye başladığında uyarı verebilir ve kritik seviyenin altına indiğinde ise Raspberry üzerinde çalışan tüm dosyaları kayıt ederek kapatabilirsiniz. 
+Sensors used in industrial applications generally have * 0-10V * and * 4-20mA * outputs. As mentioned above, the MiniIOEx allows up to 33V . So you can use these sensors with MiniIOEx you can easily measure.
 
-Endüstride kullanılan sensörlerin genelde çıkışları *0-10V* ve *4-20mA*’dir. Yukarıda da bahsedildiği gibi batarya giriş gerilimlerin ölçülmesi için MiniIOEX 33V’a kadar müsaade ediyor. Bundan dolayı satın alacağınız Analog Çıkışlı sensörleri MiniIOEx ile rahatlıkla ölçebilirsiniz. 
+Everything is measured ** DIGITAL ** when operating in microprocessors. That is, although the outputs of the sensors are voltage, they are reflected in the ADC integrations as ** DIGITAL ** according to the resolution. In MiniIOEx, we also digitally measure the voltage information from the field. If this incoming ** DIGITAL ** value is written we can write simple functions to convert real sensor value. 
 
-Mikroişlemcilerde işlem yaparken herşeyin değeri **DİGİTAL** olarak ölçülür. Yani sensörlerin çıkışları gerilim olsa da bu ADC entegrelerine, çözünürlüğüne göre **DİGİTAL** değer olarak yansır.  Raspberry’de de yazdığımız fonksiyonlarda sahadan gelen gerilim bilgisini digital olarak ölçüyoruz. Bu gelen **DİGİTAL** değeri ise yazacağımız basit fonksiyonlar ile öncelikle gerilim/akım değerine sonra da sensörlerin anlamlı verisine (*Basınç, Sıcaklık, CO2*) bilgilere dönüştürebiliriz. 
-
-Aşağıdaki tabloda *MiniIOEx Analog Input* okuma verisi için gerilim sınır değerleri ve bunlara karşılık gelen **DİGİTAL** değerler bulunmaktadır. 
+The following table shows the voltage limit values for the MiniIOEx Analog Input * read data and the corresponding ** DIGITAL ** values.
 
 
 | Analog Giriş Gerilimi Min. 	| Analog Digital Engtegre(ADC) Sayısal Değer |
