@@ -60,6 +60,7 @@ The Raspberry-based control solutions enable you to run any applications for vai
 - Machine Tools,
 - Robotics in Handling, Production and Assembly,
 - Handling and Assembly Technology,
+- Railway applications, 
 - AV and Media Technology,
 -	Real time data stream,
 -	Camera stream via 3G,
@@ -279,47 +280,46 @@ Everything is measured ** DIGITAL ** when operating in microprocessors. That is,
 
 The following table shows the voltage limit values for the MiniIOEx Analog Input * read data and the corresponding ** DIGITAL ** values.
 
-
-| Analog Giriş Gerilimi Min. 	| Analog Digital Engtegre(ADC) Sayısal Değer |
+| Analog Input Voltage Min. 	| Analog/Digital Circuit(ADC) Min. Digital Value |
 | --- | --- |
 | 0V	| 0 |
 
 
-| Analog Giriş Gerilimi Max. 	| Analog Digital Engtegre(ADC) Sayısal Değer |
+| Analog Input Voltage Max. 	| Analog/Digital Circuit(ADC) Max. Digital Value |
 | --- | --- |
-| 33V	| 4095 |
+| 33.0V	| 4095 |
 
-Buradan yola çıkarak yazılımda gerekli fonksiyonlar yazılabilir. Bu dokumanda sensör verisi nasıl okunur ve anlamlı değerlere çevrilir örneklerle anlatılacaktır. 
+From there, the necessary functions can be written in the software. In this document, how to read the sensor data and translate it into meaningful values will be explained with examples.
 
-ADC entegresi MiniIOEx ile SPI üzerinden veri alışverişini sağlamaktadır. Bundan dolayı mcp3208 kütüphanesinde Raspberry SPI kütüphaneleri de kullanılmıştır. Bu kütüphanelerin nasıl kullanıldığı da farklı programlama dili örnekleriyle yine bu dokumanda paylaşılmıştır. MCP3208 entegresi 8 adet kanalı ölçmektedir. MiniIOEx’de bu kanalların sadece 4’ü kullanılmıştır. 
+The ADC circuit of MiniIOEx-3G provides data exchange via SPI. Therefore, Raspberry Pi SPI libraries are also used to read from MCP3208. How these libraries are used is also shared in this document with different programming language examples. The MCP3208 circuit 8 channels. Only 4 of these channels are used in MiniIOEx.
 
-| Fiziksel Giriş	| Mcp3208 Kanal İsmi |
+| Physical Input	| MCP3208 Channel Name |
 | --- | --- |
 | Analog Input 1	| 0 .  |
 | Analog Input 2	| 1 .  |
-| Analog Input 3 (Raspberry Besleme - 5V) |	6. |
-| Analog Input 4 (MiniIOEx Besleme - 24V) |	7. |
+| Analog Input 3 (Raspberry Pi Power In - 5V) |	6. |
+| Analog Input 4 (MiniIOEx-3G Power In - 24V) |	7. |
+
+As shown in the table above, the 6th and 7th legs of the MCP3208 circuit are used to measure the voltages on the Raspberry Pi and MiniIOEx-3G. When you run the Analog Input test code written in Python, you should see values of ~ 620 on channel 6. This value is the Raspberry Pi feed input voltage given in the above table. With a simple calculator it is possible to transform this digital value into a truly meaningful value.
+
+## Reading Analog Input Value from MiniIOEx-3G ##
+
+The following values are fixed values for MiniIOEx Analogue Reading functions. When you write your own function, you can use the following limit values.
+
+- Digital value read from the Entire (x),
+- Max. 12bit ADC Digital Value -> 4095 (2 ^ 12),
+- Max. Field Input Voltage -> 33V.
+
+As a result, if we want to find the voltage value of the power supply supplied by Raspberry, we have to solve the following equation:
 
 
-Yukarıdaki tabloda görüleceği gibi MCP3208 entegresinin 6. ve 7. Bacakları Raspberry üzerindeki gerilimleri ölçmek için kullanılmıştır. MiniIOEx konnektörlerine hiçbirşey bağlamasanız bile 24V veya 5V gerilim bağladıysanız Raspberry üzerindeki gerilimi görmeniz gerekmektedir.
+- * eq1. * Power Supply Input Voltage = (Digital Data (x) * Max Field Input Voltage) / (Max.Digital Data)
+- * eq2. * Power Supply Input Voltage = (620 * 33V) / (4095) = 4.996V
 
-Python’da yazılmış Analog Input test kodunu çalıştırdığınızda 6.kanalda yaklaşık ~620 değerlerini görmeniz gerekir. Bu değer yukarıdaki tabloda verilen Raspberry besleme giriş gerilimidir. Basit bir hesap ile bu digital değeri gerçek anlamlı bir değere dönüştürmek mümkündür. 
+In order to read the digital value from the MCP3208 integration, the code block below is shared and the conversion of this value to voltage and sensor data is detailed in the headers of the document. 
 
-## Analog Giriş Okuma Fonksiyon Ayarlarının Yapılması ##
-
-Aşağıdaki değerler MiniIOEx Analog Okuma fonksiyonları için sabit değerlerdir. Siz de kendi fonksiyonunuzu yazdığınızda aşağıdaki sınır değerlerini kullanabilirsiniz. 
-
--	Entegre’den Okunan Digital Değer (x), 
--	Max. 12bit ADC Digital Değer -> 4095 (2^12),
--	Max. Saha Giriş Gerilimi -> 33V .
-
-Sonuç olarak Raspberry’nin beslendiği güç kaynağının gerilim değerini bulmak ister isek aşağıdaki denklemi çözmemiz gerekiyor:
-
-
--	*eq1.* Güç Kaynağı Giriş Gerilimi = (Okunan Digital Data(x) * Max.  Saha Giriş Gerilimi)/ (Max.Digital Data )
--	*eq2.* Güç Kaynağı Giriş Gerilimi =(620 * 33V)/(4095 ) = 4.996V 
-
-MCP3208 entegresinden digital değer okumak için aşağıda kod bloğu paylaşılmış ve dokumanın ilerleyen başlıklarında ise bu değerin gerilim ve sensör datalarına çevirme işlemleri ayrıntılı olarak işlenmiştir.
+**Important Note**
+Since the Python library is used, Raspi-Config -> Interfacing Options -> SPI * enable * is required.
 
 
 ```sh
@@ -339,7 +339,8 @@ def readAI(ch):
 
         return (val & 0x0FFF)  
 ```
-Yukarıda karşılığı verilen Python kodunun C dilinde yazılmış eşdeğeri aşağıdaki gibidir. Çalışmalarınızda hangi programlama dili ile çalışacaksanız ilgili kod bloğunu seçebilirsiniz.  
+
+The equivalence of the above Python code written in C language is as follows. You can select the code block for which you want to work with the programming language in your work.
 
 ```sh
 //AI reading channel val
@@ -390,23 +391,24 @@ int smallex_getVal(const int channel){
     return adcDigNumber; //should be 0 - 4095
 ```
 
-Bu fonksiyon bloğunu programınızda kullanabilirsiniz. Herhangi bir gerilim ölçüm aleti (multimetre) ile de bu değeri kontrol edebilirsiniz. 
-5V hattında MiniIOEx üzerinde herhangi bir gerilim düşürücü eleman bulunmadığı için bu değer doğrudan Raspberry’nin beslendiği gerilimdir. 24V değerini ölçtüğünüzde bulunan gerilim değerine yaklaşık olarak 1.4V (0.7V * 2) eklemeniz gerekmektedir 24V hattında aşağıdaki köprü diyot olduğundan dolayı. Aşağıdaki resimde MiniIOEx güç besleme girişi köprü diyot bağlantısını görebilirsiniz. 
+You can use this function block in your program. You can also check this value with any voltage meter (multimeter).
+Since there is no voltage dropping element on the MiniIOEx in the 5V line, this value is the voltage that Raspberry feeds directly. However, you need to add approximately 1.4V (0.7V * 2) to the voltage value that you measure the 24V value because the following bridge diode is on the 24V line. In the illustration below you can see the MiniIOEx-3G power supply input bridge diode connection.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/38.jpg)
 
 ## Seri Port ##
 
-Seri haberleşme, telekom standartlarında belirtilmiş fiziksel kabuk üzerinde standartlarda belirtilmiş yazılım protokelleriyle çalışan ve çift taraflı veri iletişimine imkân veren bir haberleşme çeşididir. Endüstriyel sistemlerde seri haberleşme denilince genel olarak RS232 ve RS485 protokelleri akla gelir. MiniIOEx, RS232 ve RS485 fiziksel haberleşme seri yollarını destekler. RS-232 kısa mesafeli iletişim için tasarlanmış bir seri iletişim standardıdır. RX ve TX üzerinden iletilen bilgiler referans seviyesi olan GND’ye göre belirlenmektedir. RS-232 ile kısa mesafeli ve 115.2 Kbit/sn gibi hızlara ulaşılabilmektedir. Bu standart gürültülü ortamlar için uygun değildir. RS-232 sürücüleri birçok alıcıyı aynı anda sürebilecek şekilde tasarlanmamıştır.
+Serial communication is a type of communication that operates on software protocols specified in the standard on the physical shell specified in the telecom standards and allows for bi-directional data communication. In industrial systems, RS232 and RS485 protocols generally come to mind in terms of serial communication. MiniIOEx supports RS232 and RS485 physical communication serial paths. RS-232 is a serial communication standard designed for short distance communications. The information transmitted via RX and TX is determined according to the reference level GND. With RS-232, short distances and speeds of 115.2 Kbit / s can be achieved. This standard is not suitable for noisy environments. RS-232 drives are not designed to be able to sustain many receivers at the same time.
 
-UART (*Universal Asynchronous Receiver/Transmitter*) seri bus standart olarak Raspberry üzerinde iki kablo ile seri haberleşmeyi sağlar. cmdline.txt’de seri port değişkenleri görülebilir. Raspberry 3 ile beraber seri port ayarları “raspi-config”ekranında yapılabilir. Bu değişiklikler yapıldıktan sonra Raspberry yeniden başlatılmalıdır. Bu dokumanda bu ayarların nasıl yapılabileceği anlatılmıştır. Raspberry Pi üzerindeki Tx ve Rx pinleri seri haberleşmeden sorumludur. Başka bir seri port donanımı üzerinde bulunan bir cihaz ile raspberry kolaylıkla haberleşebilir.  Eğer Raspberry başka bir seri port cihazı ile haberleşecekse “console login” özelliği kaldırılmalıdır. Bu değişlikliklerden de bahsedilecektir. 
+UART (*Universal Asynchronous Receiver / Transmitter*) serial bus provides serial communication with two cables on Raspberry as standard. With Raspberry 3, serial port settings can be made on the "raspi-config" screen. Raspberry Pi should be restarted after these changes are made. This document explains how to make these settings. Tx and Rx pins on Raspberry Pi are responsible for serial communication. Raspberry can easily communicate with a device on another serial port hardware. If Raspberry will communicate with another serial port device, "console login" feature should be removed. These changes will also be mentioned.
 
-RS-485 daha uzun mesafelerde, gürültülü ortamlarda, daha yüksek hız gerektiren yerlerde, daha çok alıcı vericinin gerektiği yerlerde kullanılmak üzere geliştirilmiş bir seri iletim ortamıdır. MiniIOEx bu iki seri iletim yolunu da destekler. 
-Aşağıda MiniIOEx üzerinde bulunan seri port pin tablosu paylaşılmıştır:
-MiniIOEx Seri Port Pin Tablosu:
+The RS-485 is a serial transmission developed for use at longer distances, in noisy environments, where higher speeds are required. MiniIOEx-3G also supports these two serial transmission routes.
 
+The serial port PIN table on the MiniIOEx is shared below.
 
-| Seri Port Pin | MiniIOEx Klemens No | 
+MiniIOEx Seri Port Pin table is given at below:
+
+| Seri Port Pin | MiniIOEx-3G Terminal No | 
 | --- | --- |
 | RS232RX	| 19 |
 | RS232TX	| 20 |
@@ -416,6 +418,9 @@ MiniIOEx Seri Port Pin Tablosu:
 
 Raspberry’de tek bir UART çıkışı olduğundan dolayı MiniIOEx’de 2 adet seri port converter kullanıyoruz: UART/RS232 ve UART/RS485. Bu iki converter’ı aynı anda kullanamadığımız ziçin seçim yapmamız gereklidir. Aşağıdaki gibi kullanacağınız seri port’a göre seçim yapabilirsiniz: RS485 için yukarı yönde switch’leri ileri itebilir, RS232 için diğer yönde seçim yapabilirsiniz. 
 
+Since Raspberry has a single UART output, we use serial port converters in MiniIOEx: UART / RS232 and UART / RS485. You can control a button on MiniIoEx and you can choose which serial port can be used. 
+
+If we can not use these two converters at the same time, we have to make a choice. You can choose according to the serial port you will use as follows: For RS485, you can push upwards the switches, for RS232 you can choose the other direction.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/40.jpg)
 *RS485 Seçimi*
