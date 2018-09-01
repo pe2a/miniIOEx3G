@@ -508,7 +508,7 @@ The 9600 number entered in the parameter is the baudrate rate. You can change th
 In this document we will illustrate with practical examples how we can obtain data via **"Entes MPR63 Energy Analyzer"** using RS485 as an example.
 
 
-## 3G / GPS ##
+## 3G / GPS Commissioning##
 
 One of the most important and basic features of the MiniIOEx is that it has a structure that is compatible with 3G and 4G communication. So if you are in a place where Wireless and Ethernet are not available or if work is being done on site, data communication with 3G is the most convenient method. This communication can be fully exploited from the data exchange capacity of 3G since it is realized via USB rather than through serial port. 3G services have been added to the MiniIOEx because some service providers can not provide full performance on 3G services. It is compatible with MiniIOEx-3G, Raspberry V2, V3, Zero devices and software tests have been tested on Jessie and later operating systems. Quectel 3G Module can provide 14.4 Mbps downlink and 5.76 Mbps uplink service. Due to its compact and modular structure, it can be easily used in projects with MiniIOEx-3G. If you did not purchase the MiniIOEx with the 3G module, it will be enough to place only 3G module in your plans in the future.
 Where MiniIOEx-3G is available:
@@ -540,7 +540,7 @@ As a result of this work MiniIOEx and 3G module works synchronously and efficien
 
 These products are shipped in the product package when you buy MiniIOEx-3G. There is no need to buy an external material.
 
-## 3G Connection Configuration ##
+## Configuration of 3G Connection ##
 
 We can test the Quectel 3G module using the following steps:
 1- Fitting on Quectel Modul Shield,
@@ -568,11 +568,7 @@ After the installation is finished, the terminal is opened and the **lsusb** com
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/54.jpg)
 
-*Ekranda görülen diğer USB portları kablosuz klavye/mouse veya taşınabilir USB disk olabilir.*
-
-Fiziksel olarak USB bağlı olduğuna göre minicom üzerinde yapılacak setup ayarları ile ATkomutları modüle gönderebiliriz. Minicom ayrı bir terminalde açılarak aşağıdaki adresten miniIOEx-3G-test.py dosyası çalıştırılarak AT komutları cevapları görülebilir. Bu cevaplar aşağıda açıklanacaktır. AT komutları 3G modül ile haberleşmeden kullanılır. Bu komutlar ile cihaz üzerindeki bilgilerin sorgulanabileceği gibi SMS, Arama gibi özellikler de bu komutlar sayesinde gerçekleştirilebilir.
-
-* Other USB ports on the screen can be wireless keyboard / mouse or portable USB disk. *
+*Other USB ports on the screen can be wireless keyboard / mouse or portable USB disk.*
 
 Since MiniIOEx-3G physically connected to USB, we can send the **AT** commands.  AT commands can be used communicating with the 3G module. With these commands, the information on the device can be queried as well as features such as SMS and Search can be performed by these commands. Just write these commands on the Minicom. 
 
@@ -726,7 +722,342 @@ int main() {
 
 
 ```
-
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/63.jpg)
+
+## Application Samples ##
+
+### Sample #1 – FAN Motor Control with Start/Stop Button on MiniIOEx-3G ###
+
+Below is a nice example that we can create using 2 Digital Inputs and 1 Digital Output. 'FAN' is operated by receiving data from *'Start'* and *'Stop'* buttons. In fact, this FAN could be even a big fan or elevator engine in real life. As in the picture below, a small fan is preferred in this application and this fan output is connected to the transistor output output.
+
+The equipments required in this application:
+
+-	1ch 24VDC FAN [24VDC 80mA]
+-	1ch Start Butonu - Normally Open (NO)
+-	1ch Stop Butonu – Normally Close (NC)
+-	24VDC 30W Power Supply [Phoenix UNO Power Supply is preferred]
+-	Raspberry Pi 3 
+-	Class 10 16GB SD Card 
+
+The libraries required in this application:
+
+-	Python GPIO
+-	Python SpiDev
+
+
+**Automation Scenario**:
+*FAN motor works when Start button is pressed for 1 second; If you press the 1sec Stop button, the FAN Motor will stop.*
+
+Although the scenario seems very simple, we will be working together with Raspberry Pi to learn many of the applications we have learned before. At first, we will code the script with Python, we will carry it into WEB and we will design a FAN engine web site which can be accessed from anywhere by adding some Javascript. 
+
+If the scenario is going to be a chart, we can get the following chart. We also need to program according to this chart:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/300.jpg)
+
+As you can see in the graphic above, when the Start button or the Stop button is pressed for 1 second, the value of the FAN motor must change to the rising or falling edge. The 1 second duration actually provides 'digital filter'. That means that the Xms energized Start button allows for the FAN motor to move because of any interference. Such filters are important for the software application to work with the hardware.
+
+The following terminal numbers are used in connection:
+
+| Terminal Number | Comments |
+| --- | --- |
+| 18 |	Digital Input - 1 | 
+| 16 |	Digital Input - 2 |
+| 10 | 	Transistor Output 1 |
+
+*The any relay of the MiniIOEx-3G is not used in this application. The reason for this is that the load to be switched requires high current.*
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/30.jpg)
+*Fan Motor Working Process- 1*
+
+We can do the wiring as above. **FAN GND**is shorted to power supply GND. The voltage is given by switching from the transistor by software. In the following illustration, the cable ends are shared:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/31.jpg)
+*Fan Motoru Terminal Cable Commissioning *
+
+
+```python
+import RPi.GPIO as GPIO
+import time
+
+#definition GPIO
+RASP_DIG_IN_1 = 6 #START BUTTON
+RASP_DIG_IN_2 = 13  #STOP BUTTON
+RASP_DIG_tr_OUT_1 = 21 #TRANSISTOR Output 
+
+#init function
+GPIO.setmode(GPIO.BCM) #bcm library
+#for digital inputs
+GPIO.setup(RASP_DIG_IN_1,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(RASP_DIG_IN_2,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(RASP_DIG_tr_OUT_1,GPIO.OUT)
+GPIO.setwarnings(False)
+
+while 1:
+    DI_In1 = not GPIO.input(RASP_DIG_IN_1)
+    DI_In2 = not GPIO.input(RASP_DIG_IN_2)
+    
+    if  DI_In1:
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.HIGH)
+
+    if not DI_In2:
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.LOW)
+    
+    time.sleep(1) #for holding time   
+
+```
+We can examine the code at below.
+
+```python
+    DI_In1 = not GPIO.input(RASP_DIG_IN_1)
+    DI_In2 = not GPIO.input(RASP_DIG_IN_2)
+```
+
+This code aims that our intended Digital Inputs are **PULL_UP** so that Raspberry arrives *1*  even if the buttons are not pressed at the moment of opening. We are returning the inputs here to the physical value by adding **not**.
+
+```python
+if  DI_In1:
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.HIGH)
+
+if not DI_In2:
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.LOW)
+```
+
+In this structure, the **Start** button is pressed and the FAN motor starts to work. The only requirement to interrupt this work is to press the **Stop** button for 1 second. The **Stop** button is Normally Close (NC), so its value always will be **1** if the stop button is not pressed. When the **Stop** button is pressed, the value will be **0**.
+
+
+
+### Sample #2 – Controlling of FAN Motor with Start/Stop and WEB Reference ###
+
+In this application, WEB reference will be used with Start/Stop button. Firebase is the key of WEB controlling. the following libraries must be installed:
+
+-	PYTHON GPIO
+-	PYTHON Firebase-pyrebase
+
+**Automation Scenario:**
+
+If **Start button** is pressed for 1 second or **WEB Start button** is activated, FAN motor will work.
+If the **Stop button** is pressed OR the **WEB STOP button** is activated, the FAN Motor is stopped.
+
+We create a database name on Firebase called **WEBSample** and their child is **StartButton** and **StopButton**. Since these values come from WEB, we have to adjust our program accordingly it.
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/33.jpg)
+*Firebase WEB Reference Values*
+
+Since the **StopButton Reference** on the WEB does not have a feature like Normally Closed, we can get it as a normal variable. Since the variables stored in the Firebase are strings, we need to act accordingly. You can also use it directly as a string, or you can convert it to *integer*. Web Reference  or physical button value is necessary for the operation of the FAN motor.
+
+```python
+if (DI_In1 or myConnect.WEB_REF_1 == '1'):
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.HIGH)
+        print("web ref_1")
+#stop comes from firebase DB
+if (not DI_In2 or myConnect.WEB_REF_2 == '1'):
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.LOW)
+```
+Our software is currently working on values coming from WEB and values coming from physical.
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/34.jpg)
+*Firebase WEB Referance Values*
+
+When you change the **StarButton** value from the **Firebase** console screen, you can see that the FAN engine starts to rotate. Of course this can be changed and assigned according to the user. Our program will now start to work through a WEB database. This will now allow us to reach Raspberry Pi from a world outside. As an example, you can access Raspberry Pi via mobile application or WEB application when required services are written in this database. Accessing Raspberry Pi via a server can also result in security weakness. As a result, you need to configure security for your server against security adjustments and possible attacks. In the case of services such as Firebase, you are unlikely to encounter such a problem.
+
+Below is the application you can control the FAN engine via Firebase. Here are some parameters that will be available via Firebase. Once you log in to Firebase, you can easily retrieve this information from the main page. You need to use these parameters in applications you write.
+
+Here's what these parameters are:
+
+```python
+myFirebaseConfig = {
+              "apiKey": "",
+              "authDomain": "",
+              "databaseURL": "",
+              "projectId": "",
+              "storageBucket": "",
+              "messagingSenderId": "",
+        }
+```
+You can find out that'a all the program at below:
+
+```python
+import RPi.GPIO as GPIO
+import time
+import spidev
+import pyrebase
+
+RASP_DIG_IN_1 = 6 #START BUTTON
+RASP_DIG_IN_2 = 13  #STOP BUTTON
+RASP_DIG_tr_OUT_1 = 21 #RPI PIN: 40
+
+#init function
+GPIO.setmode(GPIO.BCM) #bcm library
+#for digital inputs
+GPIO.setup(RASP_DIG_IN_1,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(RASP_DIG_IN_2,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+#transistor output definition
+GPIO.setup(RASP_DIG_tr_OUT_1,GPIO.OUT)
+GPIO.setwarnings(False)
+
+#firebase connection 
+class connectCloudPolly():
+    
+    def __init__(self,myConfig):
+        
+        self.myCloudConfig = myConfig
+        self.cloud = pyrebase.initialize_app(self.myCloudConfig)
+        self.db = self.cloud.database()
+       
+       
+    
+    def ReadButtonInf(self):
+        self.WEB_REF_1 = self.db.child("/WEBSample/StartButton/").get().val()
+        self.WEB_REF_2 = self.db.child("/WEBSample/StopButton/").get().val()
+        
+        print(bWEB_REF_1,bWEB_REF_2)
+        
+#firebase connection struct 
+#you can easily get the values from firebase console
+myFirebaseConfig = {
+              "apiKey": "",
+              "authDomain": "",
+              "databaseURL": "",
+              "projectId": "",
+              "storageBucket": "",
+              "messagingSenderId": "",
+        }
+#firebase connection
+myConnect = connectCloudPolly(myFirebaseConfig)
+
+while 1:
+    DI_In1 = not GPIO.input(RASP_DIG_IN_1)
+    DI_In2 = not GPIO.input(RASP_DIG_IN_2)
+    
+    myConnect.ReadButtonInf()
+                #start comes from firebase DB
+    if (DI_In1 or myConnect.WEB_REF_1 == '1'):
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.HIGH)
+        print("web ref_1")
+                    #stop comes from firebase DB
+    if (not DI_In2 or myConnect.WEB_REF_2 == '1'):
+        GPIO.output(RASP_DIG_tr_OUT_1, GPIO.LOW)
+    
+    time.sleep(1) #for holding time
+
+```
+
+
+### Sample #3 – Reading values from Energy Analyser via RS485###
+
+RS485 sayesinde birçok cihaza bağlanabilir ve bunlardan veri okuyabiliriz.  Raspberry ve MiniIOEx ile bu verileri 3G veya Ethernet/Wireless üzerinden merkeze gönderebilir, bu verilerin sayesinde IO’ları kullanarak eyleme geçebilir veya bu verileri yüksek çözünürlükte depolayabiliriz. Bu tarz bir işlem kolay gibi görünse de PLC veya gömülü PC’lerde oldukça yüksek maliyetler çıkmaktadır. 
+Aşağıda sistemde kullandığımız topoloji gözükmektedir. Topolojide harici bir bilgisayar da gözükmektedir. Bilgisayarı kullanmamızdaki amaç RS485 fiziksel seri yolu üzerinden MODBUS RTU protokolü ile veri alış/verişi yaptığımız için bu verileri nasıl aldığımızı göstermektir. Yani enerji analizöründen veri alırken hangi sorgularla aslında bu verileri alıyoruz bunu harici bir bilgisayar üzerinden rahatlıkla görebileceğiz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/45.jpg)
+*RS485 Cihaz Topoloji*
+
+Yukarıdaki sistemde Bilgisiyar master/slave , MiniIOEx master ve Analizör slave ‘dir. RS485, *A* ve *B* uçları sistemde kısa devredir. Bilgisiyar’da kurulu olan **“Modbus Master”** ve **“Terminal v1.9b”** programları sayesinde Entes Analizör’den veri okumak için gitmesi gereken referans kodları görebiliyoruz. Tabi bunu yapmadan önce Analizör’ün hangi register’larında hangi bilgiler var bunları bilmemiz gereklidir. Bunu da Entes Analizör’ün analizör dokuman internet sayfasında bulunan **“Data Mapping”** dokümanından çıkartabiliriz.
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/46.jpg)
+*Entes Analizör Register Tablosu*
+
+Buradaki tabloda görüldüğü gibi *cosq* değerleri *19,20,21* nolu register’larında yer almaktadır. (Register tablosunda ilk değerin 0’dan başladığı görülmektedir.) cosq değeri için çözünürlük 1000 olduğu için gelen değerin gerçek cosq değerinde olması için 1000’e bölünmesi gereklidir. Örnek olarak 999 değeri geldiğinde bu değerin cosq = 999/1000 = 0.99 olması gerekmektedir. Entes analizöre herhangi Akım/Gerilim uçları bağlanmadığı için arada faz farkı oluşmamakta ve bundan dolayı cosq = 1 değeri görmemiz gereklidir. Sahada uygulama yapıldığında bu dokuman kullanarak diğer bilgiler (gerilim, akım vs.) de alınabilir. 
+Analizörü bilgisiyar ve MiniIOEx klemens uçlarına bağladığımızda veri okuma işlemlerine geçebiliriz. 
+
+
+| MiniIOEx Klemens Ucu |MPBR63 Analizör Haberleşme Klemens Ucu | 
+| --- | --- |
+| RS485-B, 19	| RS485-B, 15 |
+| RS485-A, 20	| RS485-A, 14 |
+
+İlk olarak bilgisayarda kurulu olan **MODBUS MASTER** programında kaç adet register okumak istediğimizi, node/slave adresi gibi temel bilgileri yazmamız gerekiyor. Aşağıdaki ekran görüntüsünden de örnek bilgiler edinilebilir:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/47.jpg)
+*HEX Formatında Analizör Sorgu ve Cevap*
+
+Bilgisayarın gönderdiği sorgu : **01 03 00 00 1E C5 C2** şeklindedir. Bu sorguya göre ise Analizör uzun bir cevap vermiştir. Rx, bilgisiyarın gönderdiği sorgu; Tx ise analizörden gelen cevaptır. RS485 üzerinde sorgulamadan veri alınamaz. RS232 ile bu yönde de ayrılırlar. Bu uzun cevaplar aslında Analizörün ölçtüğü Gerilim/Akım/Frekans/Güç faktörü gibi parametrelerdir. Biz bu parametrelerden cosq’yu kullanacağımız için ilk başta Analizörün gönderdiği sorguyu inceleyelim. Analizör bize sıralı olarak 03 E8 cevaplarını göndermiştir. Bu cevap aslında HEX 0x3E8 ‘dir. Ondalık sayı sisteminde ise “1000” ile ifade edilir. Yani analizöre yaptığımız sorgu sonucunda cosq register’ında 1000 ifademiz ise 1000/1000 = 1 olarak ifade edilir. Eğer 999(0x3E7) değeri gelseydi 999 / 1000 = 0.99 olacaktı. Bu yapılan işlemler en temel düzeyde RS485 seri yolunda gerçekleşen olaylardır. Biz protokoller kullanarak bu işlemleri basit hale getiriyoruz. Eğer Raspberry’den bilgisiyar gibi bir sorgu yapmak istersek aşağıdaki kodu kullanabiliriz. Aşağıdaki kodda “python serial” kütüphanesi olduğu görülmektedir. Bu kütüphaneyi terminalde aşağıdaki komutu yazarak kurabilirsiniz.
+
+```sh
+$sudo apt-get install python-serial
+```
+Kütüphaneyi yükledikten sonra ilgili sorguyu aşağıdaki programı çalıştırarak gönderebiliriz. 
+
+```sh
+import os,time
+import serial
+      
+ser = serial.Serial(
+              
+    port='/dev/ttyS0',
+    baudrate = 9600,
+    parity=serial.PARITY_NONE,
+    stopbits=serial.STOPBITS_ONE,
+    bytesize=serial.EIGHTBITS,
+    timeout=1
+            )
+
+ser.write(serial.to_bytes([0x01,0x03,0x00,0x00,0x00,0x1E,0xC5,0xC2]))
+
+```
+
+Analizörden veri almamız için analizöre ilgili parametreyi göndermemiz gerektiğini yukarıda belirtmiştik: 01 03 00 00 1E C5 C2 bu parametreyi seri port üzerinden Analizör’e gönderdiğimizde ise bize yine HEX olarak üzerindeki parametreleri döndürmektedir. Bunu da yine bilgisayar üzerinden **“Terminal v1.9b”** programı sayesinde görebilmekteyiz. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/48.jpg)
+*RS485 Sorgu ve Cevabı*
+
+Yukarıdaki resimde, Analizör’e giden sorgu **( 01 03 00 00 1E C5 C2 )** ve analizörden gelen sorgu ve bu sorguya göre de analizörden gelen cevaplar yer almaktadır. Bu sorguda aslında çok da karışık değildir. Örnek olarak “01” Node adresini tanımlar; “1E”’de kaç adet register tanımlanmış onu gösterir. RS485 protokolünde ilk sorgu sonra da onun cevabı yer alır. RS485 seri port üzerinden Yazma ve Okuma ikisi senkronize bir şekilde sorgulanamaz. Bu durum hataya sebep verir. 
+Bu temel kodu çalıştırdığımızda Analizör yukarıdaki gibi bir sonuç verecektir. Bu kodu ModbusRTU protokolü ile yazdığımızda parametrelerin anlaşılması, Check-Sum hesapları, CRC hesapları daha rahat olmaktadır. 
+Raspberry’de çalışan birçok açık kaynaklı ModbusRTU kütüphanesi mevcut bulunmaktadır. İnternette bu konuyla ilgili birçok dokuman da bulunmaktadır. ModbusRTU, bir protokol olduğundan isterseniz bu protokolü siz de oluşturabilirsiniz ama yazılım gibi çoğu alanda da geçerli olan “tekerliği yeniden icat etme” ye burada da gerek yoktur.  Bu dokumanda “pymodbus” kütüphanesi kullanılmıştır. Pymodbus kütüphanesini aşağıdaki terminale komutu girerek yükleyebilirsiniz. 
+
+
+```sh
+$sudo pip install  -U pymodbus
+```
+
+**“pymodbus”** kütüphanesi yüklendiğinde ise ModbusRTU protokolünü kullanarak Analizörden sahadan aldığı parametreleri çekebiliriz. Buradaki örnekte kullanılan analizöre hiçbir gerilim veya akım kaynağı bağlanmamıştır. Bundan dolayı sadece “cosq” verisini sorgulayabileceğiz. “cosq” verisini alabilmek demek zaten diğer verilere de rahatlıkla ulaşılabileceği anlamına gelmektedir. Diğer bilgileri alabilmek için sadece doğru “register” adreslerini bilmek gereklidir. 
+
+
+```sh
+import serial
+import pymodbus
+from pymodbus.pdu import ModbusRequest
+from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+from pymodbus.transaction import ModbusRtuFramer
+import time
+
+client = ModbusClient(method = 'rtu', port = '/dev/ttyS0',baudrate = 9600,timeout = 1, parity = 'N')
+client.connect()
+
+while 1:
+
+    try:
+        result = client.read_holding_registers(0x00,40,unit = 0x01)
+        #print(result.registers)
+        print("cosqL1 : {}, cosqL2 : {}, cosqL3 : {}".format(result.registers[19]/1000.0,result.registers[20]/1000.0,result.registers[21]/1000.0))
+    except:
+        pass
+    time.sleep(1)
+
+```
+
+Programın içerisindeki *read_holding_registers* kullanımı:
+
+```sh
+result = client.read_holding_registers(0x00,40,unit = 0x01)
+```
+
+Yukarıdaki yazılım örneğinde analizörün üzerindeki 0 ve 40. Register’lar arasındaki register’lar sorgulanıyor. Yukarıda da register tablosu verilmişti ve bu register’lar arasında birçok parametrenin olduğunu görmüştük. Analizörün haberleşme node “1” olduğu için “client.read_holding_registers” fonksiyonun  parametresine de “0x01” veya sadece “1” ID sorgu parametresini de ekliyoruz. Yani aslında unit ID’si 1 olan analizör, 0 ve 40. Registerlar arasındaki paramatrelerini göndermesini istiyoruz. Bu parametreler arasında agerilim, akım, cosq, enerji gibi değerler de mevcut. Eğer bu ID numaralı bir analizör yoksa *timeout*’da sistem bekleyecektir. 
+
+Kodun çıktısı ise faz Aktif Güçlerindeki cosq’ların değeri olmaktadır. Eğer gerilim/akım gibi bilgiler alınacaksa ilgili Register tablosundan sorgulama yapılmalıdır. Cosq’ları Analizörden aldığımız diğer bilgiler vasıtasıyla da hesaplayabiliriz.
+
+-	P = VIcosq  == cosq=P/VI
+ 
+-	Örnek P = 3.4kW, V=400V, I=10A
+
+-	Cosq = 3400W / (400Vx10A)
+
+-	Cosq = 0.85
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/49.jpg)
+
+
+Buradan cosq’yu *0.85* olarak hesaplayabiliriz. Tabiki cosq’nun her zaman 1’e yakın olmasını isteriz. Analizörden Gerilim, Akım, Aktif Güç değerlerini de alabildiğimiz için cosq’yu ve buna bağlı olarak açı hesaplarını yapabiliriz. Eğer sistemde cosq 1 olmuyorsa Reaktif Kullanım yüğzünden para cezası ödenebilir. Bundan dolayı güç faktörü hesaplarının takibinin iyi yapılması gerekmekte ve böyle bir durumda Reaktör veya Kapasite bankaları ile cosq’yu 1(>0.98) ’e çekmemiz gerekmektedir. Kullanıcı bilgilendirme gibi işlemleri Raspberry yüzünden rahatça yapılabilir. Yazacağınız koda birkaç satır ekleyerek mail atma, “push-in notification” gibi özellikleri ekleyebilirsiniz.  
+
+Analizörden Tüketilen enerji ve Üretilen enerjiyi de görebilirsiniz. Eğer bir güneş santraliniz var ise Harcanan ve Üretilen Enerji bilgilerini de alabilir ve günlük/haftalık/aylık bazda veritabına kayıt edebilir ve sunucunuza MiniIOEx üzerindeki 3G module’i da kullanarak herhangi bir internet servis sağlayıcı olmaksızın verilerinizi gönderebilirsiniz. Enerji üretimi olduğunda Akım’ın işareti değişecektir. Buna dikklat edilmelidir. 
 
 
