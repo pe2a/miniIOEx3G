@@ -577,7 +577,7 @@ After completing the SIM card and USB tests, you can connect to the internet by 
 sudo chmod +x ./pe2a_miniIOEx.sh
 sudo ./pe2a_miniIOEx.sh internet ttyUSB3
 ```
-The ttyUSB3 address will change according to what you connect to the USB on Raspberry. If ttyUSB is incorrectly selected, the device will not be connect internet. Usually, the default APN for Vodafone is **'internet'**. This depends on the country you are located in and the operator you are servicing. The device can not connect internet on the wrong APN. For Turkcell, the APN may be **"mgbs"**. Detailed information can be reached at: https://www.turkcell.com.tr/kurumsal/kurumsal-cozumler/statik-ip/sikca-sorulan-sorular
+The **ttyUSB3** address will change according to what you connect to the USB on Raspberry. If ttyUSB is incorrectly selected, the device will not be connect internet. Usually, the default APN for Vodafone is **'internet'**. This depends on the country you are located in and the operator you are servicing. The device can not connect internet on the wrong APN. For Turkcell, the APN may be **"mgbs"**. Detailed information can be reached at: https://www.turkcell.com.tr/kurumsal/kurumsal-cozumler/statik-ip/sikca-sorulan-sorular
 
 Do not forget to close the internet connections after this:
 
@@ -600,7 +600,7 @@ After the **"sudo pppd call gprs"** command, you should see a screen like this:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/57.jpg)
 
-If the device does not exit internete, it will give a "script failed" error. The most common problems are that the APN address of the SIM card is incorrect, the PIN code is insufficient, etc. You can access the IP of the device by executing the following command on the device internete.
+If the device does not connect internet, it will give a "script failed" error. The most common problems are that the APN address of the SIM card is incorrect, the PIN code is insufficient, etc. You can access the IP of the device by executing the following command on the device internete.
 
 ```sh
 sudo ifconfig
@@ -611,46 +611,42 @@ If you want to see internet speed, ** speedtest-cli ** program should be install
 
 ## GPS Commissioning ##
 
-MiniIOEx, GPRS bağlantısının yanı sıra GPS konum tabanlı uygulamalar için de kullanılabilir. GPS uydularından alınan konum verisi ve GPS’den gelecek saat uygulamalarda kullanılabilir. Bununla ilgili piyasada birçok uygulamaya rastlamak mümkündür. GPS ve GPRS’de kullanılan antenler farklı olduğundan dolayı aynı antenlerin kullanılması verilerin düzgün alınmamasına veya hiç veri gelmemesine yol açacaktır.
+The MiniIOEx can be used for GPRS-based applications as well as for GPRS connectivity. Location data from GPS satellites and hours from GPS can be used in applications. It is possible to encounter many applications in the related market. Since the antennas used in GPS and GPRS are different, using the same antennas will result in incorrect reception or no data at all.
 
-UC20 shield’i üzerinden GPS verileri alındığı için Bölüm 2.1.’de gerçekleştirilen uygulamaların da GPS verilerini alınması için yüklenmesi ve çalıştırılması tavsiye edilir. Özellikle
-“lsusb” komutuyla modulün MiniIOEx’e ve Raspberry’ye bağlandığından emin olunmalıdır. En sık karşılaşılan hatalardan bazıları USB adres yolunun yanlış verilmesidir. Bunu da yine “lsusb-v” komutuyla ayrıntılı olarak USB cihazların hangi USB’lere bağlandığını görebilirsiniz.
+Be sure to connect to the module MiniIOEx and Raspberry via the **"lsusb"** command. Some of the most common mistakes are misdirecting the USB address path. You can also see this in detail via the **"lsusb-v"** command which USB devices are connected to which USB.
 
-Bu bölümde GPS verilerinden gelen datalar incelenecektir ve örnek kod paylaşılacaktır. Buna göre işlemlerinizi gerçekleştirebilirsiniz.
-GPS antenini Quectel UC20 modulün GNSS konnektörüne bağlanması gerekmektedir. GitHub’dan MiniIOEx-gps.py kodu indirilmesi ve çalıştırılması gerekmektedir. UC20 modüle gönderilen “AT” komutlarını ekteki linkten ihtiyacınıza uygun komutları program üzerinden revize edebilirsiniz. 
+In this section, the data from the GPS data will be examined and the sample code will be shared. You can then perform your actions accordingly. **The GPS antenna needs to be connected to the Quentel UC20 modular GNSS connector.** You need to download and run MiniIOEx-gps.py from GitHub. You can revise the "AT" commands sent in UC20 mode through the program according to the commands you need from the link on the right.
 
-Quectel UC20 GNSS AT Komutları Dokuman Linki:
+Quectel UC20 GNSS AT Commands Document link:
 http://www.quectel.com/UploadImage/Downlad/Quectel_UC20_GNSS_AT_Commands_Manual_V1.1.pdf
 
-Program çıktısı aşağıdaki gibi olacaktır:
+The output of the program will be as follows:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/59.jpg)
 
-*GNSS Çıktıları*
+*GNSS Outputs*
 
-Program çalıştırıldıktan sonra gelen dataların: UTC Clock,Date,Coordinate gibi işlevleri Raspberry üzerinde kullanılabilir. Yukarıdaki şekilde de görüldüğü üzere koordinat sık sık yer değiştirmektedir. Bundan dolayı kullanıcıların koordinat verilerin daha doğru hesaplanması için bulunan yer üzerindeki koordinatların optimizasyonu gibi fonksiyonları kullanması gerekmektedir. Bu sayede daha kesin sonuç alınması mümkündür. Location coordinate verisini GOOGLE MAPS veri girişini yaptığımızda bulunduğunuz yer yaklaşık olarak ortaya çıkacaktır. UTC clock verisini ise Raspberry CPU saati olarak RTC ile beraber kullanabilirsiniz.
+Functions that come after the program has been run: UTC Clock, Date, Coordinate, etc. can be used on Raspberry Pi. As you can see above, the coordinates change often. Therefore, users need to use functions such as optimizing coordinates on the ground for more accurate calculation of coordinate data. It is possible to get a more accurate result on this view. When you do the GOOGLE MAPS data entry in the location coordinate data, the place you are about will appear. UTC clock data also can be used with RTC as Raspberry Pi CPU clock and of course you can write that UTC Clock to EEPROM on MiniIOEx. 
 
 ## Real Time Clock and EEPROM  ##
 
-Mikroişlemcilerde yapılan işlemlerde saatin devamlılığı önemlidir. Raspberry’de Real Time Clock (Gerçek Zaman Saati) bulunmadığından dolayı Raspberry’nin enerjisi gittiğinde saatiniz ‘fake’ bir saatte veya en son kaldığınız bir saatte başlayabilir. Bu da yapılacak otomasyon işlerinin zamanın değişmesine yol açar. Örnek olarak her gün 13:00’da bir pompayı çalıştırmanız gerekirse siz bu pompayı normal saatinden 5 saat sonra 18:00’da çalıştırabilirsiniz. Bu gibi sebeplerden dolayı MiniIOEx’e gerçek zaman saati entegre ettik. Zaman saatini kullanabilmek için aşağıdaki adımları takip edebilirsiniz. EEPROM ve RTC i2c üzerinden MiniIOEx ile haberleşmektedir. i2c, birçok cihazdan veri almak ve veri göndermek için oldukça popüler bir haberleşme protokolüdür. Sadece 2 kablo ile yüksek hızlarda veri alıp/göndermek mümkündür. i2c cihazlarını kontrol eden modüle ‘master’, kontrol edilen modüle ise ‘slave’ denir. Her i2c slave cihazın benzersiz bir adresi mevcuttur. Her i2c cihazı aynı SCL(serial clock) ve SDA(serial data) üzerinden haberleşir. i2c protokolü **START** ve **STOP** durumları içererek datanın başlayıp/bittiğini de master cihaza haber verir.
+In microprocessors, it is important that the clock is continuous. Since the Raspberry Pi does not have a Real Time Clock, your clock can start at 'fake' one hour or the last one you have when the energy of Raspberry Pi goes out. This leads to time-consuming changes in automation. For example, if you need to start an engine every day at 13:00, you can operate this pump at 18:00 after 5 hours of normal time. For such reasons we have integrated the real time clock into the MiniIOEx-3G. To use the time clock, you can follow the steps below. 
+
+EEPROM and RTC communicate with MiniIOEx-3G via i2C. i2C is a popular communication protocol for receiving and sending data from many devices. It is possible to send / receive data at high speed with only 2 wires. The module that controls I2C devices is called 'master' and the module that is controlled is called 'slave'. Each i2c slave device has a unique address. Each i2C device communicates over the same serial clock (SCL) and serial data (SDA). The i2c protocol includes the states **START** and **STOP** to inform the master device whether the data starts or ends.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/60.jpg)
 
-Aşağıdaki resimde ise SCL ve SDA’nın BIT tablosunu bulabilirsiniz. SCL, clock olduğu için birbirini takip eden referans sinyaller; SDA ise slave cihazın verisini üretmiştir. 
+In the picture below, you can find the BIT chart of SCL and SDA. SCL is a clock, consecutive reference signals; SDA produced the data of the slave device.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/61.jpg)
 
-
-Terminalde **raspi-config-> Interface Options-> i2c->Enable** edildikten sonra Raspberry’yi tekrardan başlatmanız önerilir. 
-
-Bu adımları geçtikten sonra terminalde i2cdetect -y 1 veya eski bir Raspberry sürümü kullanıyorsanız i2cdetect -y 0 (en kısa zamanda yeni bir işletim sistemini yüklemeniz önerilir) ile sistemde bulunan i2c cihazlarını görebilirsiniz. 
+In the terminal **raspi-config-> Interface Options-> i2c-> Enable** then it is recommended to start Raspberry Pi reboot. To access the I2C devices, you can run terminal command that **i2cdetect -y 1**. For older Raspberry Pi version, it shall be **i2cdetect -y 0**
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/62.jpg)
 
-MiniIOEx üzerindeki **EEPROM** entegresinin **(24LC512)** unique adresi **0x50**’dir. Bu unique adresi yazılımda da kullanmamız gerekiyor. EEPROM’a, RTC verisi yazılıp Raspberry yeniden başladığında ise buradan RTC verisi okuması yapılabilir veya programınızın kopyalanmasını önleyecek bazı ‘gizli’ şifreler buraya yazılabilir ve yazdığınız program buradan aldığı bilgi ile çalışmaya başlar. Yani bir şekilde Raspberry’nin SD kartı üzerindeki işletim sistemi imaj’ı kopyalansa bile program kullanılamaz olacaktır. 
+The ** EEPROM ** on MiniIOEx **(24LC512)** unique address is **0x50**. We also need to use this unique address in the software. If RTC data is written to EEPROM and Raspberry Pi is restarted, RTC data can be read from EEPROM, or some 'secret' passwords can be written to EEPROM. 
 
-Aşağıda *.c* koduyla yazılmış örnek program mevcuttur. Bu kodda EEPROM üzerine RTC’den alınan saat verisi yazdırılıp bu veri EEPROM üzerinden okunmuştur. 
-
+Below is a sample program written in *.c*. In this code, clock data from RTC is printed on EEPROM and this data is read through EEPROM.
 
 ```sh
 #include <stdio.h>
