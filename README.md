@@ -1,4 +1,23 @@
-## An Industrial Raspberry Shield: MiniIOEx-3G ##
+
+##Table of Contents##
+
+[An Industrial Raspberry Shield: MiniIOEx-3G] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#an-industrial-raspberry-shield-miniioex-3g)
+[Who is for MiniIOEx-3G?] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#who-is-for-miniioex-3g)
+[What is in the box?] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#what-is-in-the-box-)
+[IO Handling] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#io-handling)
+[Digital Input] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-input)
+[Digital Output] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-output)
+[Analog Input] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#analog-input)
+[Reading Analog Input Values ]https://github.com/pe2a/miniIOEx3G/blob/master/README.md#miniioex-3g-analog-input-read
+[Serial Port] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#seri-port)
+[3G / GPS] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#3g--gps)
+[GPS Commissioning] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#gps-commissioning)
+[RTC and EEPROM Usage] (https://github.com/pe2a/miniIOEx3G/blob/master/README.md#real-time-clock-and-eeprom)
+
+
+
+
+# An Industrial Raspberry Shield: MiniIOEx-3G #
 
 MiniIOEx-3G is Raspberry Pi shield that can be used in industrial areas with 3G Module. MiniIOEx-3G has affordable price to use with Raspberry Pi. You can easily commissioning shield and you can easily integrate in your projects.  
 
@@ -84,7 +103,7 @@ If you buy  *MiniIOEx-3G* with **3G module** :
 - MiniIOEx Metal Sheet
 - Sheet mount parts
 
-## IO Handling ##
+# IO Handling #
 
 MiniIOEx has Digital Input, Digital Output and Analog Input functions for your IOT/IIOT applications. Digital IOs are directly connected Raspberry pin to pin and Analog Input is connected over SPI. So, you will use SPI functions to get Analog Input Data. 
 
@@ -101,7 +120,7 @@ At the below table, you can find which MiniIOEx pins are connected to Raspberry 
 | Digital Output  *RUN* LED	| 37 |
 
 
-## Digital Input 
+## Digital Input ##
 
 We mentioned before MiniIOEx-3G has 2ch Digital Inputs. Digital Input on MiniIOEx has given characteristics at below table:
 
@@ -180,11 +199,8 @@ You can view the Digital Outputs on the MiniIOEx in the following table:
 | 38	| Digital Output Transistor 2 |
 | 40	| Digital Output Transistor 1 |
 
-<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteICON.jpg" alt="drawing" width="35"/>
-
 **Important Note**
-
-If you supply MiniIOEx with 24V, you can use all Digital Output pins. You can only use Relay outputs if you supply directly from Raspberry via 5V USB.
+**If you supply MiniIOEx with 24V, you can use all Digital Output pins. You can only use Relay outputs if you supply directly from Raspberry via 5V USB.**
 
 | Technical Data  	| Digital Output | 
 | --- | --- |
@@ -260,7 +276,7 @@ You can use the MiniIOEx-3G Analogue Input Module by wiring the following termin
 *MiniIOEx Analog Input Terminal Number*
 
 **IMPORTANT NOTE**
-To use the analog input module as a 4-20mA sensor input, the following buttons must be pulled in the direction of ** ON **.
+**To use the analog input module as a 4-20mA sensor input, the following buttons must be pulled in the direction of ** ON **.**
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/37.jpg)
 *MiniIOEx 4-20mA Selection Button will be pulled in the direction of ON*
@@ -395,7 +411,7 @@ Since there is no voltage dropping element on the MiniIOEx in the 5V line, this 
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/38.jpg)
 
-## Seri Port ##
+## Serial Port ##
 
 Serial communication is a type of communication that operates on software protocols specified in the standard on the physical shell specified in the telecom standards and allows for bi-directional data communication. In industrial systems, RS232 and RS485 protocols generally come to mind in terms of serial communication. MiniIOEx supports RS232 and RS485 physical communication serial paths. RS-232 is a serial communication standard designed for short distance communications. The information transmitted via RX and TX is determined according to the reference level GND. With RS-232, short distances and speeds of 115.2 Kbit / s can be achieved. This standard is not suitable for noisy environments. RS-232 drives are not designed to be able to sustain many receivers at the same time.
 
