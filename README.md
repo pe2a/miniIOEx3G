@@ -192,8 +192,8 @@ If you supply MiniIOEx with 24V, you can use all Digital Output pins. You can on
 | Digital Output Relay | 	2ch |
 | Digital Output Transistor 	| 2ch |
 | Relay Switch Current and Volatge	| 1A,24VDC |
-| Transistör Switch Current and Voltage	| 80mA, 24VDC |
-| Configuration	| GPIO veya bcm28354 kütüphanesinin yüklenmesi |
+| Transistor Switch Current and Voltage	| 80mA, 24VDC |
+| Configuration	| GPIO or bcm2835 library install |
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/29.jpg)
 *Relay Datasheet Informations*
@@ -319,8 +319,7 @@ As a result, if we want to find the voltage value of the power supply supplied b
 In order to read the digital value from the MCP3208 integration, the code block below is shared and the conversion of this value to voltage and sensor data is detailed in the headers of the document. 
 
 **Important Note**
-Since the Python library is used, Raspi-Config -> Interfacing Options -> SPI * enable * is required.
-
+Since the Python library is used, **Raspi-Config -> Interfacing Options -> SPI** *enable* is required.
 
 ```sh
 def readAI(ch):
@@ -408,138 +407,137 @@ The serial port PIN table on the MiniIOEx is shared below.
 
 MiniIOEx Seri Port Pin table is given at below:
 
-| Seri Port Pin | MiniIOEx-3G Terminal No | 
+| Serial Port Pin | MiniIOEx-3G Terminal No | 
 | --- | --- |
-| RS232RX	| 19 |
-| RS232TX	| 20 |
-| RS485B	| 19 |
-| RS485A	| 20 |
-| RS GND	| 17 |
+| RS232-RX	| 19 |
+| RS232-TX	| 20 |
+| RS485-B	| 19 |
+| RS485-A	| 20 |
+| Serial GND	| 17 |
 
-Raspberry’de tek bir UART çıkışı olduğundan dolayı MiniIOEx’de 2 adet seri port converter kullanıyoruz: UART/RS232 ve UART/RS485. Bu iki converter’ı aynı anda kullanamadığımız ziçin seçim yapmamız gereklidir. Aşağıdaki gibi kullanacağınız seri port’a göre seçim yapabilirsiniz: RS485 için yukarı yönde switch’leri ileri itebilir, RS232 için diğer yönde seçim yapabilirsiniz. 
-
-Since Raspberry has a single UART output, we use serial port converters in MiniIOEx: UART / RS232 and UART / RS485. You can control a button on MiniIoEx and you can choose which serial port can be used. 
+Since Raspberry has a single UART output, we use serial port converters in MiniIOEx: UART / RS232 and UART / RS485. You can control a button on MiniIoEx and you can choose which serial port can be used. It should be known RS232 uses three cables and RS485 uses two cables. 
 
 If we can not use these two converters at the same time, we have to make a choice. You can choose according to the serial port you will use as follows: For RS485, you can push upwards the switches, for RS232 you can choose the other direction.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/40.jpg)
-*RS485 Seçimi*
+*RS485 Selection*
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/41.jpg)
-*RS232 Seçimi*
+*RS232 Selection*
 
-Seri port klemens uçları bir cihaza takılı iken seri port seçim butonları ile değişim yapmak: MiniIOex üzerindeki entegreleri bozabilir. Bundan dolayı hangi seri port seçimi yapılacaksa cihaza takılmadan önce butonların o yönde ayarlanması gereklidir. 
+To change the serial port selection buttons while the serial port terminal is plugged into a device: It may break the integrations on MiniIOex. Therefore, if any serial port is selected, the buttons need to be adjusted in that direction before connecting to the device.
 
-Terminal ekranında daha önceden de kullandığımız **“raspi-config”** komutunu terminale girmemiz gerekiyor. 
+We need to use the Raspberry Pi configuration tool to configure the serial ports. In the terminal, we write ** "raspi-config" **.
 
 ```sh
 $raspi-config > Interfacing Options > Serial 
 ```
+After pressing the "enter" key on the **"Serial"** menu, follow the steps below.
 
-Bu menüye girildiğinde ise **“Serial”** menüsünde “enter”tuşuna basıldıktan sonra aşağıdaki adımların takip edilmesi gereklidir. 
+**On the Login menu, use Serial Port> Off (No)**
 
-**Login menüsünde Seri Port kullanımını > Kapalı (No) **
-
-Bu menü eğer gözden kaçırılırsa seri port kullanan program çalışmaya başladığında hata verecektir. Bundan dolayı Login kullanımı için seri port’un kapalı olması gereklidir. 
+If this menu is missed, the program using the serial port will fail when it starts to work. Therefore, in order to use Login, serial port must be closed.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/42.jpg)
-*Seri Port Kullanımı Login Shell*
+*Serial Port Using Login Shell*
 
-**Seri Port Donanım Kullanımı -> Açık /(Yes)**
+**Serial Port Hardware Use -> On / (Yes)**
 
-Raspberry seri port uçlarının programlanabilir hale getirmektedir. 
+This menu makes the Raspberry Pi serial port terminals programmable.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/43.jpg)
-*Seri Port Kullanımı Donanım*
+*Serial Port Hardware Usage*
 
-Tüm işlemler bittiğinde ise aşağıdaki gibi bir ekranla karşılaşmamız gerekmektedir:
+When all the processes are finished, we need to see a screen like this:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/44.jpg)
-*Seri Port Kullanım Bilgileri*
+*Serial Port Usage Informations*
 
-Raspberry üzerinde çalışabilen “minicom” programı ile Raspberry’ye seri port üzerinden gelen değişkenleri görebilir veya bu program üzerinden herhangi bir referans verebilirsiniz. 
+With the "minicom" program that can run on Raspberry, you can see the variables coming from Raspberry via serial port or give any reference through this program.
 
-Minicom programı yüklemek istiyorsanız aşağıdaki adımları takip edebilirsiniz:
+If you want to install the Minicom program, you can follow the steps below:
 
-**1. Minicom Yükleme:**
+**1. Minicom Install:**
 
 ```sh
 $sudo apt-get install minicom 
 ```
 
-**2. Minicom Programını Başlatma**
-Eğer Raspberry Pi 3’den önce çıkmış bir Raspberry serisini kullanıyor iseniz port adresiniz: “ttyAMA0” olmalıdır. 
+**2. Minicom Starting Program**
+
+If you use before Raspberry Pi 3 version, you need to use port adress as being "ttyAMA0". 
 
 ```sh
 $sudo minicom -b 9600 -o -D /dev/ttyAMA0 
 ```
-
-Raspberry Pi 3 ve sonrası için ise seri port “ttys0” olarak değişmiştir. Aşağıdaki komutu girmemiz gereklidir:
+If you use  Raspberry Pi 3 version and the others, you need to use port adress as being "ttyS0". 
 
 ```sh
 $sudo minicom -b 9600 -o -D /dev/ttyS0
 
 ```
-Parametreye girilen 9600 sayısı baudrate hızıdır. Bu hızı standart hızlara göre değiştirebilirsiniz. Genelllikle bu değer 115200’de  de kullanılır. Bu işlemler sonrasında ise herhangi bir PC’den veya başka bir cihazdan seri port kullanarak Raspberry’ye veri gönderebilir veya veri alabilirsiniz.  Bu dokumanda örnek olarak RS485 kullanarak **“Entes MPR63 Enerji Analizörü”** vasıtasıyla veri alabildiğimizi uygulamalı örneklerle anlatacağız. 
+The 9600 number entered in the parameter is the baudrate rate. You can change this speed according to the standard speeds. Usually this value is also used in 115200. After this process, you can send or receive data to Raspberry by using serial port from any PC or any other device. You can change these settings with the ** "minicom -s" ** parameter.
+
+In this document we will illustrate with practical examples how we can obtain data via **"Entes MPR63 Energy Analyzer"** using RS485 as an example.
 
 
 ## 3G / GPS ##
 
-MiniIOEx’in en önemli ve temel özelliklerinden birisi 3G ve 4G haberleşmeye uyumlu bir yapıya sahip olmasıdır. Yani eğer Wireless ve Ethernet imkanı olmayan bir yerdeyseniz veya sahada çalışmalar gerçekleştiriliyorsa 3G ile data haberleşmesi en uygun yöntemdir. Bu haberleşme seri port üzerinden değil USB üzerinden gerçekleştiğinden dolayı da 3G’nin data alış-veriş kapasitesinden tam olarak yararlanılabilir. Bazı servis sağlayacılarının 3G modemleri endüstriyel sahada tam performans veremediklerinden dolayı MiniIOEx’e 3G uyumluluğu eklenmiştir. MiniIOEx-3G, Raspberry V2, V3, Zero cihazlarla uyumludur ve yazılım testleri Jessie ve sonrası işletim sistemleri üzerinde test edilmiştir.  Quectel 3G Module 14.4 Mbps downlink ve 5.76 Mbps uplink hizmeti sağlayabilir. Küçük ve modüler yapısından dolayı MiniIOEx-3G ile beraber projelerinizde rahatlıkla kullanılabilir.  Eğer MiniIOEx’i 3G modül ile beraber almadıysanız ileride planlarınız dahilinde sadece 3G modül siparişi vermeniz yeterli olacaktır. 
-MiniIOEx-3G nerelerde kullanılabilir:
+One of the most important and basic features of the MiniIOEx is that it has a structure that is compatible with 3G and 4G communication. So if you are in a place where Wireless and Ethernet are not available or if work is being done on site, data communication with 3G is the most convenient method. This communication can be fully exploited from the data exchange capacity of 3G since it is realized via USB rather than through serial port. 3G services have been added to the MiniIOEx because some service providers can not provide full performance on 3G services. It is compatible with MiniIOEx-3G, Raspberry V2, V3, Zero devices and software tests have been tested on Jessie and later operating systems. Quectel 3G Module can provide 14.4 Mbps downlink and 5.76 Mbps uplink service. Due to its compact and modular structure, it can be easily used in projects with MiniIOEx-3G. If you did not purchase the MiniIOEx with the 3G module, it will be enough to place only 3G module in your plans in the future.
+Where MiniIOEx-3G is available:
 
--	IOT uygulamaları,
--	HDMI üzerinden görüntü aktarma işlemler,
--	Başka bir PLC veya PC’den verilerin dışarı aktarılması,
--	Endüstriyel makinelerin uzaktan izlenmesi,
--	Real Time Data stream işlemleri,
--	Camera stream işlemleri vb.
+- IOT applications,
+- Exporting data from another PLC or PC,
+- Remote monitoring of industrial machines,
+- Real Time Data stream operations,
+- Camera stream operations,
+- Transferring images via camera etc.
 
-MiniIOEx’in 24V ile beslenebiliyor olması endüstriyel ortamlar için oldukça faydalı bir özelliktir. 3G gibi çok fazla güç harcayan ve anlık darbe akımları çeken bir uygulama için de 24V besleme alternatifinin olması haberleşmenin devamlılığı açısından oldukça önemlidir. Bu konu ile ilgili birçok test ve çalışma gerçekleştirilmiştir. Aşağıda 2 adet osiloskop ekran görüntüsü paylaşılmıştır. Bunlardan ilki 3G modemin ilk internete bağlanmaya çalıştığındaki gerilim grafiğidir. Bu grafikte de görülebileceği gibi kırmızı kutu içerisinde kalan kısımda akıma bağlı olarak gerilim düşmesi görülmektedir. Bu gerilim düşmesini mümkün olan en düşük gerilimde tutulmaya çalışılmıştır. Modül 3.3V hassas besleme gerilimi ile çalıştığından dolayı herhangi ciddi bir gerilim düşmesinde modül kendisini resetlyerek çalışmamaktadır. Bundan dolayı modül beslemesinde lineer bir gerilim grafiği elde edilmeye çalışılmıştır. 
+The fact that the MiniIOEx can be fed with 24V is a very useful feature for industrial environments. For an application that consumes too much power and draws instantaneous pulsating currents like 3G, it is very important for the continuity of communication that there is a 24V supply alternative. Many tests and studies have been conducted on this subject. Below are 2 oscilloscope screenshots. These are the graphs of voltage the 3G modem tries to connect to the first internete. As you can see in this chart, there is a voltage drop due to the flow in the red box. This voltage drop has been tried to be kept at the lowest voltage possible. The module does not operate by resetting the module itself at any serious voltage drop because it operates with 3.3V precision supply voltage. Therefore, it was tried to obtain a linear voltage graph at the module feed.
 
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/52.jpg)
 
-*3G Modül Bağlantı Esnasında Akım Darbeleri Gerilim Grafiği*
+*Voltage Graph during 3G Module Connection*
 
-Aşağıda verilen osiloskop ekran görüntüsünde de görüleceği gibi internete bağlandıktan sonra veri indirme/yükleme işleri olsa bile gerilim “steady state” karakteri göstermektedir. 
-
+As shown in the oscilloscope screen image below, the voltage is steady state even though the data download / upload operations after connecting the internet.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/53.jpg)
 
-*3G Bağlantıdan Sonraki Durumda Gerilim Grafiği*
+*After 3G connection Voltage Graph*
 
+As a result of this work MiniIOEx and 3G module works synchronously and efficiently. In the following chapters, the commissioning of the 3G module is shown. The products listed below are needed to perform these operations.
+- USB Cable
+- Antenna
+- Antenna cable
 
-Bu yapılan çalışmalar sonucunda MiniIOEx ve 3G modül senkronize verimli bir şekilde çalışmaktadır. İlerleyen başlıklarda 3G modülün devreye alma işlemleri gösterilmiştir. Bu işlemleri gerçekleştirebilmek için aşağıdaki tabloda yer alan ürünlere ihtiyaç vardır.
--	USB Kablo
--	Anten
--	Anten kablosu 
+These products are shipped in the product package when you buy MiniIOEx-3G. There is no need to buy an external material.
 
-Bu ürünler, MiniIOEx-3G aldığınızda ürün paketi içerisinde yollanmaktadır. Harici bir malzeme  alınmasına gerek yoktur. 
+## 3G Connection Configuration ##
 
-## 3G Bağlantı Ayarları ##
+We can test the Quectel 3G module using the following steps:
+1- Fitting on Quectel Modul Shield,
+2- Placement of the SIM card on the module,
+3- Installation of Raspberry on Shield,
+4- Installation of USB cable to Raspberry Pi,
+5- Installation of 3G antenna on Quectel UC20 module.
+Once the physical module and the Raspberry have been installed, the corresponding 'scripts' can be activated to activate the 3G module. As expected, the 3G module requires a high current source in the internete coupling stage. If this current is not met, the voltage drops and the module resets itself. This topic is about sahada and lab. We did a lot of research / development in our tests. In MiniIOEX and similar 3G products, we have also ensured that this voltage regulator protects our 3G connection more stable.
+6- It is recommended to operate the latest operating system on the operating system. The Minicom program displays the data received from the serial port sockets for SIM card and the Module tests. For **speedtest-cli**, you can also use the device's internete connection speed for testing purposes.
 
-Quectel 3G modülü aşağıdaki adımları kullanarak test edebiliriz:
-1- Quectel modulün Shield üzerine takılması,
-2- Sim kartının modül üzerine yerleştirilmesi,
-3- Raspberry’nin Shield üzerine montajı,
-4- USB kablonun Raspberry’ye montajı,
-5- 3G antenin Quectel UC20 modulünün üzerine takılması.
-Fiziksel olarak modülün ve Raspberry’nin montajı yapıldıktan sonra ilgili ‘script’ler çalıştırılarak 3G modül devreye alınabilir. 3G modül beklenildiği gibi internete bağlanma aşamasında yüksek bir akım kaynağına ihtiyaç duymaktadır. Eğer bu akım karşılanmadığında gerilim düşerek modül kendini resetliyor. Bu konuyla ilgili sahada ve lab. Testlerinde birçok araştırma/geliştirme yaptık. MiniIOEX ve benzeri 3G ürünlerimizde de bu gerilim regülatör yapımızı koruyarak 3G bağlantısının daha stabil hale gelmesini sağladık. 
-6- İşletim sistemi üzerinde son güncel işletim sistemi çalıştırılması önerilir. Minicom programı, seri port soketlerinden alınan veriyi gösterir. RS232 ve USB bağlantısı için kullanabiliriz. SIM kartı ve Modül testleri için minicom oldukça kullanışlı bir programdır. Speedtest-cli programını ise cihazın internete bağlantı hızını test amacıyla kullanabilirsiniz.
-İlgili örnekler, dokuman devamında verilmiştir.
+Relevant examples are given in the text.
 
--	sudo apt-get update
--	sudo apt-get minicom
--	sudo apt-get speedtest-cli
--	sudo apt-get rpi-update
--	sudo apt-get upgrade
--	sudo reboot
--	git clone git://github.com/pe2a/miniIOEx3G.git
+- sudo apt-get update
+- sudo apt-get minicom
+- sudo apt-get speedtest-cli
+- sudo apt-get rpi-update
+- sudo apt-get upgrade
+- sudo reboot
+- git clone git: //github.com/pe2a/miniIOEx3G.git
 
-Yükleme işlemleri bittikten sonra terminal açılır ve **lsusb** komutu işletilir. Bu komut o anda USB’ye bağlı cihazları gösterir. Eğer herhangi bir durum yoksa aşağıdaki gibi bir ekranla karşılaşmanız gerekir. Quectel’i göremiyorsak bunun nedeni Quectel UC20 modulü veya USB kablonun kendisinden olabilir. Quectel 3G modulünü terminal ekranından göremiyorsanız modulü takıp çıkartmanız yarar sağlayabilir. **Modül üzerinde montaj işlemleri yaparken enerjisiz çalışmaya özen gösterilmesi gerekmektedir.**
+After the installation is finished, the terminal is opened and the **lsusb** command is executed. This command then shows the devices connected to the USB. If there is no situation, you should see a screen like below. If we can not see Quectel UC20 Module, it could be the Quectel UC20 module or the USB cable itself. For this situation, It may be beneficial to insert and remove the module. 
 
-<span style="color:blue">USB Kabloyu değiştirdikten sonra halen Quectel modulü USB üzerinden görülemiyorsa lütfen tarafımıza bildiriniz! text</span>
+**Important Note**
+**Installation work on the module should be done without energy**
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/54.jpg)
 
@@ -547,71 +545,67 @@ Yükleme işlemleri bittikten sonra terminal açılır ve **lsusb** komutu işle
 
 Fiziksel olarak USB bağlı olduğuna göre minicom üzerinde yapılacak setup ayarları ile ATkomutları modüle gönderebiliriz. Minicom ayrı bir terminalde açılarak aşağıdaki adresten miniIOEx-3G-test.py dosyası çalıştırılarak AT komutları cevapları görülebilir. Bu cevaplar aşağıda açıklanacaktır. AT komutları 3G modül ile haberleşmeden kullanılır. Bu komutlar ile cihaz üzerindeki bilgilerin sorgulanabileceği gibi SMS, Arama gibi özellikler de bu komutlar sayesinde gerçekleştirilebilir.
 
+* Other USB ports on the screen can be wireless keyboard / mouse or portable USB disk. *
+
+Since MiniIOEx-3G physically connected to USB, we can send the **AT** commands.  AT commands can be used communicating with the 3G module. With these commands, the information on the device can be queried as well as features such as SMS and Search can be performed by these commands. Just write these commands on the Minicom. 
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/55.jpg)
 
-Çalıştırılan python scripti sonrasında minicom ekranında yukarıdaki gibi bir çıktı elde edilir. Kırmızı blok içine alınmış script’lerin açıklaması aşağıda verilmiştir.
+The description of the basic AT commands in the red block is given below:
 
-1-) Quectel cihaz seri no numarası -> **ATI**
+1-) Quectel device serial number -> ** ATI **
 
-2-) Cihaz üzerinde Sim Kilidi ile ilgili bir sıkıntı yoksa Sim kartının kullanıma hazır olduğunu belirtir. Sim kartı yeni aldı iseniz herhangi bir cep telefonunda Sim kartı PIN özelliğini devreden çıkartabilirsiniz: **AT+CPIN?**
+2-) Indicates that the Sim card is ready for use if there is no problem with Sim Lock on the device. You can disable the SIM card PIN feature on any mobile phone if you have just bought a SIM card: **AT + CPIN?**
 
-3-) Şebekenin hazır olup olmadığını belirtir. Eğer şebeke hazır değil ise CME Error hatası döndürür ve ekteki dokumandan hangi hata olduğunu inceleyebilirsiniz: **AT+CREG?**
+3-) Indicates whether the network is ready or not. If the network is not ready, you can return the CME Error  and see what error it is on the following document: **AT + CREG?**
 
-4-) Şebekenin çekim kapasitesidir. Antenin kalitesi, baz istasyonun yakınlığı ve çevresel faktörlere göre bu oran değişir. 30‘un aşağısı kabul edilebilir değerdir. 99,99 şebeke çekiminin olmadığını gösterir: **AT+CSQ**
+4-) The net capacity of the net. This ratio changes according to the quality of the antenna, the proximity of the base station and the environmental factors. Below 30 is acceptable. 99.99 indicates no network capture: **AT + CSQ**
 
-5-) Kart üzerindeki SIM kartının operatörünü gösterir. Testler sırasında Vodafone SIM kartı kullanılmıştır. Türk Telekom veya Turkcell‘de IOT uygunluğu olan SIM kartı üretmektedir. Eğer burada SIM kartı yeri boş veya şebeke bağlantısı 99 gösteriyorsa SIM kartında veya servis sağlayıcısında bir problem olabilir. Lütfen başka bir SIM kartıyla aynı işlemleri tekrardan deneyin: **AT+COPS?**
+5-) Shows the operator of the SIM card on the card. Vodafone SIM card was used during the tests. Turk Telekom or Turkcell'te IOT compatible SIM card is produced. If the SIM card is empty or shows the network connection 99 here, there may be a problem on the SIM card or the service provider. Please try the same process again with another SIM card: **AT + COPS?**
 
-Satın aldığınız cihazın IMEI numarasını ise edevlet üzerinden sorgulayabilirsiniz. (https://www.turkiye.gov.tr/imei-sorgulama ) Bu sorgulama sadece Türkiye için geçerlidir. **IMEI** kayıtlı değil ise lütfen modülleri satın aldığınız firma ile iletişim kurunuz.
-
+You can also inquire about the IMEI number of the device you have purchased through the municipality. **This question applies only to Turkey.** If IMEI is not registered, please contact the company where you purchased the modules.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/56.jpg)
 
-Eğer modulün IMEI numarası kayıtlı ise yukarıdaki gibi bir cevap almamız gereklidir.
+If the module's IMEI number is registered, we need to get an answer as above.
 
-**Not : Cihaz yurtdışında kullanılacak ise lütfen tarafımıza bildiriniz.**
+**Important Note: Please inform us if the device will be used abroad.**
 
-SIM kartı ve USB testleri bitirildikten sonra aşağıdaki script çalıştırılarak shield ile internete çıkabilirsiniz.
-
-
+After completing the SIM card and USB tests, you can connect to the internet by running the following script.
 
 ```sh
 sudo chmod +x ./pe2a_miniIOEx.sh
 sudo ./pe2a_miniIOEx.sh internet ttyUSB3
 ```
+The ttyUSB3 address will change according to what you connect to the USB on Raspberry. If ttyUSB is incorrectly selected, the device will not be connect internet. Usually, the default APN for Vodafone is **'internet'**. This depends on the country you are located in and the operator you are servicing. The device can not connect internet on the wrong APN. For Turkcell, the APN may be **"mgbs"**. Detailed information can be reached at: https://www.turkcell.com.tr/kurumsal/kurumsal-cozumler/statik-ip/sikca-sorulan-sorular
 
-ttyUSB2, Raspberry’nin üzerindeki USB’lerden hangisine bağladığınıza göre değişecektir. ttyUSB’nin yanlış seçilmesi durumunda cihaz internete çıkmayacaktır. Genellikle, Vodafone için default APN **‘internet’** dir. Bulunan ülkeye göre ve servis aldığınız operatöre göre bu değişir. Yanlış APN’de cihaz internete bağlanamaz. Turkcell için APN "mgbs" 'dir. Ayrıntılı bilgiye ekte ulaşılabilir: https://www.turkcell.com.tr/kurumsal/kurumsal-cozumler/statik-ip/sikca-sorulan-sorular
-
-Bu işlemlerden sonra internet bağlantılarını kapatmayı unutmayınız:
+Do not forget to close the internet connections after this:
 
 ```sh
 sudo ifconfig eth0 down
 sudo ifconfig wlan0 down
 ```
-
-APN ayarlarından sonra ise aşağıdaki komut ile internete çıkabilirsiniz:
+After the APN settings, you can connect to the internet with the following command:
 
 ```sh
 sudo pppd call gprs
 ```
-Komutun arka planda çalışmasını istiyorsanız aşağıdaki gibi ‘&’ karakterini komut satırına ek yapabilirsiniz. 
+If you want the program backplane to work, you can add '&' to the command line as follows.
 
 ```sh
 sudo pppd call gprs&
 ```
 
-**“sudo pppd call gprs”** komutundan sonra aşağıdaki gibi bir ekranla karşılaşmamız gerekmektedir:
+After the **"sudo pppd call gprs"** command, you should see a screen like this:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/57.jpg)
 
-Eğer cihaz internete çıkmıyorsa “script failed” hatası verecektir. En çok karşılaşılan problemler SIM kartı APN adresinin yanlış olması, PIN kodu, SIM kartın internete çıkmaması, SIM kartın internet hakkının olmaması vs. Dokuman başlarında anlatılan USB testleri ve SIM kart testleri başarılı ise fiziksel olarak modülde bir sıkıntı olmaması gerekir. 
-Cihaz internete çıktığında aşağıdaki komutu işleyerek cihazın IP’sine erişebilirsiniz. 
+If the device does not exit internete, it will give a "script failed" error. The most common problems are that the APN address of the SIM card is incorrect, the PIN code is insufficient, etc. You can access the IP of the device by executing the following command on the device internete.
 
 ```sh
 sudo ifconfig
 ```
-
-Cihaz internete çıktığında ise eğer internet hızını görmek istiyorsak **speedtest-cli** programı yüklememiz gereklidir. Bu program üzerinden internete çıkış hızımızı görebiliriz. Aşağıda konuyla ilgili örnek ekran görüntüsü bulunmaktadır:
+If you want to see internet speed, ** speedtest-cli ** program should be installed. Through this program, we can see the speed of the international exit. Below is a sample screenshot of the relevant topic:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/58.jpg)
 
