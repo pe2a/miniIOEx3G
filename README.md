@@ -2,31 +2,18 @@
 ## Table of Contents ##
 
 [An Industrial Raspberry Shield: MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#an-industrial-raspberry-shield-miniioex-3g)
-
 [Who is for MiniIOEx-3G?](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#who-is-for-miniioex-3g)
-
 [What is in the box?](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#what-is-in-the-box-)
-
 [IO Handling](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#io-handling)
-
 [Digital Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-input)
-
 [Digital Output](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-output)
-
 [Analog Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#analog-input)
-
 [Reading Analog Input Values ](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#miniioex-3g-analog-input-read)
-
 [Serial Port](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#seri-port)
-
 [3G / GPS](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#3g--gps)
-
 [GPS Commissioning](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#gps-commissioning)
-
 [RTC and EEPROM Usage](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#real-time-clock-and-eeprom)
-
 [Support](support@pe2a.com)
-
 
 
 # An Industrial Raspberry Shield: MiniIOEx-3G #
