@@ -62,8 +62,8 @@ The Raspberry-based control solutions enable you to run any applications for vai
 - Handling and Assembly Technology,
 - Railway applications, 
 - AV and Media Technology,
--	Real time data stream,
--	Camera stream via 3G,
+- Real time data stream,
+- Camera stream via 3G,
 - Students/Engineers who aim to develop about Embedded Linux plaftorms. 
 
 
@@ -134,7 +134,7 @@ Sample connection of buttons:
 Given in the example code, you can monitor your Digital contacts/switches/buttons etc.
 *di_test.py*
 
-```sh
+```python
 import RPi.GPIO as GPIO
 import time
 
@@ -321,7 +321,7 @@ In order to read the digital value from the MCP3208 integration, the code block 
 **Important Note**
 Since the Python library is used, **Raspi-Config -> Interfacing Options -> SPI** *enable* is required.
 
-```sh
+```python
 def readAI(ch):
         if 7 <= ch <= 0:
             raise Exception('MCP3208 channel must be 0-7: ' + str(ch))
@@ -341,7 +341,7 @@ def readAI(ch):
 
 The equivalence of the above Python code written in C language is as follows. You can select the code block for which you want to work with the programming language in your work.
 
-```sh
+```c
 //AI reading channel val
 int smallex_getVal(const int channel){
     char tbuf[3]; //transmitting values to mcp3208
@@ -648,7 +648,7 @@ The ** EEPROM ** on MiniIOEx **(24LC512)** unique address is **0x50**. We also n
 
 Below is a sample program written in *.c*. In this code, clock data from RTC is printed on EEPROM and this data is read through EEPROM.
 
-```sh
+```c
 #include <stdio.h>
 #include <sys/ioctl.h> // ioctl
 #include <fcntl.h>     // open
