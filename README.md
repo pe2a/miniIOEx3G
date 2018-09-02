@@ -19,11 +19,13 @@
 
 [Serial Port](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#seri-port)
 
-[3G / GPS](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#3g--gps)
+[3G / GPS Commissioning](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#3g--gps)
 
 [GPS Commissioning](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#gps-commissioning)
 
 [RTC and EEPROM Usage](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#real-time-clock-and-eeprom)
+
+[Application Notes]((https://github.com/pe2a/miniIOEx3G/blob/master/README.md#application-notes)
 
 [Support](support@pe2a.com)
 
@@ -543,11 +545,13 @@ These products are shipped in the product package when you buy MiniIOEx-3G. Ther
 ## Configuration of 3G Connection ##
 
 We can test the Quectel 3G module using the following steps:
-1- Fitting on Quectel Modul Shield,
-2- Placement of the SIM card on the module,
-3- Installation of Raspberry on Shield,
-4- Installation of USB cable to Raspberry Pi,
-5- Installation of 3G antenna on Quectel UC20 module.
+
+- Fitting on Quectel Modul Shield,
+- Placement of the SIM card on the module,
+- Installation of Raspberry on Shield,
+- Installation of USB cable to Raspberry Pi,
+- Installation of 3G antenna on Quectel UC20 module.
+
 Once the physical module and the Raspberry have been installed, the corresponding 'scripts' can be activated to activate the 3G module. As expected, the 3G module requires a high current source in the internete coupling stage. If this current is not met, the voltage drops and the module resets itself. This topic is about sahada and lab. We did a lot of research / development in our tests. In MiniIOEX and similar 3G products, we have also ensured that this voltage regulator protects our 3G connection more stable.
 6- It is recommended to operate the latest operating system on the operating system. The Minicom program displays the data received from the serial port sockets for SIM card and the Module tests. For **speedtest-cli**, you can also use the device's internete connection speed for testing purposes.
 
@@ -601,6 +605,9 @@ sudo chmod +x ./pe2a_miniIOEx.sh
 sudo ./pe2a_miniIOEx.sh internet ttyUSB3
 ```
 The **ttyUSB3** address will change according to what you connect to the USB on Raspberry. If ttyUSB is incorrectly selected, the device will not be connect internet. Usually, the default APN for Vodafone is **'internet'**. This depends on the country you are located in and the operator you are servicing. The device can not connect internet on the wrong APN. For Turkcell, the APN may be **"mgbs"**. Detailed information can be reached at: https://www.turkcell.com.tr/kurumsal/kurumsal-cozumler/statik-ip/sikca-sorulan-sorular
+
+**Important Note**
+**The port number you use as ttyUSB2 in minicom needs to be ttyUSB3 when running the .sh script.**
 
 Do not forget to close the internet connections after this:
 
@@ -724,7 +731,9 @@ int main() {
 ```
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/63.jpg)
 
-## Application Samples ##
+## Application Notes ##
+
+You can review applications made on MiniIOEx-3G in this section.
 
 ### Sample #1 – FAN Motor Control with Start/Stop Button on MiniIOEx-3G ###
 
@@ -945,39 +954,49 @@ while 1:
 
 ### Sample #3 – Reading values from Energy Analyser via RS485###
 
-RS485 sayesinde birçok cihaza bağlanabilir ve bunlardan veri okuyabiliriz.  Raspberry ve MiniIOEx ile bu verileri 3G veya Ethernet/Wireless üzerinden merkeze gönderebilir, bu verilerin sayesinde IO’ları kullanarak eyleme geçebilir veya bu verileri yüksek çözünürlükte depolayabiliriz. Bu tarz bir işlem kolay gibi görünse de PLC veya gömülü PC’lerde oldukça yüksek maliyetler çıkmaktadır. 
-Aşağıda sistemde kullandığımız topoloji gözükmektedir. Topolojide harici bir bilgisayar da gözükmektedir. Bilgisayarı kullanmamızdaki amaç RS485 fiziksel seri yolu üzerinden MODBUS RTU protokolü ile veri alış/verişi yaptığımız için bu verileri nasıl aldığımızı göstermektir. Yani enerji analizöründen veri alırken hangi sorgularla aslında bu verileri alıyoruz bunu harici bir bilgisayar üzerinden rahatlıkla görebileceğiz. 
+Thanks to RS485, we can connect and read/write data from many devices. With Raspberry Pi and MiniIOEx, this data can be sent via 3G or Ethernet / Wireless, thanks to which data can be transferred using IOs or stored in high resolution. Although this kind of process seems easy, the PLC or embedded PCs cost quite a lot for this basic process.
+
+Used devices for this part:
+
+- Raspberry Pi 3
+- MiniIOEx
+- Entes MPBR63 ENergy Analyzer
+- Additional computer to monitor read/write data
+
+Below is the topology we use in the system. There is also a computer outside the topology. The purpose of our computer use is to show how we receive this data because we have exchanged data with the MODBUS RTU protocol over the RS485 physical serial path. In other words, when we receive data from the energy analyzer, we actually receive this data with which questions we can easily see it on an external computer.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/45.jpg)
-*RS485 Cihaz Topoloji*
-
-Yukarıdaki sistemde Bilgisiyar master/slave , MiniIOEx master ve Analizör slave ‘dir. RS485, *A* ve *B* uçları sistemde kısa devredir. Bilgisiyar’da kurulu olan **“Modbus Master”** ve **“Terminal v1.9b”** programları sayesinde Entes Analizör’den veri okumak için gitmesi gereken referans kodları görebiliyoruz. Tabi bunu yapmadan önce Analizör’ün hangi register’larında hangi bilgiler var bunları bilmemiz gereklidir. Bunu da Entes Analizör’ün analizör dokuman internet sayfasında bulunan **“Data Mapping”** dokümanından çıkartabiliriz.
+*RS485 Device Connection Topology*
+ 
+In the above system, the computer behaves as master / slave, the MiniIOEx is master and the analyzer is slave. *A* and *B* terminals of MiniIOEx RS485 are all short-circuited in the system. **"Modbus Master**" that Computer Serial Port Program and **"Terminal v1.9b**" programs installed on the computer, we can see the reference codes you need to go to read data from the Entes Analyzer. Of course, before we do this, we need to know which registers the analyzer has which information. We can also extract this from the **"Data Mapping"** document found on the analyzer web page of the Entes Analyzer.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/46.jpg)
-*Entes Analizör Register Tablosu*
+*Register Table of the Energy Analyzer*
 
-Buradaki tabloda görüldüğü gibi *cosq* değerleri *19,20,21* nolu register’larında yer almaktadır. (Register tablosunda ilk değerin 0’dan başladığı görülmektedir.) cosq değeri için çözünürlük 1000 olduğu için gelen değerin gerçek cosq değerinde olması için 1000’e bölünmesi gereklidir. Örnek olarak 999 değeri geldiğinde bu değerin cosq = 999/1000 = 0.99 olması gerekmektedir. Entes analizöre herhangi Akım/Gerilim uçları bağlanmadığı için arada faz farkı oluşmamakta ve bundan dolayı cosq = 1 değeri görmemiz gereklidir. Sahada uygulama yapıldığında bu dokuman kullanarak diğer bilgiler (gerilim, akım vs.) de alınabilir. 
-Analizörü bilgisiyar ve MiniIOEx klemens uçlarına bağladığımızda veri okuma işlemlerine geçebiliriz. 
+As you can see on the tablade there is *cosq* values *19,20,21* in the register. (It appears that the first value starts from 0 in the Register table.) Since the resolution for cosq value is 1000, it must be divided by 1000 so that the value coming from real cosq value. For example, when the value of 999 is reached, this value should be cosq = 999/1000 = 0.99. Since no current / voltage terminals are connected to the energy analyzer, there is no phase difference between them and therefore we need to see cosq = 1. Other information (voltage, current, etc.) can also be taken using this tissue when a field application is made.
 
+When we connect the analyzer to the terminals of the computer and MiniIOEx terminal, we can proceed to read data.
 
-| MiniIOEx Klemens Ucu |MPBR63 Analizör Haberleşme Klemens Ucu | 
+| MiniIOEx Terminal Number  | MPBR63 Analyzer Terminal Number | 
 | --- | --- |
 | RS485-B, 19	| RS485-B, 15 |
 | RS485-A, 20	| RS485-A, 14 |
 
-İlk olarak bilgisayarda kurulu olan **MODBUS MASTER** programında kaç adet register okumak istediğimizi, node/slave adresi gibi temel bilgileri yazmamız gerekiyor. Aşağıdaki ekran görüntüsünden de örnek bilgiler edinilebilir:
+First we need to write basic information such as node slave address, how many registers we want to read in the **MODBUS MASTER** program installed on the computer. The following screen shot also provides sample information:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/47.jpg)
-*HEX Formatında Analizör Sorgu ve Cevap*
+*Query and Answer as HEX format*
 
-Bilgisayarın gönderdiği sorgu : **01 03 00 00 1E C5 C2** şeklindedir. Bu sorguya göre ise Analizör uzun bir cevap vermiştir. Rx, bilgisiyarın gönderdiği sorgu; Tx ise analizörden gelen cevaptır. RS485 üzerinde sorgulamadan veri alınamaz. RS232 ile bu yönde de ayrılırlar. Bu uzun cevaplar aslında Analizörün ölçtüğü Gerilim/Akım/Frekans/Güç faktörü gibi parametrelerdir. Biz bu parametrelerden cosq’yu kullanacağımız için ilk başta Analizörün gönderdiği sorguyu inceleyelim. Analizör bize sıralı olarak 03 E8 cevaplarını göndermiştir. Bu cevap aslında HEX 0x3E8 ‘dir. Ondalık sayı sisteminde ise “1000” ile ifade edilir. Yani analizöre yaptığımız sorgu sonucunda cosq register’ında 1000 ifademiz ise 1000/1000 = 1 olarak ifade edilir. Eğer 999(0x3E7) değeri gelseydi 999 / 1000 = 0.99 olacaktı. Bu yapılan işlemler en temel düzeyde RS485 seri yolunda gerçekleşen olaylardır. Biz protokoller kullanarak bu işlemleri basit hale getiriyoruz. Eğer Raspberry’den bilgisiyar gibi bir sorgu yapmak istersek aşağıdaki kodu kullanabiliriz. Aşağıdaki kodda “python serial” kütüphanesi olduğu görülmektedir. Bu kütüphaneyi terminalde aşağıdaki komutu yazarak kurabilirsiniz.
+The computer sends the query: **01 03 00 00 1E C5 C2**. According to this query, the Analyzer gave a long answer. Rx, the query sent by the computer; Tx is the answer from the analyzer. Data can not be retrieved without inquiry on RS485. These long answers are actually parameters such as Voltage / Current / Frequency / Power factor measured by the Analyzer. In order to use Cosq from these parameters, let us first examine the question sent by the Analyzer. The analyzer sent us the **03 E8** replies in sequence. This answer is actually **HEX 0x3E8**. In the decimal number system, it is expressed as "1000". In other words, the result of the query we made is 1000/1000 = 1 in the cosq register. If the value of 999 (0x3E7) came, it would be 999/1000 = 0.99. These operations are the most basic events that take place in the RS485 serial path. We make these operations simple by using protocols. If we want to make a computer-like query from Raspberry Pi, we can use the following code. 
+
+The following code appears to have the **"python serial"** library. You can run this library by typing the following command at the terminal.
 
 ```sh
 $sudo apt-get install python-serial
 ```
-Kütüphaneyi yükledikten sonra ilgili sorguyu aşağıdaki programı çalıştırarak gönderebiliriz. 
+After uploading the library, we can send the related query by running the following program.
 
-```sh
+```python
 import os,time
 import serial
       
@@ -994,25 +1013,24 @@ ser = serial.Serial(
 ser.write(serial.to_bytes([0x01,0x03,0x00,0x00,0x00,0x1E,0xC5,0xC2]))
 
 ```
-
-Analizörden veri almamız için analizöre ilgili parametreyi göndermemiz gerektiğini yukarıda belirtmiştik: 01 03 00 00 1E C5 C2 bu parametreyi seri port üzerinden Analizör’e gönderdiğimizde ise bize yine HEX olarak üzerindeki parametreleri döndürmektedir. Bunu da yine bilgisayar üzerinden **“Terminal v1.9b”** programı sayesinde görebilmekteyiz. 
+In order to receive the data from the analyzer, we have mentioned above that we need to send the relevant parameter to the analyzer:**01 03 00 00 1E C5 C2** When we send this parameter through the serial port to the analyzer, it returns us the parameters in HEX again. We can see that the values again on **"Terminal v1.9b"** computer program.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/48.jpg)
-*RS485 Sorgu ve Cevabı*
+*RS485 Query and Answer*
 
-Yukarıdaki resimde, Analizör’e giden sorgu **( 01 03 00 00 1E C5 C2 )** ve analizörden gelen sorgu ve bu sorguya göre de analizörden gelen cevaplar yer almaktadır. Bu sorguda aslında çok da karışık değildir. Örnek olarak “01” Node adresini tanımlar; “1E”’de kaç adet register tanımlanmış onu gösterir. RS485 protokolünde ilk sorgu sonra da onun cevabı yer alır. RS485 seri port üzerinden Yazma ve Okuma ikisi senkronize bir şekilde sorgulanamaz. Bu durum hataya sebep verir. 
-Bu temel kodu çalıştırdığımızda Analizör yukarıdaki gibi bir sonuç verecektir. Bu kodu ModbusRTU protokolü ile yazdığımızda parametrelerin anlaşılması, Check-Sum hesapları, CRC hesapları daha rahat olmaktadır. 
-Raspberry’de çalışan birçok açık kaynaklı ModbusRTU kütüphanesi mevcut bulunmaktadır. İnternette bu konuyla ilgili birçok dokuman da bulunmaktadır. ModbusRTU, bir protokol olduğundan isterseniz bu protokolü siz de oluşturabilirsiniz ama yazılım gibi çoğu alanda da geçerli olan “tekerliği yeniden icat etme” ye burada da gerek yoktur.  Bu dokumanda “pymodbus” kütüphanesi kullanılmıştır. Pymodbus kütüphanesini aşağıdaki terminale komutu girerek yükleyebilirsiniz. 
+In the picture above, the query **(01 03 00 00 1E C5 C2)** to the Analyzer and the query from the analyzer and the answers from the analyzer according to this query. In this question, it is not really complicated. As an example, *"01"* defines Node address; *"1E"* shows how many registers are defined. The first query in the RS485 protocol then takes place in his reply. Both Write and Read via RS485 serial port at the same time can not be querried synchronously. This causes the fault.
 
+When we run this basic code, the Analyzer will give a result like above. When we write this code with ModbusRTU protocol, understanding of parameters, Check-Sum calculations, CRC calculations are more comfortable.
+
+There are many open source **ModbusRTU** libraries running on Raspberry. There are many documents related to this subject on the internet. **ModbusRTU** is a protocol that you can create if you wish but you do not need to "reinvent the wheel" here, which is also true in most areas like software. In this document **"PYMODBUS"** library is used. You can download the **PYMODBUS** library by entering the command at the following terminal.
 
 ```sh
 $sudo pip install  -U pymodbus
 ```
 
-**“pymodbus”** kütüphanesi yüklendiğinde ise ModbusRTU protokolünü kullanarak Analizörden sahadan aldığı parametreleri çekebiliriz. Buradaki örnekte kullanılan analizöre hiçbir gerilim veya akım kaynağı bağlanmamıştır. Bundan dolayı sadece “cosq” verisini sorgulayabileceğiz. “cosq” verisini alabilmek demek zaten diğer verilere de rahatlıkla ulaşılabileceği anlamına gelmektedir. Diğer bilgileri alabilmek için sadece doğru “register” adreslerini bilmek gereklidir. 
+When the **"PYMODBUS"** library is installed, we can use the ModbusRTU protocol to get the parameters received from the Analyzer from the field. The analyzer used in this example has no voltage or current source connected. Therefore, we can only query "cosq" data. Having the "cosq" data means that other data can be easily accessed. In order to receive other information, it is only necessary to know the correct "register" addresses.
 
-
-```sh
+```python
 import serial
 import pymodbus
 from pymodbus.pdu import ModbusRequest
@@ -1034,20 +1052,21 @@ while 1:
     time.sleep(1)
 
 ```
+Usage of *read_holding_registers* in python program:
 
-Programın içerisindeki *read_holding_registers* kullanımı:
-
-```sh
+```python
 result = client.read_holding_registers(0x00,40,unit = 0x01)
 ```
 
-Yukarıdaki yazılım örneğinde analizörün üzerindeki 0 ve 40. Register’lar arasındaki register’lar sorgulanıyor. Yukarıda da register tablosu verilmişti ve bu register’lar arasında birçok parametrenin olduğunu görmüştük. Analizörün haberleşme node “1” olduğu için “client.read_holding_registers” fonksiyonun  parametresine de “0x01” veya sadece “1” ID sorgu parametresini de ekliyoruz. Yani aslında unit ID’si 1 olan analizör, 0 ve 40. Registerlar arasındaki paramatrelerini göndermesini istiyoruz. Bu parametreler arasında agerilim, akım, cosq, enerji gibi değerler de mevcut. Eğer bu ID numaralı bir analizör yoksa *timeout*’da sistem bekleyecektir. 
+In the above software example, the registers between 0 and 40 registers on the analyzer are being queried. The register table has been given above and we have seen that there are many parameters between these registers. Since the analyzer is the communication node "1", we add "0x01" or only "1" ID query parameter to the parameter of **"client.read_holding_registers"**. That is, the analyzer with unit ID:1 actually wants to send the parameters between 0. and 40. Registers. These parameters include  voltage, current, cosq, energy. If there is no analyzer with this ID number, the system will wait in *timeout*.
 
-Kodun çıktısı ise faz Aktif Güçlerindeki cosq’ların değeri olmaktadır. Eğer gerilim/akım gibi bilgiler alınacaksa ilgili Register tablosundan sorgulama yapılmalıdır. Cosq’ları Analizörden aldığımız diğer bilgiler vasıtasıyla da hesaplayabiliriz.
+The output of the code is the value of the cosq values in the Active Power. If information such as voltage / current is to be received, inquiry should be made from the relevant Register table. We can also calculate COSQ through other informations from the Analyzer.
+
+Basic Cosq calculation:
 
 -	P = VIcosq  == cosq=P/VI
  
--	Örnek P = 3.4kW, V=400V, I=10A
+-	Sample#1 P = 3.4kW, V=400V, I=10A
 
 -	Cosq = 3400W / (400Vx10A)
 
@@ -1055,9 +1074,13 @@ Kodun çıktısı ise faz Aktif Güçlerindeki cosq’ların değeri olmaktadır
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/49.jpg)
 
+Here we can calculate *CosQ* as *0.85*. In general, we always want CosQ to be close to 1. Since we can get the values angle of Voltage, Current, Active Power etc. from the analyzer, we can calculate cosq and accordingly angle calculations. If the system of cosq is not below 0.98, fines shall be paid.
 
-Buradan cosq’yu *0.85* olarak hesaplayabiliriz. Tabiki cosq’nun her zaman 1’e yakın olmasını isteriz. Analizörden Gerilim, Akım, Aktif Güç değerlerini de alabildiğimiz için cosq’yu ve buna bağlı olarak açı hesaplarını yapabiliriz. Eğer sistemde cosq 1 olmuyorsa Reaktif Kullanım yüğzünden para cezası ödenebilir. Bundan dolayı güç faktörü hesaplarının takibinin iyi yapılması gerekmekte ve böyle bir durumda Reaktör veya Kapasite bankaları ile cosq’yu 1(>0.98) ’e çekmemiz gerekmektedir. Kullanıcı bilgilendirme gibi işlemleri Raspberry yüzünden rahatça yapılabilir. Yazacağınız koda birkaç satır ekleyerek mail atma, “push-in notification” gibi özellikleri ekleyebilirsiniz.  
+You can also see the energy consumed and the energy generated from the analyzer. If you have a solar power plant, you can also get Spent and Generated Energy information and record it on a daily / weekly / monthly basis and send your data to your server without any internet service provider by using 3G module on MiniIOEx-3G. When there is energy production, the sign of the current will change. It should be noted.
 
-Analizörden Tüketilen enerji ve Üretilen enerjiyi de görebilirsiniz. Eğer bir güneş santraliniz var ise Harcanan ve Üretilen Enerji bilgilerini de alabilir ve günlük/haftalık/aylık bazda veritabına kayıt edebilir ve sunucunuza MiniIOEx üzerindeki 3G module’i da kullanarak herhangi bir internet servis sağlayıcı olmaksızın verilerinizi gönderebilirsiniz. Enerji üretimi olduğunda Akım’ın işareti değişecektir. Buna dikklat edilmelidir. 
+
+### Sample #4 – Reading values from Energy Analyser via RS485###
+
+
 
 
