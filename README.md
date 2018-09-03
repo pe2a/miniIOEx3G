@@ -9,23 +9,31 @@
 
 [IO Handling](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#io-handling)
 
-[Digital Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-input)
+	- [Digital Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-input)
 
-[Digital Output](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-output)
+	- [Digital Output](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-output)
 
-[Analog Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#analog-input)
+	- [Analog Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#analog-input)
 
-[Reading Analog Input Values ](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#miniioex-3g-analog-input-read)
+	- [Reading Analog Input Values ](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#miniioex-3g-analog-input-read)
 
 [Serial Port](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#seri-port)
 
 [3G / GPS Commissioning](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#3g--gps)
 
-[GPS Commissioning](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#gps-commissioning)
+	- [GPS Commissioning](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#gps-commissioning)
 
 [RTC and EEPROM Usage](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#real-time-clock-and-eeprom)
 
-[Application Notes]((https://github.com/pe2a/miniIOEx3G/blob/master/README.md#application-notes)
+[Application Notes](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#application-notes)
+
+	- [FAN Motor Control](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-1--fan-motor-control-with-startstop-button-on-miniioex-3g)
+
+	- [FAN Motor Control Using WEB Reference](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-2--controlling-of-fan-motor-with-startstop-and-web-reference)
+
+	- [Reading Values from energy Analyzer via RS485](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-3--reading-values-from-energy-analyser-via-rs485)
+
+	- [Controlling Siemesn AC Motor by ABB Motor Driver via RS485]
 
 [Support](support@pe2a.com)
 
@@ -348,7 +356,7 @@ As a result, if we want to find the voltage value of the power supply supplied b
 In order to read the digital value from the MCP3208 integration, the code block below is shared and the conversion of this value to voltage and sensor data is detailed in the headers of the document. 
 
 **Important Note**
-Since the Python library is used, **Raspi-Config -> Interfacing Options -> SPI** *enable* is required.
+**Since the Python library is used, **Raspi-Config -> Interfacing Options -> SPI** *enable* is required.**
 
 ```python
 def readAI(ch):
@@ -510,7 +518,7 @@ The 9600 number entered in the parameter is the baudrate rate. You can change th
 In this document we will illustrate with practical examples how we can obtain data via **"Entes MPR63 Energy Analyzer"** using RS485 as an example.
 
 
-## 3G / GPS Commissioning##
+## 3G / GPS Commissioning ##
 
 One of the most important and basic features of the MiniIOEx is that it has a structure that is compatible with 3G and 4G communication. So if you are in a place where Wireless and Ethernet are not available or if work is being done on site, data communication with 3G is the most convenient method. This communication can be fully exploited from the data exchange capacity of 3G since it is realized via USB rather than through serial port. 3G services have been added to the MiniIOEx because some service providers can not provide full performance on 3G services. It is compatible with MiniIOEx-3G, Raspberry V2, V3, Zero devices and software tests have been tested on Jessie and later operating systems. Quectel 3G Module can provide 14.4 Mbps downlink and 5.76 Mbps uplink service. Due to its compact and modular structure, it can be easily used in projects with MiniIOEx-3G. If you did not purchase the MiniIOEx with the 3G module, it will be enough to place only 3G module in your plans in the future.
 Where MiniIOEx-3G is available:
@@ -781,7 +789,7 @@ The following terminal numbers are used in connection:
 We can do the wiring as above. **FAN GND**is shorted to power supply GND. The voltage is given by switching from the transistor by software. In the following illustration, the cable ends are shared:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/31.jpg)
-*Fan Motoru Terminal Cable Commissioning *
+*Fan Motor Terminal Cable Commissioning *
 
 
 ```python
@@ -1079,8 +1087,217 @@ Here we can calculate *CosQ* as *0.85*. In general, we always want CosQ to be cl
 You can also see the energy consumed and the energy generated from the analyzer. If you have a solar power plant, you can also get Spent and Generated Energy information and record it on a daily / weekly / monthly basis and send your data to your server without any internet service provider by using 3G module on MiniIOEx-3G. When there is energy production, the sign of the current will change. It should be noted.
 
 
-### Sample #4 – Reading values from Energy Analyser via RS485###
+### Sample #4 – Reading values from Energy Analyser via RS485 ###
+
+We have seen in the previous chapter that we can easily read data from the Energy Analyzer with MiniIOEx. Because MiniIOEx-3G is an industrial development card, it is designed for use in industrial environments. When it comes to industrial environments, mind motor control and applications come first. In this application, we will try to drive the motor by giving reference values via RS485 to the motor driver. RS485 will be used again in this study. Therefore, we assume that the following libraries are installed:
+
+- **serial**
+- **pymodbus**
+
+If you have loaded these libraries, you can load them by looking at the previous example. **"Raspi-config"** should check that the serial port settings are open. Our goal here is to give the speed reference to the motor driver and to control this speed through Raspberry. The following equipment was used in this study:be
+
+-	ABB ACH550 3P 400V 7.5kW Motor Driver
+-	Siemens 2kW 3P 400V 1500rpm AC Motor 
+-	Raspberry Pi 3 B+
+-	MiniIOEx-3G 
+-	Phoenix Contact UNO Power 230V/24V Power Supply
+
+**IMPORTANT NOTE**
+**Perform motor and driver connections with an experienced electrician. It should not be forgotten that there is a danger of death at 400V**
+
+After setting the motor parameters of the ABB Driver, we need to enter the "Communication Parameter" settings. The corresponding parameter setting is available in the driver's manual. After setting the parameters, we are installing the RS485 terminals of the MiniIOEx in the ABB Motor Drive.
+
+We create a file called **"abb.py"** on the terminal screen and we need to grant all rights to use serial port and IO operations in this file. If we write in the terminal we can give these rights by *"chmod + x abb.py"* command. If the driver's motor connections and communication connections are completed, we can switch to the corresponding software. When we read the manual page of our driver, we are registering the relevant registers and we need to check what information they contain. Although the drive consumes a lot of information from the consumed energy to the saved energy etc., we will only use the following parameters in our software:
+
+-	Motor Speed[rpm]
+-	Motor Current[A]
+-	Motor Power[kW]
+-	Driver DC Bus Voltage[V]
+-	Driver Temperature [Celcius]
+
+We can retrieve these values by querying the relevant registers. We only used the Motor Speed variable in our sample software. Other information can also be taken from the code. The Motor Temperature parameter is important for this information. In general, motor drivers can only operate for a certain time at a certain temperature. This value should be continuously checked for unintentional stops and if the temperature is too high (operating temperature is usually 40 °C max), the driver can be taken care of or the environmental conditions can be changed.
+
+We read data via RS485 with the energy analyzer, but we did not write any data on the analyzer. In this example, there is also how to write data via Modbus.
+
+```python
+client = ModbusClient(method = 'rtu', port = '/dev/ttyS0',baudrate = 9600,timeout = 1, parity = 'N')
+client.connect()
+
+try:
+    result = client.read_holding_registers(100,20,unit = 0x01)
+    print("Motor Speed : {}".format(result.registers[2]))
+```
+
+We were questioning the '0' register while reading the data on the analyzer, but since the ACH550 driver told us that we could read from the 100th Register, we made 20 register's from the 100th register. The return value of the function ".read_holding_registers" contains all the variables mentioned above in the 'result' array. In the 100.register, because of the Speed ​​Variable, the result [0] will give us the instant speed variable in subsequent queries.
+
+After the first interrogation, the program decides whether to start the engine by looking at the variables. Since we have a simple example here, we have not checked these variables. For example, the motor start temperature, DC bara voltage can be controlled, and if these values are not within the desired range, the motor should not start.
+
+General flow diagram of the program:
+
+- Read motor and drive parameters
+- "Driver start" refer to the first conditions
+- "Driver start"
+- Driver motor speed reference sending as [Hz] type
+- Increase motor speed reference
+- Pull motor speed reference to 0 Hz
+- Bring the drive to the stop state
+
+In the first step we read the motor and drive parameters. Now we have to start the drive. 
+
+In the analyzer we mentioned that we were just reading and writing here. We can perform the typing operation using the following function:
+
+```python
+result = client.write_registers(REGISTER_ADRESS,REGISTER_REF,unit = UNITID)
+```
+
+With this function, we can perform the desired write operation. First we need to perform the driver start operation in register *0* and not send the motor speed reference still. We can do all of this with the **"write_registers"** function.
+
+Driver Start Bit Reference Values Initial Status:
+
+| ACH550 Motor Driver Register Value[0]	| Bit Value |
+| --- | --- |
+| [0].1	| True |
+| [0].2	| True |
+| [0].3	| True |
+| [0].4	| True |
+| [0].5	| True |
+| [0].6	| True |
+| [0].7	| True |
+| [0].10 | True |
+| [0].0	| **False (Start Bit)** |
+
+First of all references to the table should be sent. Since we send references as DECIMAL, the value of DECIMAL in this table is 1278.
+
+```python
+result = client.write_registers(0,1278,unit = 1)
+```
+After that, we will make the Start bit True, making the motor driver work.
+
+Driver Start Bit Reference Values Second Condition:
+
+| ACH550 Motor Driver Register Value[0]	| Bit Value|
+| --- | --- |
+| [0].1	| True |
+| [0].2	| True |
+| [0].3	| True |
+| [0].4	| True |
+| [0].5	| True |
+| [0].6	| True |
+| [0].7	| True |
+| [0].10 | True |
+| [0].0	| **True (Start Bit)** |
+
+**[0] .0** Since the value of the start bit changes, the reference value we send to the register will increase. 
+
+```python
+result = client.write_registers(0,1279,unit = 1)
+```
+
+After this reference value, the motor drive will be ready for external reference. First we do not want to make all bits true. Therefore we gradually activated the motor drive. Now let's send the motor speed reference again using the **"write_registers"** function.
+
+```python
+result = client.write_registers(1,speedRef,unit = 1)
+```
+The ABB Motor document Indicates that there is a **"Speed Reference"** register in the driver's No. 1 register. We can increase the **"speedRef"** variable to speed up the motor. We specified that the speed reference parameter of the AC Motor drive is "Hz".
+
+| Referance Value(Decimal) | Hz Response |
+| --- | --- |
+| 0	| 0 Hz |
+| 10000	| 25Hz |
+| 20000	| 50Hz |
+
+Increases **speedRef** by 10,000 in each cycle to speed up the engine.
+
+```python
+myCounter = 5
+speedRef = 0
+    while myCounter:
+        
+        result = client.write_registers(1,speedRef,unit = 1)
+        time.sleep(1)
+        result = client.read_holding_registers(100,20,unit = 0x01)
+        print("Motor Speed : {} ".format(result.registers[0]))
+        myCounter = myCounter - 1 
+        speedRef = speedRef + 10000
+        time.sleep(10)
+```
+When we run the program, we get the speed values as follows:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/50.jpg)
+
+*ABB Driver Speed Reference*
 
 
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/51.jpg)
 
+*Driver User Panel at full speed*
+
+As seen in the above screen display, the motor speed is gradually increased in rpm and then gradually decreased. Due to the slip of the AC motor, the maximum speed rises to 1476 rpm not 1500.  The motor was rotated and stopped in the *FORWARD* direction by the ABB driver. It is possible to do all of these easily by using **PYTHON** language. Very good graphics can be developed by developing the program, the data can be sent to the WEB or the program can be run from the WEB in various situations. 
+
+
+Below you will find the code needed to control the ABB ACH550 Motor drive.
+
+**abb.py**
+
+```python
+import serial
+import pymodbus
+from pymodbus.pdu import ModbusRequest
+from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+from pymodbus.transaction import ModbusRtuFramer
+import time
+
+client = ModbusClient(method = 'rtu', port = '/dev/ttyS0',baudrate = 9600,timeout = 1, parity = 'N')
+client.connect()
+
+try:
+    result = client.read_holding_registers(100,20,unit = 0x01)
+    print("Motor Speed : {}".format(result.registers[2]))
+    time.sleep(1)
+    #start bit  0       
+    result = client.write_registers(0,1278,unit = 1)
+    time.sleep(1)
+    #start bit  1
+    result = client.write_registers(0,1279,unit = 1)
+    time.sleep(1) 
+    #after start operation 
+    print("operation starts:")
+    myCounter = 5
+    speedRef = 0
+    while myCounter:
+        
+        result = client.write_registers(1,speedRef,unit = 1)
+        time.sleep(1)
+        result = client.read_holding_registers(100,20,unit = 0x01)
+        print("Motor Speed : {} ".format(result.registers[0]))
+        myCounter = myCounter - 1 
+        speedRef = speedRef + 10000
+        time.sleep(10)
+    #Stop Operation
+    #speed ref will be 0 rpm
+    time.sleep(5)
+    result = client.write_registers(1,0,unit = 1)
+    time.sleep(20)
+    result = client.read_holding_registers(100,20,unit = 0x01)
+    print("Motor Speed : {}".format(result.registers[0]))
+    #driver start bit will be 0 and driver will stop
+    result = client.write_registers(0,0,unit = 1)
+    result = client.read_holding_registers(100,20,unit = 0x01)
+    print("Motor Speed : {}".format(result.registers[0]))
+
+except:
+    pass
+    
+time.sleep(1)
+client.close()
+
+```
+
+Modbus communication can be turned off by the *".close ()"* function.
+
+```python
+client.close()
+```
+
+### Support ###
 
