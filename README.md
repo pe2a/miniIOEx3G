@@ -42,6 +42,8 @@
 
 MiniIOEx-3G is Raspberry Pi shield that can be used in industrial areas with 3G Module. MiniIOEx-3G has affordable price to use with Raspberry Pi. You can easily commissioning shield and you can easily integrate in your projects.  
 
+There are very useful informations for engineers and interested people in the automation field, who are new to the IOT sector and who want to communicate with machines in this study. In this document, examples are often given in languages such as C / C ++ and Python. However, this document will mention many things like Raspberry Pi's control of GPIO pins, serial port applications, transferring data from servers to servers, exiting internetting using 3G feature, using USB ports.Using this information, you can also develop your ideas about how you can improve your progeny and use Raspberry Pi.
+
 MiniIOEx-3G has specifications mentioned at below:
 
 | Technical Data  	| MiniIOEx-3G      |
@@ -73,6 +75,8 @@ We have some pictures for industrial shields at below:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3367.jpg)
 
+*The terminal on which the IOs are located is specified on the MiniIOEx.*
+
 MiniIOEx-3G has standart **Metal Sheet** to be used in electrical panels and industrial fields. So, you can easily mount it your projects. MiniIOEx-3G has also industrial 2x12 push-in terminal. Because of this feature, you will not worry cable installation time and robustness. For the MiniIOEx Terminal, the reference ground for all inputs is the 0 V power contact. The wires can be connected without tools in the case of solid wires using a direct plug-in technique. 
 
 MiniIOEx terminal features:
@@ -90,6 +94,12 @@ MiniIOEx terminal features:
 ## Who is For MiniIOEx-3G? ##
 
 The Raspberry-based control solutions enable you to run any applications for vaious IOT platforms: building automation, urban automation, smart city applications to operate and monitoring. MiniIOEx significantly reduces hardware and software costs and there is also not any licence prices thanks to Raspberry Pi. 
+
+When developing industrial automation projects, the most important feature is to use high level languages such as C / C ++ / Python / JAVA in PLC, uploading data/pictures etc. to server, to reduce load on SCADA by installing local database on PLC. GUI applications on Raspberry Pi, retrieving data over serial port or direct IOs, and transferring the data to a server / creating WEB application are very easy. That's why Raspberry Pi has an operating system on it and it provides that we can program on Linux. 
+
+There are many Raspberry Pi education cards on the market, but we can not use any of these cards in our industrial projects. That's why I witnessed many Raspberry Pi's being taken for the first time with enthusiasm. We want to you make your projects will be work in real fiel with our industrial shields with MiniIOEx, MedIoEx etc. 
+
+So if we're going to sum it up, who's MiniIOEx for?
 
 - Building Automation,
 - Urban Automation,
@@ -205,7 +215,6 @@ You can run program with at below command.
 python3 di_test.py
 ```
 
-
 ## Digital Output ##
 
 MiniIOEx-3G has 4ch Digital Outputs. 2ch relay and 2ch 24VDC transistor you can use. Load resistors are set up to allow the transistors to draw no more current and a maximum current of 80mA is allowed to be drawn. If you need more load, you can use the relays on MiniIOEX or external relays to connect these transistors.
@@ -233,7 +242,7 @@ You can view the Digital Outputs on the MiniIOEx in the following table:
 | Configuration	| GPIO or bcm2835 library install |
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/29.jpg)
-*Relay Datasheet Informations*
+*MiniIOEx Relay Datasheet Informations*
 
 With MiniIOEx, many basic automation operations can be performed. For example, the data can be sent to the central servers from a device via RS485 / RS232 and then the device can be started / stopped / performance monitored with this information. When we look at the whole of document, many examples like this are shared.
 
@@ -300,11 +309,10 @@ You can use the MiniIOEx-3G Analogue Input Module by wiring the following termin
 **To use the analog input module as a 4-20mA sensor input, the following buttons must be pulled in the direction of ** ON **.**
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/37.jpg)
+
 *MiniIOEx 4-20mA Selection Button will be pulled in the direction of ON*
 
 In the applications we saw on the field, there was a request to measure Raspberry's input voltage or battery voltage. Therefore, you can measure 5V and 24V power input supplies directly from Raspberry via MiniIOEx without any external cabling.
-
-<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/myNoteIcon.jpg" alt="drawing" width="35"/>
 
 **Important Note**
 There is no need to take any end from your 24V or 5V supply source and enter the MiniIOEx connector. These input feeds are measured internally on MiniIOEx.
@@ -430,7 +438,9 @@ int smallex_getVal(const int channel){
 You can use this function block in your program. You can also check this value with any voltage meter (multimeter).
 Since there is no voltage dropping element on the MiniIOEx in the 5V line, this value is the voltage that Raspberry feeds directly. However, you need to add approximately 1.4V (0.7V * 2) to the voltage value that you measure the 24V value because the following bridge diode is on the 24V line. In the illustration below you can see the MiniIOEx-3G power supply input bridge diode connection.
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/38.jpg)
+<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/38.jpg" alt="drawing" width="250"/>
+
+As you can see above pictures, MinIOEx has bridge diode for 24V power in. 
 
 ## Serial Port ##
 
@@ -1299,5 +1309,142 @@ Modbus communication can be turned off by the *".close ()"* function.
 client.close()
 ```
 
-### Support ###
+### Reading Values from Siemens CO2 Sensor ###
 
+In this study, data values from the "Siemens QPA2002" CO2 / Air quality sensor will be processed. The processes described will then be compared to a real system.
+
+• Sensor and MiniIOEX supply 24V during the test. The necessary cabling is also made accordingly.
+• Sensor, 0-10V model with voltage output (U1) is preferred.
+
+Siemens QPA2002 Sensor information:
+
+*Min. CO2*  = (0) ppm
+*Max. CO2* = 2000 ppm  
+
+-	3 No’lu Pin : G
+-	4 No’lu Pin : G0
+-	5 No’lu Pin:  U1
+
+The U1 pin output is the sensor voltage output. We can formalize the output voltage of the sensor as follows:
+
+Output  = (Input-0V) * ((CO2 ppm max.  - CO2ppm min.)/(10V-0V )) + CO2 ppm Min. 
+
+Output  = (Input) * ((2000ppm - 0ppm)/(10V-0V )) + 0ppm
+
+Depending on the above equation we can also perform the function of the CO2 sensor as follows:
+
+```python
+def co2_sensor_converter(val):
+    return val * 200.0
+```
+
+After the function related to the sensor data is written, we can execute the entire code as given in the above examples. 
+
+**Note:**
+It is recommended to not exceed 1000ppm for indoor air quality to be good. As you type, the program can create hysteresis curves for these values and control the ventilation fan *ON/OFF* accordingly.
+
+Below is a sample code block written about this sensor. CO2 sensor is installed to MiniIOEx J2: 12 and their GNDs shorted together. If you blow into the air quality sensor, you can see that the 'ppm' data generated by the sensor due to the CO2 in your breath changes. This value will increase after blowing.
+
+```python
+import spidev
+import time
+
+#definition SPI parameter
+spi = spidev.SpiDev()
+spi.open(0, 0)
+spi.max_speed_hz = 7629
+#definition Analog Input Var. 
+AI_ANIN2 = 0 #J2, pin:12 and always GND is common with sensor
+#definition co2 sensor data
+co2SensorData = 0
+#mcp3208 ADC
+def readAI(ch):
+        if 7 <= ch <= 0:
+            raise Exception('MCP3208 channel must be 0-7: ' + str(ch))
+
+        cmd = 128  # 1000 0000
+        cmd += 64  # 1100 0000
+        cmd += ((ch & 0x07) << 3)
+        ret = spi.xfer2([cmd, 0x0, 0x0])
+
+        # get the 12b out of the return
+        val = (ret[0] & 0x01) << 11  
+        val |= ret[1] << 3           
+        val |= ret[2] >> 5           
+
+        return (val & 0x0FFF)  
+
+#converts digital number to voltage
+def dig_vol_converter(val):
+    return val*33.0/4095.0
+
+#0 ppm -> 0V 2000ppm -> 10V
+#Siemens QPA2002
+#assume val is co2sensor voltage output : (val-0V) *[(2000ppm-0ppm / 10V-0V) + 0V]
+def co2_sensor_converter(val):
+    return val * 200
+    
+print('-' * 55)
+# Main program loop.
+while True:
+    print('\n')
+    print('{} | {} '.format('Sensor Voltage[V]','Sensor Data[ppm]'))
+   
+    # The read_adc function
+    AI_ANIN2 = dig_vol_converter(readAI(1)) #Voltage
+    #lets convert co2 value
+    co2SensorData = round(co2_sensor_converter(AI_ANIN2),1) #ppm
+    
+    print('{:6f}  {:21f} '.format(AI_ANIN2,co2SensorData))
+    time.sleep(1)
+```
+
+**Note**
+All of the examples so far have been related to the linearity condition of sensors, but some sensors may not be linear. That is, voltage and sensor value may not be linearly proportional. In such cases, we can linearize the values by recording the sensor values. Once you have registered the values, we can calculate it at http://www.wolframalpha.com/.
+
+With an example, we can explain this situation more clearly. Sample values are taken from the book [Exploring Raspberry Pi, M. Derek, 2016](https://www.amazon.com/Exploring-Raspberry-Pi-Interfacing-Embedded/dp/1119188687)
+
+Suppose that 3925 digital corresponds to 10cm, 2790 digital corresponds to 15cm. There is no linear decrease in the values here. We can not use a nonlinear equation on Raspebrry. Therefore, various theorems have been produced to approximate this value to linearization. (Marquardt-Levenberg) The Wolfram program will automatically linearize this value. All we need to do is write the following set of equations to the Wolfram program:
+
+*exponential fit {3925,10}, {2790,15}, {2200,20}, {1755,25}, {1528,30},{1273,40}, {851,50}, {726,60}, {620,70}, {528,80}*
+
+As a result of this program, we can obtain the following graph and equation.
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/39.jpg)
+
+If you have a sensor set of such a nonlinear output you can benefit from this theory.
+
+## Other Topic ##
+
+### Installing Raspbian OS ###
+
+Raspberry Pi runs the operating system on the SD card on it. Therefore, it is necessary to have a *"Disk Image"* program to load a high-quality and fast SD card (class 10 is recommended) and the operating system to be loaded in the correct format.
+You can do this with "Win32 Disk Imager" on Windows by following the steps below:
+Win32 Disk Imager Program: https://sourceforge.net/projects/win32diskimager/
+
+If you are using GPIOs intensively, it is important to set up a Raspbian based operating system. Other operating systems do not have a stable working structure on Raspberry. The Raspberry Foundation updates its operating system during certain periods of the year. The latest Raspbian operating system is available on the link below.
+
+Raspberry ISO Link: https://www.raspberrypi.org/downloads/raspbian/
+
+There are two ISO formats Raspbian OS on the related link. "Raspbian Lite" only opens the terminal screen. It does not host any GUI. So if your program uses GPIO and this data is sent to a server as an example, you can download 'Lite' version without using any GUI process. In this way, the operating system will get rid of many programs that you do not use. If you are developing applications on Raspbian, if you also want to use programs like Office, 'with Desktop' will be the best choice.
+
+After downloading the desired operating system, you can start the following operations by opening your 'Disk Imager' program and placing the SD card in your computer to format the SD card.
+
+1)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI1OS.jpg)
+
+2)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI2OS.jpg)
+
+3)
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI3OS.jpg)
+
+
+## Support ##
+
+Please do not hesitate to create request for this document or product named MiniIOEx-3G, or you can contact to us directly as using support@pe2a.com .
+
+If you want to buy MiniIOEx, you can also use support@pe2a.com or 
