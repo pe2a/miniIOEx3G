@@ -33,7 +33,7 @@
 
 - [Reading Values from energy Analyzer via RS485](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-3--reading-values-from-energy-analyser-via-rs485)
 
-- [Controlling Siemesn AC Motor by ABB Motor Driver via RS485]
+- [Controlling Siemens AC Motor by ABB Motor Driver via RS485](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-4--reading-values-from-energy-analyser-via-rs485)
 
 [Support](support@pe2a.com)
 
