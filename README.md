@@ -35,7 +35,14 @@
 
 - [Controlling Siemens AC Motor by ABB Motor Driver via RS485](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-4--reading-values-from-energy-analyser-via-rs485)
 
-[Support](support@pe2a.com)
+[Other Topic](https://github.com/pe2a/miniIOEx3G#other-topic)
+
+- [Installing Raspbian OS](https://github.com/pe2a/miniIOEx3G#installing-raspbian-os)
+
+[Support](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#support)
+
+[BUY](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#buy)
+
 
 
 # An Industrial Raspberry Shield: MiniIOEx-3G #
@@ -799,7 +806,7 @@ The following terminal numbers are used in connection:
 We can do the wiring as above. **FAN GND**is shorted to power supply GND. The voltage is given by switching from the transistor by software. In the following illustration, the cable ends are shared:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/31.jpg)
-*Fan Motor Terminal Cable Commissioning *
+*Fan Motor Terminal Cable Commissioning*
 
 
 ```python
@@ -1447,4 +1454,6 @@ After downloading the desired operating system, you can start the following oper
 
 Please do not hesitate to create request for this document or product named MiniIOEx-3G, or you can contact to us directly as using support@pe2a.com .
 
-If you want to buy MiniIOEx, you can also use support@pe2a.com or 
+## Buy ##
+
+If you want to buy MiniIOEx, you can also use support@pe2a.com or [BUY Link]()
