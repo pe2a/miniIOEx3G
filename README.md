@@ -9,31 +9,31 @@
 
 [IO Handling](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#io-handling)
 
-	- [Digital Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-input)
+- [Digital Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-input)
 
-	- [Digital Output](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-output)
+- [Digital Output](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-output)
 
-	- [Analog Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#analog-input)
+- [Analog Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#analog-input)
 
-	- [Reading Analog Input Values ](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#miniioex-3g-analog-input-read)
+- [Reading Analog Input Values ](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#miniioex-3g-analog-input-read)
 
 [Serial Port](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#seri-port)
 
 [3G / GPS Commissioning](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#3g--gps)
 
-	- [GPS Commissioning](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#gps-commissioning)
+- [GPS Commissioning](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#gps-commissioning)
 
 [RTC and EEPROM Usage](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#real-time-clock-and-eeprom)
 
 [Application Notes](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#application-notes)
 
-	- [FAN Motor Control](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-1--fan-motor-control-with-startstop-button-on-miniioex-3g)
+- [FAN Motor Control](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-1--fan-motor-control-with-startstop-button-on-miniioex-3g)
 
-	- [FAN Motor Control Using WEB Reference](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-2--controlling-of-fan-motor-with-startstop-and-web-reference)
+- [FAN Motor Control Using WEB Reference](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-2--controlling-of-fan-motor-with-startstop-and-web-reference)
 
-	- [Reading Values from energy Analyzer via RS485](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-3--reading-values-from-energy-analyser-via-rs485)
+- [Reading Values from energy Analyzer via RS485](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-3--reading-values-from-energy-analyser-via-rs485)
 
-	- [Controlling Siemesn AC Motor by ABB Motor Driver via RS485]
+- [Controlling Siemesn AC Motor by ABB Motor Driver via RS485]
 
 [Support](support@pe2a.com)
 
