@@ -1456,4 +1456,7 @@ Please do not hesitate to create request for this document or product named Mini
 
 ## Buy ##
 
-If you want to buy MiniIOEx, you can also use support@pe2a.com or [BUY Link]()
+If you want to buy MiniIOEx-3G, you can also use support@pe2a.com or [BUY Link]()
+
+Please, contact support@pe2a.com for bulk purchase. 
+
