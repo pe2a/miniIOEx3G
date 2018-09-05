@@ -80,9 +80,15 @@ We have some pictures for industrial shields at below:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3378.jpg)
 
+*The MiniIOEx-3G has standart sheet metal case.*
+
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3367.jpg)
 
 *The terminal on which the IOs are located is specified on the MiniIOEx.*
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3435.jpg)
+
+*MiniIOEx-3G has standard industrial terminal.*
 
 MiniIOEx-3G has standart **Metal Sheet** to be used in electrical panels and industrial fields. So, you can easily mount it your projects. MiniIOEx-3G has also industrial 2x12 push-in terminal. Because of this feature, you will not worry cable installation time and robustness. For the MiniIOEx Terminal, the reference ground for all inputs is the 0 V power contact. The wires can be connected without tools in the case of solid wires using a direct plug-in technique. 
 
@@ -96,6 +102,8 @@ MiniIOEx terminal features:
 | Resistance Voltage	| 2000V |
 | Max. Cable Size	| 2.5mm2 |
 | Working Temperature	| -40C   +105C |
+
+
 
 
 ## Who is For MiniIOEx-3G? ##
@@ -124,6 +132,9 @@ So if we're going to sum it up, who's MiniIOEx for?
 - Students/Engineers who aim to develop about Embedded Linux plaftorms. 
 
 
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/miniIOEx_poster_01.jpg)
+
+
 ## What is in the box ? ##
 
 If you just buy *MiniIOEx* without 3G module :
@@ -140,6 +151,8 @@ If you buy  *MiniIOEx-3G* with **3G module** :
 - GPRS Antenna Cable
 - MiniIOEx Metal Sheet
 - Sheet mount parts
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/miniIOEx_poster_02.jpg)
 
 # IO Handling #
 
@@ -179,17 +192,20 @@ We mentioned before MiniIOEx-3G has 2ch Digital Inputs. Digital Input on MiniIOE
 
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/27.jpg)
-*MiniIOEx Digital Input Terminal *
+
+*MiniIOEx Digital Input Terminal*
 
 Terminal 16 and 18 is Digital Input connection point. You can easily mount your cable with **ground** on terminal. 
 
 Sample connection of buttons:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/28.jpg)
-*MiniIOEx Digital Input Connection*
+
+*MiniIOEx Digital Input Connection Diagram*
 
 Given in the example code, you can monitor your Digital contacts/switches/buttons etc.
-*di_test.py*
+
+**di_test.py**
 
 ```python
 import RPi.GPIO as GPIO
@@ -237,6 +253,7 @@ You can view the Digital Outputs on the MiniIOEx in the following table:
 | 40	| Digital Output Transistor 1 |
 
 **Important Note**
+
 **If you supply MiniIOEx with 24V, you can use all Digital Output pins. You can only use Relay outputs if you supply directly from Raspberry via 5V USB.**
 
 | Technical Data  	| Digital Output | 
@@ -247,6 +264,7 @@ You can view the Digital Outputs on the MiniIOEx in the following table:
 | Relay Switch Current and Volatge	| 1A,24VDC |
 | Transistor Switch Current and Voltage	| 80mA, 24VDC |
 | Configuration	| GPIO or bcm2835 library install |
+
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/29.jpg)
 *MiniIOEx Relay Datasheet Informations*
@@ -286,7 +304,7 @@ When using SPI libraries in Raspberry, different configuration settings need to 
 | SpiDev (Python) |	**Enable** |
 
 When we use the above libraries, we also need to make the necessary settings in Raspberry Pi. So, if you are using the bcm2835 library **SPI -> Disable** 
-Otherwise your program will likely get 'fatal error' at 'Run Time' even if it does not get an error in 'Compile Time'. Raspberry's new models  have **BCM2836 ** or **BCM2837** chips are used. So do not think bcm2835's library will not work. The bcm2835 ibrary is compatible with  all bcmXX  models.
+Otherwise your program will likely get 'fatal error' at 'Run Time' even if it does not get an error in 'Compile Time'. Raspberry's new models  have **BCM2836** or **BCM2837** chips are used. So do not think bcm2835's library will not work. The bcm2835 ibrary is compatible with  all bcmXX  models.
 
 
 ## MiniIOEx-3G Analog Input Read ##
@@ -313,7 +331,8 @@ You can use the MiniIOEx-3G Analogue Input Module by wiring the following termin
 *MiniIOEx Analog Input Terminal Number*
 
 **IMPORTANT NOTE**
-**To use the analog input module as a 4-20mA sensor input, the following buttons must be pulled in the direction of ** ON **.**
+
+**To use the analog input module as a 4-20mA sensor input, the following buttons must be pulled in the direction of ON.**
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/37.jpg)
 
@@ -322,15 +341,16 @@ You can use the MiniIOEx-3G Analogue Input Module by wiring the following termin
 In the applications we saw on the field, there was a request to measure Raspberry's input voltage or battery voltage. Therefore, you can measure 5V and 24V power input supplies directly from Raspberry via MiniIOEx without any external cabling.
 
 **Important Note**
-There is no need to take any end from your 24V or 5V supply source and enter the MiniIOEx connector. These input feeds are measured internally on MiniIOEx.
+
+**There is no need to take any end from your 24V or 5V supply source and enter the MiniIOEx connector. These input feeds are measured internally on MiniIOEx.**
 
 To describe with a sample scenario; You feed the MiniIOEx with the battery and the battery voltage is dropping. If this voltage is never tracked, you can only understand it when Raspberry is shut down. If you follow the battery voltage, you may be warned when the battery voltage begins to fall and when it drops below the critical level, you can turn off all files running on the Raspberry.
 
 Sensors used in industrial applications generally have * 0-10V * and * 4-20mA * outputs. As mentioned above, the MiniIOEx allows up to 33V . So you can use these sensors with MiniIOEx you can easily measure.
 
-Everything is measured ** DIGITAL ** when operating in microprocessors. That is, although the outputs of the sensors are voltage, they are reflected in the ADC integrations as ** DIGITAL ** according to the resolution. In MiniIOEx, we also digitally measure the voltage information from the field. If this incoming ** DIGITAL ** value is written we can write simple functions to convert real sensor value. 
+Everything is measured **DIGITAL** when operating in microprocessors. That is, although the outputs of the sensors are voltage, they are reflected in the ADC integrations as **DIGITAL** according to the resolution. In MiniIOEx, we also digitally measure the voltage information from the field. If this incoming **DIGITAL** value is written we can write simple functions to convert real sensor value. 
 
-The following table shows the voltage limit values for the MiniIOEx Analog Input * read data and the corresponding ** DIGITAL ** values.
+The following table shows the voltage limit values for the MiniIOEx Analog Input read data and the corresponding **DIGITAL** values.
 
 | Analog Input Voltage Min. 	| Analog/Digital Circuit(ADC) Min. Digital Value |
 | --- | --- |
@@ -365,12 +385,13 @@ The following values are fixed values for MiniIOEx Analogue Reading functions. W
 As a result, if we want to find the voltage value of the power supply supplied by Raspberry, we have to solve the following equation:
 
 
-- * eq1. * Power Supply Input Voltage = (Digital Data (x) * Max Field Input Voltage) / (Max.Digital Data)
-- * eq2. * Power Supply Input Voltage = (620 * 33V) / (4095) = 4.996V
+ *eq1.* Power Supply Input Voltage = (Digital Data (x) * Max Field Input Voltage) / (Max.Digital Data)
+ *eq2.* Power Supply Input Voltage = (620 * 33V) / (4095) = 4.996V
 
 In order to read the digital value from the MCP3208 integration, the code block below is shared and the conversion of this value to voltage and sensor data is detailed in the headers of the document. 
 
 **Important Note**
+
 **Since the Python library is used, **Raspi-Config -> Interfacing Options -> SPI** *enable* is required.**
 
 ```python
@@ -448,6 +469,7 @@ Since there is no voltage dropping element on the MiniIOEx in the 5V line, this 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/38.jpg" alt="drawing" width="250"/>
 
 As you can see above pictures, MinIOEx has bridge diode for 24V power in. 
+
 
 ## Serial Port ##
 
@@ -593,6 +615,7 @@ Relevant examples are given in the text.
 After the installation is finished, the terminal is opened and the **lsusb** command is executed. This command then shows the devices connected to the USB. If there is no situation, you should see a screen like below. If we can not see Quectel UC20 Module, it could be the Quectel UC20 module or the USB cable itself. For this situation, It may be beneficial to insert and remove the module. 
 
 **Important Note**
+
 **Installation work on the module should be done without energy**
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/54.jpg)
@@ -605,7 +628,7 @@ Since MiniIOEx-3G physically connected to USB, we can send the **AT** commands. 
 
 The description of the basic AT commands in the red block is given below:
 
-1-) Quectel device serial number -> ** ATI **
+1-) Quectel device serial number -> **ATI**
 
 2-) Indicates that the Sim card is ready for use if there is no problem with Sim Lock on the device. You can disable the SIM card PIN feature on any mobile phone if you have just bought a SIM card: **AT + CPIN?**
 
@@ -629,10 +652,11 @@ After completing the SIM card and USB tests, you can connect to the internet by 
 sudo chmod +x ./pe2a_miniIOEx.sh
 sudo ./pe2a_miniIOEx.sh internet ttyUSB3
 ```
-The **ttyUSB3** address will change according to what you connect to the USB on Raspberry. If ttyUSB is incorrectly selected, the device will not be connect internet. Usually, the default APN for Vodafone is **'internet'**. This depends on the country you are located in and the operator you are servicing. The device can not connect internet on the wrong APN. For Turkcell, the APN may be **"mgbs"**. Detailed information can be reached at: https://www.turkcell.com.tr/kurumsal/kurumsal-cozumler/statik-ip/sikca-sorulan-sorular
+The **ttyUSB3** address will change according to what you connect to the USB on Raspberry. If ttyUSB is incorrectly selected, the device will not be connect internet. Usually, the default APN for Vodafone is **'internet'**. This depends on the country you are located in and the operator you are servicing. The device can not connect internet on the wrong APN. For Turkcell, the APN may be **"mgbs"**. Detailed information can be reached at: https://www.turkcell.com.tr/kurumsal/kurumsal-cozumler/statik-ip/sikca-sorulan-sorular (only in Turkish)
 
 **Important Note**
-**The port number you use as ttyUSB2 in minicom needs to be ttyUSB3 when running the .sh script.**
+
+**The port number you use as ttyUSB2 in minicom needs to be as ttyUSB3 when running the .sh script.**
 
 Do not forget to close the internet connections after this:
 
@@ -756,6 +780,8 @@ int main() {
 ```
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/63.jpg)
 
+*You can test real time clock with hwclock -r command*
+
 ## Application Notes ##
 
 You can review applications made on MiniIOEx-3G in this section.
@@ -777,7 +803,6 @@ The libraries required in this application:
 
 -	Python GPIO
 -	Python SpiDev
-
 
 **Automation Scenario**:
 *FAN motor works when Start button is pressed for 1 second; If you press the 1sec Stop button, the FAN Motor will stop.*
@@ -976,8 +1001,7 @@ while 1:
 
 ```
 
-
-### Sample #3 – Reading values from Energy Analyser via RS485###
+### Sample #3 – Reading values from Energy Analyser via RS485 ###
 
 Thanks to RS485, we can connect and read/write data from many devices. With Raspberry Pi and MiniIOEx, this data can be sent via 3G or Ethernet / Wireless, thanks to which data can be transferred using IOs or stored in high resolution. Although this kind of process seems easy, the PLC or embedded PCs cost quite a lot for this basic process.
 
@@ -1407,6 +1431,7 @@ while True:
 ```
 
 **Note**
+
 All of the examples so far have been related to the linearity condition of sensors, but some sensors may not be linear. That is, voltage and sensor value may not be linearly proportional. In such cases, we can linearize the values by recording the sensor values. Once you have registered the values, we can calculate it at http://www.wolframalpha.com/.
 
 With an example, we can explain this situation more clearly. Sample values are taken from the book [Exploring Raspberry Pi, M. Derek, 2016](https://www.amazon.com/Exploring-Raspberry-Pi-Interfacing-Embedded/dp/1119188687)
