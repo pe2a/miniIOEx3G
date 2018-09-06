@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <bcm2835.h>
 
+//to compile : gcc -o ai_test ai_test.c -lbcm2835 -std=gnu11 
+//to run: ./ai_test
 
 #define ai_StepDown 100
 
