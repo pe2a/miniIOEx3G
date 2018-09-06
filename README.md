@@ -132,7 +132,7 @@ So if we're going to sum it up, who's MiniIOEx for?
 - Students/Engineers who aim to develop about Embedded Linux plaftorms. 
 
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/miniIOEx_poster_01.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/miniIOex_poster_01.jpg)
 
 
 ## What is in the box ? ##
@@ -152,7 +152,7 @@ If you buy  *MiniIOEx-3G* with **3G module** :
 - MiniIOEx Metal Sheet
 - Sheet mount parts
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/miniIOEx_poster_02.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/miniIOex_poster_02.jpg)
 
 # IO Handling #
 
@@ -169,6 +169,21 @@ At the below table, you can find which MiniIOEx pins are connected to Raspberry 
 | Digital Output  Transistor 1	| 38 |
 | Digital Output  Transistor 2	| 40 |
 | Digital Output  *RUN* LED	| 37 |
+
+
+## IO Test GUI Program ##
+
+You can use the GUI program to control all IOs. To use this program, you need to do the following:
+
+- SPI -> *enable*
+- Install spidev library 
+- Run the program by using *"python3 testGUI.py"* command 
+
+After the running, you should see GUI as follows :
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/testGUI.PNG)
+
+The code you can access: https://github.com/pe2a/miniIOEx3G/blob/master/testGUI.py
 
 
 ## Digital Input ##
@@ -252,13 +267,15 @@ You can view the Digital Outputs on the MiniIOEx in the following table:
 | 38	| Digital Output Transistor 2 |
 | 40	| Digital Output Transistor 1 |
 
+
+
 **Important Note**
 
 **If you supply MiniIOEx with 24V, you can use all Digital Output pins. You can only use Relay outputs if you supply directly from Raspberry via 5V USB.**
 
 | Technical Data  	| Digital Output | 
 | --- | --- |
-| Terminal Connection |	2 kablo |
+| Terminal Connection |	2 wire |
 | Digital Output Relay | 	2ch |
 | Digital Output Transistor 	| 2ch |
 | Relay Switch Current and Volatge	| 1A,24VDC |
@@ -271,7 +288,64 @@ You can view the Digital Outputs on the MiniIOEx in the following table:
 
 With MiniIOEx, many basic automation operations can be performed. For example, the data can be sent to the central servers from a device via RS485 / RS232 and then the device can be started / stopped / performance monitored with this information. When we look at the whole of document, many examples like this are shared.
 
-Aşağıdaki kodda **MiniIOEx3G** üzerindeki tüm **Digital Çıkışlar** kullanılmıştır. 
+The following codes uses all Output of MiniIOEx: https://github.com/pe2a/miniIOEx3G/blob/master/output.py
+
+```python
+import RPi.GPIO as GPIO
+import time
+import random 
+
+DO_Relay1 = 19 #relay1 1A,24VDC
+DO_Relay2 = 16 #relay2 1A,24VDC
+DO_TR1 = 21 #TRANSISTOR 2A,5VDC
+DO_TR2 = 20 #TRANSISTOR, 2A,5VDC
+DO_RunLed = 26 #RunLED on PCB 
+
+#init function
+GPIO.setmode(GPIO.BCM) #bcm library
+
+GPIO.setup(DO_Relay1,GPIO.OUT)
+GPIO.setup(DO_Relay2,GPIO.OUT)
+GPIO.setup(DO_TR1,GPIO.OUT) #LOW ON, HIGH OFF
+GPIO.setup(DO_TR2,GPIO.OUT) #LOW ON, HIGH OFF
+GPIO.setup(DO_RunLed,GPIO.OUT)
+
+GPIO.setwarnings(False)
+
+while (1):
+	
+	
+	#led 
+	GPIO.output(DO_RunLed,GPIO.HIGH) #ON
+	time.sleep(0.2) #200ms
+	GPIO.output(DO_RunLed,GPIO.LOW) #OFF
+	time.sleep(0.2) #200ms
+	
+	#relay1 
+	GPIO.output(DO_Relay1,GPIO.HIGH) 
+	time.sleep(0.2) #200ms
+	GPIO.output(DO_Relay1,GPIO.LOW) 
+	time.sleep(0.2) #200ms
+	
+	#relay2 
+	GPIO.output(DO_Relay2,GPIO.HIGH) 
+	time.sleep(0.2) #200ms
+	GPIO.output(DO_Relay2,GPIO.LOW) 
+	time.sleep(0.2) #200ms
+	
+	#mosfet1 
+	GPIO.output(DO_TR1,GPIO.LOW) #ON
+	time.sleep(0.2) #200ms
+	GPIO.output(DO_TR1,GPIO.HIGH) #OFF
+	time.sleep(0.2) #200ms
+	
+	#mosfet2 
+	GPIO.output(DO_TR2,GPIO.LOW) 
+	time.sleep(0.2) #200ms
+	GPIO.output(DO_TR2,GPIO.HIGH) 
+	time.sleep(0.2) #200ms
+```
+
 
 ## Analog Input ##
 
@@ -314,6 +388,7 @@ MiniIOEx-3G can provide 2ch analog inputs can be received from the field. The Mi
 In the following image, the Analog Input model between MiniIOEx-3G and Raspberry Pi integration is explained. As seen in this model, the 5V and 24V readings are carried out with the voltage divider on the MiniIOEx and there are 2ch Analog Input inputs that MiniIOEx-3G can read from the field. You can read MiniIOEx-3G input voltages from the relevant library and use them in your operations.
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/35.jpg)
+
 *MiniIOEx Analog Input*
 
 The following table contains the terminal numbers for the analog data to be input from the field. 
@@ -328,6 +403,7 @@ The following table contains the terminal numbers for the analog data to be inpu
 You can use the MiniIOEx-3G Analogue Input Module by wiring the following terminals:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/36.jpg)
+
 *MiniIOEx Analog Input Terminal Number*
 
 **IMPORTANT NOTE**
@@ -340,7 +416,7 @@ You can use the MiniIOEx-3G Analogue Input Module by wiring the following termin
 
 In the applications we saw on the field, there was a request to measure Raspberry's input voltage or battery voltage. Therefore, you can measure 5V and 24V power input supplies directly from Raspberry via MiniIOEx without any external cabling.
 
-**Important Note**
+**IMPORTANT NOTE**
 
 **There is no need to take any end from your 24V or 5V supply source and enter the MiniIOEx connector. These input feeds are measured internally on MiniIOEx.**
 
@@ -410,6 +486,12 @@ def readAI(ch):
         val |= ret[2] >> 5           
 
         return (val & 0x0FFF)  
+	
+	
+#digital value for 5V
+
+print(readAI(6))
+
 ```
 
 The equivalence of the above Python code written in C language is as follows. You can select the code block for which you want to work with the programming language in your work.
