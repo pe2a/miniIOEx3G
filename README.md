@@ -9,6 +9,8 @@
 
 [IO Handling](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#io-handling)
 
+- [Test GUI Program](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#io-test-gui-program)
+
 - [Digital Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-input)
 
 - [Digital Output](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-output)
