@@ -35,7 +35,9 @@
 
 - [Reading Values from energy Analyzer via RS485](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-3--reading-values-from-energy-analyser-via-rs485)
 
-- [Controlling Siemens AC Motor by ABB Motor Driver via RS485](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-4--reading-values-from-energy-analyser-via-rs485)
+- [Controlling Siemens AC Motor by ABB Motor Driver via RS485](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-4--ac-motor-control-by-using--ac-motor-driver-with-miniioex-rs485)
+
+- [Reading Analog Values from Siemens CO2 Sensor](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-5---reading-values-from-siemens-co2-sensor)
 
 [Other Topic](https://github.com/pe2a/miniIOEx3G#other-topic)
 
@@ -44,7 +46,6 @@
 [Support](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#support)
 
 [BUY](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#buy)
-
 
 
 # An Industrial Raspberry Shield: MiniIOEx-3G #
