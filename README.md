@@ -1098,7 +1098,7 @@ Used devices for this part:
 
 Below is the topology we use in the system. There is also a computer outside the topology. The purpose of our computer use is to show how we receive this data because we have exchanged data with the MODBUS RTU protocol over the RS485 physical serial path. In other words, when we receive data from the energy analyzer, we actually receive this data with which questions we can easily see it on an external computer.
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/45.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/entes-computer-mini.png)
 *RS485 Device Connection Topology*
  
 In the above system, the computer behaves as master / slave, the MiniIOEx is master and the analyzer is slave. *A* and *B* terminals of MiniIOEx RS485 are all short-circuited in the system. **"Modbus Master**" that Computer Serial Port Program and **"Terminal v1.9b**" programs installed on the computer, we can see the reference codes you need to go to read data from the Entes Analyzer. Of course, before we do this, we need to know which registers the analyzer has which information. We can also extract this from the **"Data Mapping"** document found on the analyzer web page of the Entes Analyzer.
@@ -1212,7 +1212,7 @@ Here we can calculate *CosQ* as *0.85*. In general, we always want CosQ to be cl
 You can also see the energy consumed and the energy generated from the analyzer. If you have a solar power plant, you can also get Spent and Generated Energy information and record it on a daily / weekly / monthly basis and send your data to your server without any internet service provider by using 3G module on MiniIOEx-3G. When there is energy production, the sign of the current will change. It should be noted.
 
 
-### Sample #4 – Reading values from Energy Analyser via RS485 ###
+### Sample #4 – AC Motor Control by using  AC Motor Driver with MiniIOEx RS485  ###
 
 We have seen in the previous chapter that we can easily read data from the Energy Analyzer with MiniIOEx. Because MiniIOEx-3G is an industrial development card, it is designed for use in industrial environments. When it comes to industrial environments, mind motor control and applications come first. In this application, we will try to drive the motor by giving reference values via RS485 to the motor driver. RS485 will be used again in this study. Therefore, we assume that the following libraries are installed:
 
@@ -1228,6 +1228,7 @@ If you have loaded these libraries, you can load them by looking at the previous
 -	Phoenix Contact UNO Power 230V/24V Power Supply
 
 **IMPORTANT NOTE**
+
 **Perform motor and driver connections with an experienced electrician. It should not be forgotten that there is a danger of death at 400V**
 
 After setting the motor parameters of the ABB Driver, we need to enter the "Communication Parameter" settings. The corresponding parameter setting is available in the driver's manual. After setting the parameters, we are installing the RS485 terminals of the MiniIOEx in the ABB Motor Drive.
@@ -1424,7 +1425,7 @@ Modbus communication can be turned off by the *".close ()"* function.
 client.close()
 ```
 
-### Reading Values from Siemens CO2 Sensor ###
+### Sample #5 - Reading Values from Siemens CO2 Sensor ###
 
 In this study, data values from the "Siemens QPA2002" CO2 / Air quality sensor will be processed. The processes described will then be compared to a real system.
 
