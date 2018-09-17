@@ -65,7 +65,7 @@ MiniIOEx-3G has specifications mentioned at below:
 | Power Input 	| 24V on Terminal OR 5V on RPI USB | 
 | 3G Module	| QEUCTEL UC20/EC20 MiniPCI  |
 | EEPROM	| 32kBit | 
-| Real Time Clock | 	- |
+| Real Time Clock | 	Yes |
 | Size with Case	| 80x94x42mm(WxLxH)|
 | Weight	| ~30gr |
 
