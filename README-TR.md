@@ -984,9 +984,9 @@ MiniIOEx’i 24V ile beslediğiniz takdirde tüm Digital Output pinlerini kullan
 
 Digital Input ve Digital Output kullanılarak aslıdan birçok örnek yapılabilir. Otomasyonun temeli Input ve Output’dur 😊 MiniIOEx ile birçok temel düzeyde otomasyon işlemleri gerçekleştirilebilir. Örnek olarak bir cihazdan/makineden RS485/RS232 üzerinden çalışma verisi alınıp merkez sunuculara gönderilebilir sonrasında da bu bilgiler ile cihaz çalıştırılabilir/durdurulabilir performans takip edilebilir vs. Dokumanın geneline baktığımızda da bunun gibi birçok örnek paylaşılmıştır. 
 
-Aşağıdaki kodda **MiniIOEx3G** üzerindeki tüm **Digital Çıkışlar** kullanılmıştır. 
+## MiniIOEx-3G  Digital Input / Output Örnek Uygulama ##
 
---asdasdasdasdaBOŞBOŞ******
+Aşağıdaki kodda **MiniIOEx3G** üzerindeki tüm **Digital Çıkışlar** kullanılmıştır. 
 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/UYGICON.jpg" alt="drawing" width="35"/>
 **Uygulama Örneği #1 – Start/Stop Butonu ile FAN Motoru Kontrolü:**
