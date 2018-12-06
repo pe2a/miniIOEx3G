@@ -49,7 +49,7 @@ GPIO.setwarnings(False)
 
 def fLed():
     #it means a program running on OS
-    counter = 0
+    
     while 1:
         GPIO.output(DO_RunLed,GPIO.HIGH) #ON
         time.sleep(0.2) #200ms
