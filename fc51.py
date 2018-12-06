@@ -212,7 +212,7 @@ t2.start()
 
 #if you need to run a program for every reboot
 #just add /etc./rc.local
-#sample: sudo python3 /etc/rc.local/myProgram.py &
+#sample: sudo python3 /etc/rc.local/fc51.py &
     
     
            
