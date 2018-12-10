@@ -1532,6 +1532,119 @@ As a result of this program, we can obtain the following graph and equation.
 
 If you have a sensor set of such a nonlinear output you can benefit from this theory.
 
+### Sample #6 - Danfoss FC51 Motor Driver Control via Modbus RTU ###
+
+We can transfer data from RS485 directly to our own server or cloud server via Wireless or Ethernet using Python with Raspberry Pi.
+
+Using industrial communication protocols such as Modbus via Raspberry Pi brought with it a painful process. After a while, USB / RS485 converter has caused many problems in the field. There are also many users who want to use only the Raspberry Pi as a gateway. With the help of Raspberry Pi, we can transfer data from RS485 directly to our own server or cloud server via Wireless or Ethernet using C / C ++ / Python languages. However, we can handle these values and transfer them directly to the database we created on Raspberry Pi. The advantages of running the Linux operating system over Raspberry Pi is absolutely free. If you are coming from Industrial Automation side, licence price would be very annoying stuff.
+
+In this case, we tried to show how to activate the Danfoss FC51 series motor drivers with Raspberry Pi and MiniIOEx. You can use the attached code as desired. We shared the video. So we tried to explain how the program works.
+
+After installing the operating system on Raspberry Pi, we recommend that you should use the operating system in the most up-to-date. We need to skip the basic operations in this section.
+
+We used Jessie as the operating system. In the project, the following libraries must be installed by the user:
+
+```python
+serial
+pymodbus
+```
+You can install these libraries by following these commands:
+
+```python
+$pip3 install pyserial
+$pip3 install pymodbus
+```
+
+After installing the program you can perform the installation of the MiniIOEx cable. The following cables may be connected to the terminals given below:
+
+
+| MiniIOEx Terminal No| cable Name | Field Equivalent |
+| --- | --- | --- |
+| 1	| GND | POWER SUPPLY GND |
+| 2	| 24VDC | POWER SUPPLY 24VDC |
+| 16	| DI_2 | STOP BUTTON |
+| 17	| SERIAL_GND | NO NEED |
+| 18	| DI_1 | START BUTTON |
+| 19	| RS485_B | DANFOSS ON TERMINAL NO:69 |
+| 20	| RS485_A | DANFOSS ON TERMINAL NO:68 |
+
+### Commissioning ###
+
+In fact, our scenario consists of a very simple function. *When we press the start button, our speed increases by 100rpm and remains constant at that speed. When we press the stop button, motor speed goes to 0rpm.* Also, we can read driver information data from Danfoss DC51 Driver as using pymodbus.
+
+we send the following speed reference to driver as using this function:
+
+
+```python
+ #sending motor speed  
+ def sendMotorReference(motorSpeed_rpm):  
+     return (int(motorSpeed_rpm*(21.845/2.0)))  
+```
+
+From the driver we can get the following information:
+
+```python
+ #motor parameter  
+motorConstantParameter = {  
+     "wrMotorSpeedRPM" : 0, #converted  data   
+     "r_motorDCLinkV" : 0,  
+     "r_motorPowerkW" : 0,  
+     "r_motorCurrentA" : 0,  
+     }    
+```
+
+Driver Modbus Register List:
+
+```python
+motorModbusParameter = {
+	    
+	    "motorID " : 0x1,
+	    "w_motorSpeedReq" : 2810,
+	    "r_motorDCLinkVReq" : 16299,
+	    "r_motorPowerkWReq" : 16099,
+	    "r_motorSpeedFreqReq": 16129,
+	    "r_motorCurrentAReq" : 16139,
+	    #"r_motorFreqPerReq" : 16149
+	    
+	    }
+```
+**Note: Start permission will be given at 1. Register Adress. 
+
+Incoming speed is converted to RPM with the following function:
+
+     
+```python
+ #calculation percent of requency of motor  
+ def calculationPercentFreq(motorSpeedNumber):  
+     return  (motorSpeedNumber / 32767.0*100.0)  
+```
+When the program is running, you can see that it is always flashing for RunLed on MiniIOEx. We provide this with the following function:
+
+ 
+```python
+#it  means a program running on OS    
+def fLed():       
+while 1:            
+    GPIO.output(DO_RunLed,GPIO.HIGH) #ON            
+    time.sleep(0.2) #200ms            
+    GPIO.output(DO_RunLed,GPIO.LOW) #OFF            
+    time.sleep(0.2) #200ms 
+```
+
+I also share the following code in github: https://github.com/pe2a/miniIOEx3G/blob/master/fc51.py
+
+For Video: 
+Check this out:
+
+https://vimeo.com/304813868
+
+#### Conclusion ####
+
+After installing the relevant libraries and making the cable installation connections, you can run the program. Do not hesitate to contact support@pe2a.com if something is wrong. ;)
+
+In the next article, we will try to prepare a document such as visualization of the relevant motor values on the GUI and transfer of the data to the cloud.
+
+
 ## Other Topic ##
 
 ### Installing Raspbian OS ###
