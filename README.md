@@ -39,6 +39,8 @@
 
 - [Reading Analog Values from Siemens CO2 Sensor](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-5---reading-values-from-siemens-co2-sensor)
 
+- [Danfoss FC51 Motor Driver Control via Modbus RTU](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-6---danfoss-fc51-motor-driver-control-via-modbus-rtu)
+
 [Other Topic](https://github.com/pe2a/miniIOEx3G#other-topic)
 
 - [Installing Raspbian OS](https://github.com/pe2a/miniIOEx3G#installing-raspbian-os)
