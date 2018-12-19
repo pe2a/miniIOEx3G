@@ -40,6 +40,7 @@
 - [Reading Analog Values from Siemens CO2 Sensor](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-5---reading-values-from-siemens-co2-sensor)
 
 - [Danfoss FC51 Motor Driver Control via Modbus RTU](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-6---danfoss-fc51-motor-driver-control-via-modbus-rtu)
+- [Battery Voltage Read](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-7---reading-battery-voltage-and-monitoring)
 
 [Other Topic](https://github.com/pe2a/miniIOEx3G#other-topic)
 
@@ -1650,14 +1651,14 @@ In the next article, we will try to prepare a document such as visualization of 
 
 Raspberry Pi can also be used in places without electricity. For example, water pumping stations or in areas such as animal monitoring and so Raspberry Pi work with battery. If the the values/data/image etc. are critical; it must be monitored continuously, it is important to keep the system alive. The way to do this is to monitor the battery voltage. If you can monitor the battery voltage, when the battery will run out, you can replace the battery with a spare battery. With the industrial Raspberry Shield named MiniIOEx, you can easily monitor the battery and Raspberry Pi supply voltage. An external cable connection is not required. The 12Bit Analog Input sensor on the MiniIOEx is also connected to the 24V and 5V line. The power block on the MiniIOEx converts the voltage from 5V to 30V to 5V. Therefore, you can also supply the MiniIOEx with 12V battery voltage instead of 24V.
 
-### Physical Interface ###
+#### Physical Interface ####
 
 - 12V 7Ah Rechargeable Battery
 - Industrial MiniIOEx
 - Raspberry Pi 3 B+
 - 16GB SD Card Class 10
 
-### External Library Used ###
+#### External Library  ####
 
 - matplotlib
 
@@ -1677,11 +1678,17 @@ You can install the battery terminal to MiniIOEx terminal as shown at below:
 
 The Matplotlib library is a program that draws highly useful graphics on Raspberry Pi and is very easy to use. Since we have installed the related library and made SPI settings, we need to run the following code: https://github.com/pe2a/miniIOEx3G/blob/master/batteryVoltage.py
 
-After the run code, we can get 1min or 10min graphics of battery voltage. Raspberry Pi has Operating System and this system works unbalanced as considering current demand. So, you can see that unbalanced load in figures:  
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/PowerSupply1min.png)
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/PowerSupply10min.png)
+
+How we measure battery voltage with MiniIOEx:
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/BatteryTest.jpg)
+
+#### Conclusion ####
+
+After the run code, we can get 1min or 10min graphics of battery voltage. Raspberry Pi has Operating System and this system works unbalanced as considering current demand. So, you can see that unbalanced load in figures.   
 
 
 ## Other Topic ##
