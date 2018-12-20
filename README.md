@@ -176,6 +176,46 @@ At the below table, you can find which MiniIOEx pins are connected to Raspberry 
 | Digital Output  Transistor 2	| 40 |
 | Digital Output  *RUN* LED	| 37 |
 
+# Terminal Number #
+
+Terminal naming becomes very important when you develop applications in the field.
+Terminal addresses can easily be used in MiniIOEx.Terminal number is added at below figure with table. 
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/MiniIOEx_terminalNumber.PNG)
+
+Terminal numbers are listed below:
+
+|24V|RL2_NO|RL1_NO|DIG_OUT_2|DIG_OUT_1|AI_IN2|AI_IN1|DIG_IN2|DIG_IN1|RS232_TX OR RS485_A| 
+| ------------- | -------------|-------------|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
+|GND|RL2_COM|RL1_COM|GND|GND|GND|GND|GND|RS_GND|RS232_RX OR RS485_B|
+
+All terminal numbers and comments can be found in the table below.
+
+| IO  	| Terminal Number | Comment |
+| ------------- | ------------- |------------- |
+| 0V 	| 1 | |
+| 24V	| 2 | |
+| RL1_COM	| 3 | UP TO 24VDC|
+| RL1_NO	| 4 | |
+| RL2_COM	| 5 |UP TO 24VDC|
+| RL2_NO  	| 6 | |
+| GND	| 7 |
+| DIG_OUT_2	| 8 | 24VDC,max. 80mA |
+| GND	| 9 | |
+| DIG_OUT_2	| 10 |  24VDC,max. 80mA | 
+| GND	| 11 | |
+| AI_IN2	| 12 | 0-30VDC or 4-20mA|
+| GND	| 13 | |
+| AI_IN1	| 14 | 0-30VDC or 4-20mA |
+| GND	| 15 | |
+| DIG_IN_2	| 16 | UP TO 30VDC |
+| RS_GND	| 17 | ALL GND IS SHORT-CIRCUITED |
+| DIG_IN_2	| 18 | UP TO 30VDC |
+| RS232_TX OR RS485_B	| 19 | |
+| RS232_RX OR RS485_A	| 20 | |
+
+
+
 
 ## IO Test GUI Program ##
 
@@ -1690,6 +1730,9 @@ How we measure battery voltage with MiniIOEx:
 
 After the run code, we can get 1min or 10min graphics of battery voltage. Raspberry Pi has Operating System and this system works unbalanced as considering current demand. So, you can see that unbalanced load in figures.   
 
+#### References ####
+
+https://matplotlib.org/
 
 ## Other Topic ##
 
