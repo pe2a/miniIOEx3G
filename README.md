@@ -225,7 +225,7 @@ You can use the GUI program to control all IOs. To use this program, you need to
 
 After the running, you should see GUI as follows :
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/testGUI.PNG)
+![Image of MiniIOEx-3G](http://pe2a.com/docs/img/testGUI.PNG)
 
 The code you can access: https://github.com/pe2a/miniIOEx3G/blob/master/testGUI.py
 
@@ -840,7 +840,7 @@ http://www.quectel.com/UploadImage/Downlad/Quectel_UC20_GNSS_AT_Commands_Manual_
 
 The output of the program will be as follows:
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/59.jpg)
+![Image of MiniIOEx-3G](http://pe2a.com/docs/img/59.jpg)
 
 *GNSS Outputs*
 
