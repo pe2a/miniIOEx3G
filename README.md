@@ -46,6 +46,8 @@
 
 - [Installing Raspbian OS](https://github.com/pe2a/miniIOEx3G#installing-raspbian-os)
 
+- [How to Find MAC ID of Raspberry Pi](https://github.com/pe2a/miniIOEx3G#How-to-find-your-MAC-ID-of-your-Raspberry-Pi)
+
 [Support](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#support)
 
 [BUY](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#buy)
@@ -1772,6 +1774,23 @@ After downloading the desired operating system, you can start the following oper
 3)
 
 ![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/RPI3OS.jpg)
+
+### How to find your MAC ID of your Raspberry Pi ###
+
+If you are using the Raspberry Pi in an industrial area, you may need to register your computer's MAC ID for your IT department. Therefore, you need to know the MAC ID of your computer. As you know, Raspberry Pi is a Linux/GNU based operating system, so it is very easy to learn MAC ID.
+
+You can learn your MAC address in 4 steps.
+
+-	As the root user
+-	Type “ifconfig –a”
+-	Find eth0 or wlan0 which internet connection will be used. 
+-	Locate the numbers next to the HWaddr. This is your MAC Address
+
+![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/rpi-your-mac-1.png)
+
+Link: http://www.coffer.com/mac_info/locate-unix.html
+
+The lines starting with **"b8: 27: eb"** is your  MAC address of Raspberry Pi. Let's give a hint. "b8: 27: eb" is the Raspberry Pi's registered MAC address. So even if you use another Raspberry Pi it starts with "b8: 27: eb". 16.777.215 is Raspberry Pi magic number. Please estimate this magic number..  
 
 
 ## Support ##
