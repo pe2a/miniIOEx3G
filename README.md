@@ -78,23 +78,23 @@ You can easily integrate RS232 / RS485 to communicate with other devices. If you
 
 We have some pictures for industrial shields at below:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/IMG_3369.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3369.jpg)
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/IMG_3373.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3373.jpg)
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/IMG_3380.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3380.jpg)
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/IMG_3383.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3383.jpg)
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/IMG_3378.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3378.jpg)
 
 *The MiniIOEx-3G has standart sheet metal case.*
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/IMG_3367.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3367.jpg)
 
 *The terminal on which the IOs are located is specified on the MiniIOEx.*
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/IMG_3435.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3435.jpg)
 
 *MiniIOEx-3G has standard industrial terminal.*
 
@@ -139,7 +139,7 @@ So if we're going to sum it up, who's MiniIOEx for?
 - Students/Engineers who aim to develop about Embedded Linux plaftorms. 
 
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/miniIOex_poster_01.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/miniIOex_poster_01.jpg)
 
 
 ## What is in the box ? ##
@@ -159,7 +159,7 @@ If you buy  *MiniIOEx-3G* with **3G module** :
 - MiniIOEx Metal Sheet
 - Sheet mount parts
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/miniIOex_poster_02.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/miniIOex_poster_02.jpg)
 
 # IO Handling #
 
@@ -182,7 +182,7 @@ At the below table, you can find which MiniIOEx pins are connected to Raspberry 
 Terminal naming becomes very important when you develop applications in the field.
 Terminal addresses can easily be used in MiniIOEx.Terminal number is added at below figure with table. 
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/MiniIOEx_terminalNumber.PNG)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/MiniIOEx_terminalNumber.PNG)
 
 Terminal numbers are listed below:
 
@@ -227,7 +227,7 @@ You can use the GUI program to control all IOs. To use this program, you need to
 
 After the running, you should see GUI as follows :
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/testGUI.PNG)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/testGUI.PNG)
 
 The code you can access: https://github.com/pe2a/miniIOEx3G/blob/master/testGUI.py
 
@@ -252,7 +252,7 @@ We mentioned before MiniIOEx-3G has 2ch Digital Inputs. Digital Input on MiniIOE
 | Digital Input 2	| 33 |
 
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/27.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/27.jpg)
 
 *MiniIOEx Digital Input Terminal*
 
@@ -260,7 +260,7 @@ Terminal 16 and 18 is Digital Input connection point. You can easily mount your 
 
 Sample connection of buttons:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/28.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/28.jpg)
 
 *MiniIOEx Digital Input Connection Diagram*
 
@@ -328,7 +328,7 @@ You can view the Digital Outputs on the MiniIOEx in the following table:
 | Configuration	| GPIO or bcm2835 library install |
 
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/29.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/29.jpg)
 *MiniIOEx Relay Datasheet Informations*
 
 With MiniIOEx, many basic automation operations can be performed. For example, the data can be sent to the central servers from a device via RS485 / RS232 and then the device can be started / stopped / performance monitored with this information. When we look at the whole of document, many examples like this are shared.
@@ -432,7 +432,7 @@ MiniIOEx-3G can provide 2ch analog inputs can be received from the field. The Mi
 
 In the following image, the Analog Input model between MiniIOEx-3G and Raspberry Pi integration is explained. As seen in this model, the 5V and 24V readings are carried out with the voltage divider on the MiniIOEx and there are 2ch Analog Input inputs that MiniIOEx-3G can read from the field. You can read MiniIOEx-3G input voltages from the relevant library and use them in your operations.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/35.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/35.jpg)
 
 *MiniIOEx Analog Input*
 
@@ -447,7 +447,7 @@ The following table contains the terminal numbers for the analog data to be inpu
 
 You can use the MiniIOEx-3G Analogue Input Module by wiring the following terminals:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/36.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/36.jpg)
 
 *MiniIOEx Analog Input Terminal Number*
 
@@ -593,7 +593,7 @@ int smallex_getVal(const int channel){
 You can use this function block in your program. You can also check this value with any voltage meter (multimeter).
 Since there is no voltage dropping element on the MiniIOEx in the 5V line, this value is the voltage that Raspberry feeds directly. However, you need to add approximately 1.4V (0.7V * 2) to the voltage value that you measure the 24V value because the following bridge diode is on the 24V line. In the illustration below you can see the MiniIOEx-3G power supply input bridge diode connection.
 
-<img src="http://pe2a.com/docs/img/miniioex/38.jpg" alt="drawing" width="250"/>
+<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/38.jpg" alt="drawing" width="250"/>
 
 As you can see above pictures, MinIOEx has bridge diode for 24V power in. 
 
@@ -636,10 +636,10 @@ Since Raspberry has a single UART output, we use serial port converters in MiniI
 
 If we can not use these two converters at the same time, we have to make a choice. You can choose according to the serial port you will use as follows: For RS485, you can push upwards the switches, for RS232 you can choose the other direction.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/40.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/40.jpg)
 *RS485 Selection*
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/41.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/41.jpg)
 *RS232 Selection*
 
 To change the serial port selection buttons while the serial port terminal is plugged into a device: It may break the integrations on MiniIOex. Therefore, if any serial port is selected, the buttons need to be adjusted in that direction before connecting to the device.
@@ -655,19 +655,19 @@ After pressing the "enter" key on the **"Serial"** menu, follow the steps below.
 
 If this menu is missed, the program using the serial port will fail when it starts to work. Therefore, in order to use Login, serial port must be closed.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/42.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/42.jpg)
 *Serial Port Using Login Shell*
 
 **Serial Port Hardware Use -> On / (Yes)**
 
 This menu makes the Raspberry Pi serial port terminals programmable.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/43.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/43.jpg)
 *Serial Port Hardware Usage*
 
 When all the processes are finished, we need to see a screen like this:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/44.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/44.jpg)
 *Serial Port Usage Informations*
 
 With the "minicom" program that can run on Raspberry, you can see the variables coming from Raspberry via serial port or give any reference through this program.
@@ -713,13 +713,13 @@ Where MiniIOEx-3G is available:
 The fact that the MiniIOEx can be fed with 24V is a very useful feature for industrial environments. For an application that consumes too much power and draws instantaneous pulsating currents like 3G, it is very important for the continuity of communication that there is a 24V supply alternative. Many tests and studies have been conducted on this subject. Below are 2 oscilloscope screenshots. These are the graphs of voltage the 3G modem tries to connect to the first internete. As you can see in this chart, there is a voltage drop due to the flow in the red box. This voltage drop has been tried to be kept at the lowest voltage possible. The module does not operate by resetting the module itself at any serious voltage drop because it operates with 3.3V precision supply voltage. Therefore, it was tried to obtain a linear voltage graph at the module feed.
 
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/52.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/52.jpg)
 
 *Voltage Graph during 3G Module Connection*
 
 As shown in the oscilloscope screen image below, the voltage is steady state even though the data download / upload operations after connecting the internet.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/53.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/53.jpg)
 
 *After 3G connection Voltage Graph*
 
@@ -759,13 +759,13 @@ After the installation is finished, the terminal is opened and the **lsusb** com
 
 **Installation work on the module should be done without energy**
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/54.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/54.jpg)
 
 *Other USB ports on the screen can be wireless keyboard / mouse or portable USB disk.*
 
 Since MiniIOEx-3G physically connected to USB, we can send the **AT** commands.  AT commands can be used communicating with the 3G module. With these commands, the information on the device can be queried as well as features such as SMS and Search can be performed by these commands. Just write these commands on the Minicom. 
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/55.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/55.jpg)
 
 The description of the basic AT commands in the red block is given below:
 
@@ -781,7 +781,7 @@ The description of the basic AT commands in the red block is given below:
 
 You can also inquire about the IMEI number of the device you have purchased through the municipality. **This question applies only to Turkey.** If IMEI is not registered, please contact the company where you purchased the modules.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/56.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/56.jpg)
 
 If the module's IMEI number is registered, we need to get an answer as above.
 
@@ -818,7 +818,7 @@ sudo pppd call gprs&
 
 After the **"sudo pppd call gprs"** command, you should see a screen like this:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/57.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/57.jpg)
 
 If the device does not connect internet, it will give a "script failed" error. The most common problems are that the APN address of the SIM card is incorrect, the PIN code is insufficient, etc. You can access the IP of the device by executing the following command on the device internete.
 
@@ -827,7 +827,7 @@ sudo ifconfig
 ```
 If you want to see internet speed, ** speedtest-cli ** program should be installed. Through this program, we can see the speed of the international exit. Below is a sample screenshot of the relevant topic:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/58.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/58.jpg)
 
 ## GPS Commissioning ##
 
@@ -842,7 +842,7 @@ http://www.quectel.com/UploadImage/Downlad/Quectel_UC20_GNSS_AT_Commands_Manual_
 
 The output of the program will be as follows:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/59.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/59.jpg)
 
 *GNSS Outputs*
 
@@ -854,15 +854,15 @@ In microprocessors, it is important that the clock is continuous. Since the Rasp
 
 EEPROM and RTC communicate with MiniIOEx-3G via i2C. i2C is a popular communication protocol for receiving and sending data from many devices. It is possible to send / receive data at high speed with only 2 wires. The module that controls I2C devices is called 'master' and the module that is controlled is called 'slave'. Each i2c slave device has a unique address. Each i2C device communicates over the same serial clock (SCL) and serial data (SDA). The i2c protocol includes the states **START** and **STOP** to inform the master device whether the data starts or ends.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/60.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/60.jpg)
 
 In the picture below, you can find the BIT chart of SCL and SDA. SCL is a clock, consecutive reference signals; SDA produced the data of the slave device.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/61.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/61.jpg)
 
 In the terminal **raspi-config-> Interface Options-> i2c-> Enable** then it is recommended to start Raspberry Pi reboot. To access the I2C devices, you can run terminal command that **i2cdetect -y 1**. For older Raspberry Pi version, it shall be **i2cdetect -y 0**
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/62.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/62.jpg)
 
 The ** EEPROM ** on MiniIOEx **(24LC512)** unique address is **0x50**. We also need to use this unique address in the software. If RTC data is written to EEPROM and Raspberry Pi is restarted, RTC data can be read from EEPROM, or some 'secret' passwords can be written to EEPROM. 
 
@@ -919,7 +919,7 @@ int main() {
 
 
 ```
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/63.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/63.jpg)
 
 *You can test real time clock with hwclock -r command*
 
@@ -952,7 +952,7 @@ Although the scenario seems very simple, we will be working together with Raspbe
 
 If the scenario is going to be a chart, we can get the following chart. We also need to program according to this chart:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/300.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/300.jpg)
 
 As you can see in the graphic above, when the Start button or the Stop button is pressed for 1 second, the value of the FAN motor must change to the rising or falling edge. The 1 second duration actually provides 'digital filter'. That means that the Xms energized Start button allows for the FAN motor to move because of any interference. Such filters are important for the software application to work with the hardware.
 
@@ -966,12 +966,12 @@ The following terminal numbers are used in connection:
 
 *The any relay of the MiniIOEx-3G is not used in this application. The reason for this is that the load to be switched requires high current.*
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/30.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/30.jpg)
 *Fan Motor Working Process- 1*
 
 We can do the wiring as above. **FAN GND**is shorted to power supply GND. The voltage is given by switching from the transistor by software. In the following illustration, the cable ends are shared:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/31.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/31.jpg)
 *Fan Motor Terminal Cable Commissioning*
 
 
@@ -1040,7 +1040,7 @@ If the **Stop button** is pressed OR the **WEB STOP button** is activated, the F
 
 We create a database name on Firebase called **WEBSample** and their child is **StartButton** and **StopButton**. Since these values come from WEB, we have to adjust our program accordingly it.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/33.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/33.jpg)
 *Firebase WEB Reference Values*
 
 Since the **StopButton Reference** on the WEB does not have a feature like Normally Closed, we can get it as a normal variable. Since the variables stored in the Firebase are strings, we need to act accordingly. You can also use it directly as a string, or you can convert it to *integer*. Web Reference  or physical button value is necessary for the operation of the FAN motor.
@@ -1055,7 +1055,7 @@ if (not DI_In2 or myConnect.WEB_REF_2 == '1'):
 ```
 Our software is currently working on values coming from WEB and values coming from physical.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/34.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/34.jpg)
 *Firebase WEB Referance Values*
 
 When you change the **StarButton** value from the **Firebase** console screen, you can see that the FAN engine starts to rotate. Of course this can be changed and assigned according to the user. Our program will now start to work through a WEB database. This will now allow us to reach Raspberry Pi from a world outside. As an example, you can access Raspberry Pi via mobile application or WEB application when required services are written in this database. Accessing Raspberry Pi via a server can also result in security weakness. As a result, you need to configure security for your server against security adjustments and possible attacks. In the case of services such as Firebase, you are unlikely to encounter such a problem.
@@ -1155,12 +1155,12 @@ Used devices for this part:
 
 Below is the topology we use in the system. There is also a computer outside the topology. The purpose of our computer use is to show how we receive this data because we have exchanged data with the MODBUS RTU protocol over the RS485 physical serial path. In other words, when we receive data from the energy analyzer, we actually receive this data with which questions we can easily see it on an external computer.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/entes-computer-mini.png)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/entes-computer-mini.png)
 *RS485 Device Connection Topology*
  
 In the above system, the computer behaves as master / slave, the MiniIOEx is master and the analyzer is slave. *A* and *B* terminals of MiniIOEx RS485 are all short-circuited in the system. **"Modbus Master**" that Computer Serial Port Program and **"Terminal v1.9b**" programs installed on the computer, we can see the reference codes you need to go to read data from the Entes Analyzer. Of course, before we do this, we need to know which registers the analyzer has which information. We can also extract this from the **"Data Mapping"** document found on the analyzer web page of the Entes Analyzer.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/46.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/46.jpg)
 *Register Table of the Energy Analyzer*
 
 As you can see on the tablade there is *cosq* values *19,20,21* in the register. (It appears that the first value starts from 0 in the Register table.) Since the resolution for cosq value is 1000, it must be divided by 1000 so that the value coming from real cosq value. For example, when the value of 999 is reached, this value should be cosq = 999/1000 = 0.99. Since no current / voltage terminals are connected to the energy analyzer, there is no phase difference between them and therefore we need to see cosq = 1. Other information (voltage, current, etc.) can also be taken using this tissue when a field application is made.
@@ -1174,7 +1174,7 @@ When we connect the analyzer to the terminals of the computer and MiniIOEx termi
 
 First we need to write basic information such as node slave address, how many registers we want to read in the **MODBUS MASTER** program installed on the computer. The following screen shot also provides sample information:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/47.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/47.jpg)
 *Query and Answer as HEX format*
 
 The computer sends the query: **01 03 00 00 1E C5 C2**. According to this query, the Analyzer gave a long answer. Rx, the query sent by the computer; Tx is the answer from the analyzer. Data can not be retrieved without inquiry on RS485. These long answers are actually parameters such as Voltage / Current / Frequency / Power factor measured by the Analyzer. In order to use Cosq from these parameters, let us first examine the question sent by the Analyzer. The analyzer sent us the **03 E8** replies in sequence. This answer is actually **HEX 0x3E8**. In the decimal number system, it is expressed as "1000". In other words, the result of the query we made is 1000/1000 = 1 in the cosq register. If the value of 999 (0x3E7) came, it would be 999/1000 = 0.99. These operations are the most basic events that take place in the RS485 serial path. We make these operations simple by using protocols. If we want to make a computer-like query from Raspberry Pi, we can use the following code. 
@@ -1205,7 +1205,7 @@ ser.write(serial.to_bytes([0x01,0x03,0x00,0x00,0x00,0x1E,0xC5,0xC2]))
 ```
 In order to receive the data from the analyzer, we have mentioned above that we need to send the relevant parameter to the analyzer:**01 03 00 00 1E C5 C2** When we send this parameter through the serial port to the analyzer, it returns us the parameters in HEX again. We can see that the values again on **"Terminal v1.9b"** computer program.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/48.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/48.jpg)
 *RS485 Query and Answer*
 
 In the picture above, the query **(01 03 00 00 1E C5 C2)** to the Analyzer and the query from the analyzer and the answers from the analyzer according to this query. In this question, it is not really complicated. As an example, *"01"* defines Node address; *"1E"* shows how many registers are defined. The first query in the RS485 protocol then takes place in his reply. Both Write and Read via RS485 serial port at the same time can not be querried synchronously. This causes the fault.
@@ -1262,7 +1262,7 @@ Basic Cosq calculation:
 
 -	Cosq = 0.85
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/49.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/49.jpg)
 
 Here we can calculate *CosQ* as *0.85*. In general, we always want CosQ to be close to 1. Since we can get the values angle of Voltage, Current, Active Power etc. from the analyzer, we can calculate cosq and accordingly angle calculations. If the system of cosq is not below 0.98, fines shall be paid.
 
@@ -1406,12 +1406,12 @@ speedRef = 0
 ```
 When we run the program, we get the speed values as follows:
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/50.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/50.jpg)
 
 *ABB Driver Speed Reference*
 
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/51.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/51.jpg)
 
 *Driver User Panel at full speed*
 
@@ -1584,7 +1584,7 @@ Suppose that 3925 digital corresponds to 10cm, 2790 digital corresponds to 15cm.
 
 As a result of this program, we can obtain the following graph and equation.
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/39.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/39.jpg)
 
 If you have a sensor set of such a nonlinear output you can benefit from this theory.
 
@@ -1720,7 +1720,7 @@ You can easily install matplotlib by using at below command:
 ```python
 pip install –U matplotlib
 ```
-In addition, SPI must be enabled because we will use the python with the SPI-based comm. You can review the comments in the attached link. [Https://github.com/pe2a/miniıoex3g/blob/master/readme.md#analog-input]
+In addition, SPI must be enabled because we will use the python with the SPI-based comm. You can review the comments in the attached link. [https://github.com/pe2a/miniıoex3g/blob/master/readme.md#analog-input]
 
 You can install the battery terminal to MiniIOEx terminal as shown at below:
 
@@ -1732,12 +1732,12 @@ You can install the battery terminal to MiniIOEx terminal as shown at below:
 The Matplotlib library is a program that draws highly useful graphics on Raspberry Pi and is very easy to use. Since we have installed the related library and made SPI settings, we need to run the following code: https://github.com/pe2a/miniIOEx3G/blob/master/batteryVoltage.py
 
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/PowerSupply1min.png)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/PowerSupply1min.png)
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/PowerSupply10min.png)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/PowerSupply10min.png)
 
 How we measure battery voltage with MiniIOEx:
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/BatteryTest.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/BatteryTest.jpg)
 
 #### Conclusion ####
 
@@ -1765,15 +1765,15 @@ After downloading the desired operating system, you can start the following oper
 
 1)
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/RPI1OS.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI1OS.jpg)
 
 2)
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/RPI2OS.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI2OS.jpg)
 
 3)
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/RPI3OS.jpg)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/RPI3OS.jpg)
 
 ### How to find your MAC ID of your Raspberry Pi ###
 
@@ -1786,7 +1786,7 @@ You can learn your MAC address in 4 steps.
 -	Find eth0 or wlan0 which internet connection will be used. 
 -	Locate the numbers next to the HWaddr. This is your MAC Address
 
-![Image of MiniIOEx-3G](http://pe2a.com/docs/img/miniioex/rpi-your-mac-1.png)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/rpi-your-mac-1.png)
 
 Link: http://www.coffer.com/mac_info/locate-unix.html
 
