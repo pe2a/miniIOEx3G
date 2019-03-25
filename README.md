@@ -57,7 +57,7 @@
 
 MiniIOEx-3G is Raspberry Pi shield that can be used in industrial areas with 3G Module. MiniIOEx-3G has affordable price to use with Raspberry Pi. You can easily commissioning shield and you can easily integrate in your projects.  
 
-There are very useful informations for engineers and interested people in the automation field, who are new to the IOT sector and who want to communicate with machines in this study. In this document, examples are often given in languages such as C / C ++ and Python. However, this document will mention many things like Raspberry Pi's control of GPIO pins, serial port applications, transferring data from servers to servers, exiting internetting using 3G feature, using USB ports.Using this information, you can also develop your ideas about how you can improve your progeny and use Raspberry Pi.
+There are very useful informations for engineers and interested people in the automation field, who are new to the IOT sector and who want to communicate with machines in this study. In this document, examples are often given in languages such as C / C ++ and Python. However, this document will mention many things like Raspberry Pi's control of GPIO pins, serial port applications, transferring data from servers to servers, exiting internetting using 3G feature, using USB ports.
 
 MiniIOEx-3G has specifications mentioned at below:
 
