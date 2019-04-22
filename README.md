@@ -1786,12 +1786,38 @@ You can learn your MAC address in 4 steps.
 -	Find eth0 or wlan0 which internet connection will be used. 
 -	Locate the numbers next to the HWaddr. This is your MAC Address
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/rpi-your-mac-1.png)
 
 Link: http://www.coffer.com/mac_info/locate-unix.html
 
 The lines starting with **"b8: 27: eb"** is your  MAC address of Raspberry Pi. Let's give a hint. "b8: 27: eb" is the Raspberry Pi's registered MAC address. So even if you use another Raspberry Pi it starts with "b8: 27: eb". 16.777.215 is Raspberry Pi magic number. Please estimate this magic number..  
 
+
+### Run a Program On Your Raspberry Pi At Startup ###
+
+It is the easy way that you can edit *etc/rc.login* file for running program at startup. 
+
+At below, you can see how to edit the file. ai_reboot.py starts after every Raspberry Pi reboot. 
+
+You can use *nano* or *vi* editor to edit the file.
+
+1. Step:
+
+```python
+nano /etc/rc.login
+```
+2.Step 
+
+```python
+python3 /home/pi/Desktop/ai_reboot.py
+```
+The ampersand allows the command to run in a separate process and continue booting with the main process running.
+
+```python
+python3 /home/pi/Desktop/ai_reboot.py &
+```
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/68.JPG)
+
+Link: https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/
 
 ## Support ##
 
