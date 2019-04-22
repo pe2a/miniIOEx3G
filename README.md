@@ -48,6 +48,8 @@
 
 - [How to Find MAC ID of Raspberry Pi](https://github.com/pe2a/miniIOEx3G#How-to-find-your-MAC-ID-of-your-Raspberry-Pi)
 
+- [Run a Program on Raspbian at Startup](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#run-a-program-on-your-raspberry-pi-at-startup)
+
 [Support](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#support)
 
 [BUY](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#buy)
@@ -1794,7 +1796,7 @@ The lines starting with **"b8: 27: eb"** is your  MAC address of Raspberry Pi. L
 
 ### Run a Program On Your Raspberry Pi At Startup ###
 
-It is the easy way that you can edit *etc/rc.login* file for running program at startup. 
+You can edit *etc/rc.login* file for running program at startup. 
 
 At below, you can see how to edit the file. ai_reboot.py starts after every Raspberry Pi reboot. 
 
