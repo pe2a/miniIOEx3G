@@ -1889,20 +1889,26 @@ At below, you can see how to edit the file. ai_reboot.py starts after every Rasp
 
 You can use *nano* or *vi* editor to edit the file.
 
-1. Step:
+1.Step:
 
 ```console
-nano /etc/rc.login
+$nano /etc/rc.login
 ```
 2.Step 
 
 ```console
-python3 /home/pi/Desktop/ai_reboot.py
+$python3 /home/pi/Desktop/ai_reboot.py
 ```
+3. Step
+
+```console
+$chmod +x /home/pi/Desktop/ai_reboot.py
+```
+
 The ampersand allows the command to run in a separate process and continue booting with the main process running.
 
 ```console
-python3 /home/pi/Desktop/ai_reboot.py &
+$python3 /home/pi/Desktop/ai_reboot.py &
 ```
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/68.JPG)
 
