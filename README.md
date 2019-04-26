@@ -1919,7 +1919,7 @@ Please do not hesitate to create request for this document or product named Mini
 
 ## Buy ##
 
-If you want to buy MiniIOEx-3G, you can also use support@pe2a.com or [BUY Link](https://www.tindie.com/products/yanikgo/industrial-raspberry-pi-mini-io-shield/)
+You can have MiniIOEx-3G just for $65. (https://iyzi.link/AAYIcA)
 
-Please, contact support@pe2a.com for bulk purchase. 
+
 
