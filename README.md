@@ -61,7 +61,7 @@
 
 MiniIOEx-3G is Raspberry Pi shield that can be used in industrial areas with 3G Module. MiniIOEx-3G has affordable price to use with Raspberry Pi. You can easily commissioning shield and you can easily integrate in your projects.  
 
-There are very useful informations for engineers and interested people in the automation field, who are new to the IOT sector and who want to communicate with machines in this study. In this document, examples are often given in languages such as C / C ++ and Python. However, this document will mention many things like Raspberry Pi's control of GPIO pins, serial port applications, transferring data from servers to servers, exiting internetting using 3G feature, using USB ports.
+There are very useful information in this document for engineers and the people in automation field. In this document, the examples are often given in languages such as C and Python. However, this document will mention many things like Raspberry Pi's control of GPIO pins, serial port applications, transferring data from client to server, upload any data using 3G feature etc.
 
 MiniIOEx-3G has specifications mentioned at below:
 
@@ -78,9 +78,9 @@ MiniIOEx-3G has specifications mentioned at below:
 | Size with Case	| 80x94x42mm(WxLxH)|
 | Weight	| ~30gr |
 
-You can easily integrate RS232 / RS485 to communicate with other devices. If you have no Ethernet or Wireless possibility in the fields so MiniIOEx-3G can be used with IO features. If MiniIOEx-3G will be used in industrial area and it is provided 24V DC input on MiniIOEx-3G terminal. Else, you can use 5V on Raspberry Pi USB for boosting MiniIOEx-3G. 
+You can easily integrate RS232 / RS485 to communicate with other devices. If you have no Ethernet or Wireless possibility in the fields so MiniIOEx-3G can be used with IO features. If MiniIOEx-3G will be used in industrial area, it is provided that power supply can be 24V DC on MiniIOEx-3G terminal. Else, you can use 5V on Raspberry Pi USB for boosting MiniIOEx-3G. 
 
-We have some pictures for industrial shields at below:
+We have some pictures from industrial shields at below:
 
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/IMG_3369.jpg)
 
@@ -102,7 +102,7 @@ We have some pictures for industrial shields at below:
 
 *MiniIOEx-3G has standard industrial terminal.*
 
-MiniIOEx-3G has standart **Metal Sheet** to be used in electrical panels and industrial fields. So, you can easily mount it your projects. MiniIOEx-3G has also industrial 2x12 push-in terminal. Because of this feature, you will not worry cable installation time and robustness. For the MiniIOEx Terminal, the reference ground for all inputs is the 0 V power contact. The wires can be connected without tools in the case of solid wires using a direct plug-in technique. 
+MiniIOEx-3G has **Metal Sheet** to be used in electrical panels and industrial fields. So, you can easily mount it your panels. MiniIOEx-3G has also industrial 2x12 push-in terminal. Because of this feature, you will not worry cable installation time and it provides robustness. 
 
 MiniIOEx terminal features:
 
@@ -116,10 +116,9 @@ MiniIOEx terminal features:
 | Working Temperature	| -40C   +105C |
 
 
-
 ## Who is For MiniIOEx-3G? ##
 
-The Raspberry-based control solutions enable you to run any applications for vaious IOT platforms: building automation, urban automation, smart city applications to operate and monitoring. MiniIOEx significantly reduces hardware and software costs and there is also not any licence prices thanks to Raspberry Pi. 
+The Raspberry-based control solutions enable you to run any applications for various IOT platforms: building automation, urban automation, smart city applications to operate and monitoring. MiniIOEx significantly reduces hardware and software costs and there is also not any licence prices thanks to Raspberry Pi. 
 
 When developing industrial automation projects, the most important feature is to use high level languages such as C / C ++ / Python / JAVA in PLC, uploading data/pictures etc. to server, to reduce load on SCADA by installing local database on PLC. GUI applications on Raspberry Pi, retrieving data over serial port or direct IOs, and transferring the data to a server / creating WEB application are very easy. That's why Raspberry Pi has an operating system on it and it provides that we can program on Linux. 
 
