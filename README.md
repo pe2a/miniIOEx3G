@@ -1828,9 +1828,6 @@ $python3 PowerSupply_5V_RealTime.py
 You can access the full code : https://github.com/pe2a/miniIOEx3G/tree/master/examples/RealTimeGraphics/PowerSupply_5V
 
 
-
-### Sample #9 - Real Time Charts with 5V Power Supply ###
-
 #### Conclusion ####
 
 After the run code, we can get 1min or 10min graphics of battery voltage. Raspberry Pi has Operating System and this system works unbalanced as considering current demand. So, you can see that unbalanced load in figures.   
