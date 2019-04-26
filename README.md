@@ -1891,17 +1891,17 @@ You can use *nano* or *vi* editor to edit the file.
 
 1. Step:
 
-```python
+```console
 nano /etc/rc.login
 ```
 2.Step 
 
-```python
+```console
 python3 /home/pi/Desktop/ai_reboot.py
 ```
 The ampersand allows the command to run in a separate process and continue booting with the main process running.
 
-```python
+```console
 python3 /home/pi/Desktop/ai_reboot.py &
 ```
 ![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/68.JPG)
