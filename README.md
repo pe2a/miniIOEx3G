@@ -424,6 +424,10 @@ When using SPI libraries in Raspberry, different configuration settings need to 
 | Wiring Pi  (C) | 	**Enable** |
 | SpiDev (Python) |	**Enable** |
 
+If you use **Python** for programming MiniIOEx, the Interfacing Settings should be the same at below:
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/SPIsettings.png)
+
 When we use the above libraries, we also need to make the necessary settings in Raspberry Pi. So, if you are using the bcm2835 library **SPI -> Disable** 
 Otherwise your program will likely get 'fatal error' at 'Run Time' even if it does not get an error in 'Compile Time'. Raspberry's new models  have **BCM2836** or **BCM2837** chips are used. So do not think bcm2835's library will not work. The bcm2835 ibrary is compatible with  all bcmXX  models.
 
