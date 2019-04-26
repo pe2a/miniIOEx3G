@@ -42,7 +42,7 @@
 - [Danfoss FC51 Motor Driver Control via Modbus RTU](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-6---danfoss-fc51-motor-driver-control-via-modbus-rtu)
 - [Battery Voltage Read](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-7---reading-battery-voltage-and-monitoring)
 
-- [Sample #8 - Real Time Charts with Tkinter and Matplotlib - PowerSupply]()
+- [Real Time Charts with Tkinter and Matplotlib - PowerSupply](https://github.com/pe2a/miniIOEx3G#sample-8---real-time-charts-with-tkinter-and-matplotlib---powersupply-1)
 
 [Other Topic](https://github.com/pe2a/miniIOEx3G#other-topic)
 
