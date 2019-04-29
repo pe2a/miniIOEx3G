@@ -300,7 +300,7 @@ while 1:
 ```
 You can run program with at below command. 
 
-```sh
+```console
 python3 di_test.py
 ```
 
@@ -655,7 +655,7 @@ To change the serial port selection buttons while the serial port terminal is pl
 
 We need to use the Raspberry Pi configuration tool to configure the serial ports. In the terminal, we write ** "raspi-config" **.
 
-```sh
+```console
 $raspi-config > Interfacing Options > Serial 
 ```
 After pressing the "enter" key on the **"Serial"** menu, follow the steps below.
@@ -685,7 +685,7 @@ If you want to install the Minicom program, you can follow the steps below:
 
 **1. Minicom Install:**
 
-```sh
+```console
 $sudo apt-get install minicom 
 ```
 
@@ -693,12 +693,12 @@ $sudo apt-get install minicom
 
 If you use before Raspberry Pi 3 version, you need to use port adress as being "ttyAMA0". 
 
-```sh
+```console
 $sudo minicom -b 9600 -o -D /dev/ttyAMA0 
 ```
 If you use  Raspberry Pi 3 version and the others, you need to use port adress as being "ttyS0". 
 
-```sh
+```console
 $sudo minicom -b 9600 -o -D /dev/ttyS0
 
 ```
@@ -798,9 +798,9 @@ If the module's IMEI number is registered, we need to get an answer as above.
 
 After completing the SIM card and USB tests, you can connect to the internet by running the following script.
 
-```sh
-sudo chmod +x ./pe2a_miniIOEx.sh
-sudo ./pe2a_miniIOEx.sh internet ttyUSB3
+```console
+$ chmod +x ./pe2a_miniIOEx.sh
+$ ./pe2a_miniIOEx.sh internet ttyUSB3
 ```
 The **ttyUSB3** address will change according to what you connect to the USB on Raspberry. If ttyUSB is incorrectly selected, the device will not be connect internet. Usually, the default APN for Vodafone is **'internet'**. This depends on the country you are located in and the operator you are servicing. The device can not connect internet on the wrong APN. For Turkcell, the APN may be **"mgbs"**. Detailed information can be reached at: https://www.turkcell.com.tr/kurumsal/kurumsal-cozumler/statik-ip/sikca-sorulan-sorular (only in Turkish)
 
@@ -810,19 +810,19 @@ The **ttyUSB3** address will change according to what you connect to the USB on 
 
 Do not forget to close the internet connections after this:
 
-```sh
-sudo ifconfig eth0 down
-sudo ifconfig wlan0 down
+```console
+$ ifconfig eth0 down
+$ ifconfig wlan0 down
 ```
 After the APN settings, you can connect to the internet with the following command:
 
-```sh
+```console
 sudo pppd call gprs
 ```
 If you want the program backplane to work, you can add '&' to the command line as follows.
 
-```sh
-sudo pppd call gprs&
+```console
+$ pppd call gprs &
 ```
 
 After the **"sudo pppd call gprs"** command, you should see a screen like this:
@@ -831,8 +831,8 @@ After the **"sudo pppd call gprs"** command, you should see a screen like this:
 
 If the device does not connect internet, it will give a "script failed" error. The most common problems are that the APN address of the SIM card is incorrect, the PIN code is insufficient, etc. You can access the IP of the device by executing the following command on the device internete.
 
-```sh
-sudo ifconfig
+```console
+$ ifconfig
 ```
 If you want to see internet speed, ** speedtest-cli ** program should be installed. Through this program, we can see the speed of the international exit. Below is a sample screenshot of the relevant topic:
 
@@ -1190,8 +1190,8 @@ The computer sends the query: **01 03 00 00 1E C5 C2**. According to this query,
 
 The following code appears to have the **"python serial"** library. You can run this library by typing the following command at the terminal.
 
-```sh
-$sudo apt-get install python-serial
+```console
+$ apt-get install python-serial
 ```
 After uploading the library, we can send the related query by running the following program.
 
@@ -1223,8 +1223,8 @@ When we run this basic code, the Analyzer will give a result like above. When we
 
 There are many open source **ModbusRTU** libraries running on Raspberry. There are many documents related to this subject on the internet. **ModbusRTU** is a protocol that you can create if you wish but you do not need to "reinvent the wheel" here, which is also true in most areas like software. In this document **"PYMODBUS"** library is used. You can download the **PYMODBUS** library by entering the command at the following terminal.
 
-```sh
-$sudo pip install  -U pymodbus
+```console
+$ pip install  -U pymodbus
 ```
 
 When the **"PYMODBUS"** library is installed, we can use the ModbusRTU protocol to get the parameters received from the Analyzer from the field. The analyzer used in this example has no voltage or current source connected. Therefore, we can only query "cosq" data. Having the "cosq" data means that other data can be easily accessed. In order to receive other information, it is only necessary to know the correct "register" addresses.
@@ -1609,13 +1609,13 @@ After installing the operating system on Raspberry Pi, we recommend that you sho
 
 We used Jessie as the operating system. In the project, the following libraries must be installed by the user:
 
-```python
+```console
 serial
 pymodbus
 ```
 You can install these libraries by following these commands:
 
-```python
+```console
 $pip3 install pyserial
 $pip3 install pymodbus
 ```
@@ -1727,7 +1727,7 @@ Raspberry Pi can also be used in places without electricity. For example, water 
 You can easily install matplotlib by using at below command:
 
 ```console
-$sudo pip install –U matplotlib
+$ pip install –U matplotlib
 ```
 In addition, SPI must be enabled because we will use the python with the SPI-based comm. You can review the comments in the attached link. [https://github.com/pe2a/miniıoex3g/blob/master/readme.md#analog-input]
 
@@ -1931,8 +1931,6 @@ Reading motor speed and the reference of motor speed are graphically plotted on 
 The video for Real Time Plotting via Modbus RTU is shared at below. As it can be seen from the graph, Raspberry Pi can easily do the automation process and plotting the graph just for ~ $100. 
 
 ![Video for Real Time Plotting](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/gifACMotorSpeed.gif)
-
-
 
 
 ## Other Topic ##
