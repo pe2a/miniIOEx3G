@@ -44,7 +44,7 @@
 
 - [Real Time Charts with Tkinter and Matplotlib - PowerSupply](https://github.com/pe2a/miniIOEx3G#sample-8---real-time-charts-with-tkinter-and-matplotlib---powersupply-1)
 
-- [The Best Trio : Modbus RTU + GUI + Charts for Automation Things]()
+- [The Best Trio : Modbus RTU + GUI + Charts for Automation Things](https://github.com/pe2a/miniIOEx3G#sample-9---the-best-trio--modbus-rtu--gui--charts-for-automation-things)
 
 [Other Topic](https://github.com/pe2a/miniIOEx3G#other-topic)
 
