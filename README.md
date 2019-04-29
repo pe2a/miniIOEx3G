@@ -44,6 +44,8 @@
 
 - [Real Time Charts with Tkinter and Matplotlib - PowerSupply](https://github.com/pe2a/miniIOEx3G#sample-8---real-time-charts-with-tkinter-and-matplotlib---powersupply-1)
 
+- [The Best Trio : Modbus RTU + GUI + Charts for Automation Things]()
+
 [Other Topic](https://github.com/pe2a/miniIOEx3G#other-topic)
 
 - [Installing Raspbian OS](https://github.com/pe2a/miniIOEx3G#installing-raspbian-os)
@@ -1826,14 +1828,112 @@ $python3 PowerSupply_5V_RealTime.py
 
 You can access the full code : https://github.com/pe2a/miniIOEx3G/tree/master/examples/RealTimeGraphics/PowerSupply_5V
 
-
-#### Conclusion ####
-
-After the run code, we can get 1min or 10min graphics of battery voltage. Raspberry Pi has Operating System and this system works unbalanced as considering current demand. So, you can see that unbalanced load in figures.   
-
 #### References ####
 
 https://matplotlib.org/
+https://www.tutorialspoint.com/python3/python_gui_programming.htm
+
+### Sample #9 - The Best Trio : Modbus RTU + GUI + Charts for Automation Things ###
+
+The use of HMI (Human Machine Inteface) in industrial automation has often been quite expensive. Since standard PLCs do not have monitor outputs, it is must be used to transfer data to the monitor via communication as using Modbus TCP/ RTU etc. However, this will also bring the costs of an extra PC or Industrial PC. Raspberry Pi's HDMI and Audio outputs make it easy to visualize automation applications on the device. This means that an application that you write in PLC language: I mean IEC 61131-3 is visualized with VB .NET or C #. On Raspbian, you can write and visualize both automation applications with a single language. With the MiniIOEx-3G you can use Raspberry Pi in the industrial area as using Modbus RTU on RPI. Thus, you can remarkably save  engineering cost and time. 
+
+In this document, Danfoss motor driver is communicated via Modbus RTU with Raspberry Pi and and plotted the motor speed and the  motor speed reference. The scenarios can be increased. We have prepared this document to give you just an idea of how Raspberry Pi can be used in the industrial field.
+
+The program used in OS is written in Python. You can run it on MiniIOEx-3G by copy / paste.
+
+Which products used:
+
+-	Danfoss 1kW AC Motor Driver
+-	Siemens 0.25kW 1500rpm AC Motor 
+-	Raspberry Pi 3 B+
+-	MiniIOEx-3G
+-	Omron 24VDC, 50W Power Supply
+
+for further information : 
+https://github.com/pe2a/miniIOEx3G/blob/master/README.md#sample-6---danfoss-fc51-motor-driver-control-via-modbus-rtu
+
+You should install the following librarires to run the code:
+
+-	Matplotlib
+-	PIL
+-	Pymodbus
+-	Pyserial (not serial, pyserial must be :) )
+
+How to install:
+
+```console
+$pip3 install matplotlib
+$apt-get install python3-pil.imagetk
+$pip3 install pyserial
+$pip3 install pymodbus
+```
+
+We are using that topology as shared at below:
+
+![Image of Topology](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/modbusrtu_topology_1.png)
+
+The database icon is also shared in topology, but it is not mentioned in this document. We have mentioned in our previous documents on how to install the libraries we are using in the project.
+
+The libraries used in the program are shared below:
+
+```python
+#Raspberry Pi IO library
+import RPi.GPIO as GPIO
+#Python3 Library
+import time
+#python GUI lib
+import tkinter as tk
+from tkinter import *
+#showing icon file 
+from PIL import ImageTk, Image
+#for chart
+from matplotlib.backends.backend_tkagg import (
+    FigureCanvasTkAgg, NavigationToolbar2Tk)
+# Implement the default Matplotlib key bindings.
+from matplotlib.backend_bases import key_press_handler
+from matplotlib.figure import Figure
+#for modbus lib
+import serial
+import sys
+import pymodbus
+from pymodbus.pdu import ModbusRequest
+from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+from pymodbus.transaction import ModbusRtuFramer
+from pymodbus.exceptions import ModbusIOException, NotImplementedException
+from pymodbus.exceptions import InvalidMessageReceivedException
+from pymodbus.constants import Defaults
+```
+
+The reason for the large number of libraries is that Modbus RTU, GUI and standard libraries must be used together. We have 2 pages for GUI screen and there are 2 icons on our GUI screen. The UP icon of these icons increases the motor speed by 30rpm; DOWN icon reduces 30rpm. Also, you can change what you desire. 
+
+UP icon:
+![Image of Up](https://github.com/pe2a/miniIOEx3G/blob/master/examples/RealTimeGraphics/DanfossMotorDriver/pics/up.png)
+
+Down icon:
+![Image of Down](https://github.com/pe2a/miniIOEx3G/blob/master/examples/RealTimeGraphics/DanfossMotorDriver/pics/down.png)
+
+Stop icon:
+![Image of Stop](https://github.com/pe2a/miniIOEx3G/blob/master/examples/RealTimeGraphics/DanfossMotorDriver/pics/stop.png)
+
+We are using at below function for motor speed reference:
+
+```python
+def wrSendSpeedRef(motorSpeedRef):#rpm
+```
+Reading motor speed rpm via Modbus RTU, that function is used:
+
+```python
+def readMotorParameter(showPrint = 0):
+```
+
+Reading motor speed and the reference of motor speed are graphically plotted on the GUI screen. The orange color in the graph is the speed reference; the blue defines the reading motor  speed reference. The time difference between them is due to the loss of communication time and the dead time of the PWM applied by the motor driver. Our engine is a squirrel-cage AC motor, so dead time is normal. 
+
+The video for Real Time Plotting via Modbus RTU is shared at below. As it can be seen from the graph, Raspberry Pi can easily do the automation process and plotting the graph just for ~ $100. 
+
+![Video for Real Time Plotting](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/gifACMotorSpeed.gif)
+
+
+
 
 ## Other Topic ##
 

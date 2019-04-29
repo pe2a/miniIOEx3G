@@ -1,18 +1,21 @@
+#@author: pe2a 
+#update time 29.04.19
 
 #Raspberry Pi IO library
 import RPi.GPIO as GPIO
-import spidev
 #Python3 Library
-import tkinter as tk
 import time
+#python GUI lib
+import tkinter as tk
 from tkinter import *
+#showing icon file 
 from PIL import ImageTk, Image
+#for chart
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
 # Implement the default Matplotlib key bindings.
 from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
-
 #for modbus lib
 import serial
 import sys
