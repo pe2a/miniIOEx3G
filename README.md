@@ -201,14 +201,14 @@ All terminal numbers and comments can be found in the table below.
 | ------------- | ------------- |------------- |
 | 0V 	| 1 | |
 | 24V	| 2 | |
-| RL1_COM	| 3 | UP TO 24VDC|
-| RL1_NO	| 4 | |
-| RL2_COM	| 5 |UP TO 24VDC|
-| RL2_NO  	| 6 | |
+| RL2_COM	| 3 | UP TO 24VDC|
+| RL2_NO	| 4 | |
+| RL1_COM	| 5 |UP TO 24VDC|
+| RL1_NO  	| 6 | |
 | GND	| 7 |
 | DIG_OUT_2	| 8 | 24VDC,max. 80mA |
 | GND	| 9 | |
-| DIG_OUT_2	| 10 |  24VDC,max. 80mA | 
+| DIG_OUT_1	| 10 |  24VDC,max. 80mA | 
 | GND	| 11 | |
 | AI_IN2	| 12 | 0-30VDC or 4-20mA|
 | GND	| 13 | |
@@ -216,7 +216,7 @@ All terminal numbers and comments can be found in the table below.
 | GND	| 15 | |
 | DIG_IN_2	| 16 | UP TO 30VDC |
 | RS_GND	| 17 | ALL GND IS SHORT-CIRCUITED |
-| DIG_IN_2	| 18 | UP TO 30VDC |
+| DIG_IN_1	| 18 | UP TO 30VDC |
 | RS232_TX OR RS485_B	| 19 | |
 | RS232_RX OR RS485_A	| 20 | |
 
