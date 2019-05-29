@@ -9,6 +9,8 @@
 
 [IO Handling](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#io-handling)
 
+[IO Class for MiniIOEx-3G via Python](https://github.com/pe2a/miniIOEx3G#io-class-for-miniioex-3g-via-python)
+
 - [Test GUI Program](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#io-test-gui-program)
 
 - [Digital Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-input)
@@ -241,15 +243,15 @@ $: raspi-config
 ```
 - Step 2.
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/spi-1.PNG)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/spi-1.JPG)
 
 - Step 3.
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/spi-2.PNG)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/spi-2.JPG)
 
 - Step 4.
 
-![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/spi-3.PNG)
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/spi-3.JPG)
 
 
 ## IO Test GUI Program ##
