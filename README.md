@@ -220,6 +220,36 @@ All terminal numbers and comments can be found in the table below.
 | RS232_TX OR RS485_B	| 19 | |
 | RS232_RX OR RS485_A	| 20 | |
 
+## IO Class for MiniIOEx-3G via Python ##
+
+There is a class for IO usage of MiniIOEx. You can easily do IO commissioning with this class.  
+
+You can download from github repo that using this command from Raspbian:
+
+```console
+$: wget https://raw.githubusercontent.com/pe2a/miniIOEx3G/master/miniIOEx3G.py
+```
+This class is suitable with Python 2.x and Python 3.x. SPI port must be open to use this class. We are giving sample usage for this class on the following topics. 
+
+SPI settings:
+
+- Step 1.
+Run the command on the terminal:
+
+```console
+$: raspi-config
+```
+- Step 2.
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/spi-1.PNG)
+
+- Step 3.
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/spi-2.PNG)
+
+- Step 4.
+
+![Image of MiniIOEx-3G](https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/spi-3.PNG)
 
 
 ## IO Test GUI Program ##
@@ -302,6 +332,28 @@ You can run program with at below command.
 
 ```console
 python3 di_test.py
+```
+
+OR, you can use miniIOEx class. 
+
+```python
+import miniIOEx3G
+import time
+
+#Sample Digital Input Function Usage
+#get Digital Input from the field
+io = miniIOEx3G.miniIOEx()
+counter  = 0
+while 1:
+
+    print("# {} #".format(counter))
+
+    print(io.getDI("RASP_DIG_IN_1"))
+    print(io.getDI("RASP_DIG_IN_2"))
+    time.sleep(1) #1sc delay
+    print("\n")
+	counter+=1
+	
 ```
 
 ## Digital Output ##
@@ -394,6 +446,34 @@ while (1):
 	time.sleep(0.2) #200ms
 	GPIO.output(DO_TR2,GPIO.HIGH) 
 	time.sleep(0.2) #200ms
+```
+Actually, the MiniIOEx3G class is easy to implement. 
+
+Decleration of the Digital Output variable name:
+
+RASP_DIG_R_OUT_1 = 19 #PIN NO 35 OF RASPBERRY PI
+RASP_DIG_R_OUT_2 = 16 #PIN NO 36 OF RASPBERRY PI
+RASP_DIG_tr_OUT_1 = 21 #PIN NO 40 OF RASPBERRY PI
+RASP_DIG_tr_OUT_2 = 20 #PIN 38 OF RASPBERRY PI
+RASP_DIG_tr_LED_1 = 26 #PIN 37 OF RASPBERRY PI
+
+You can use the class like at below:
+
+```python
+import miniIOEx3G
+import time
+
+#Sample Digital Input Function Usage
+#get Digital Input from the field
+io = miniIOEx3G.miniIOEx()
+
+while 1:
+
+    io.setDO("RASP_DIG_tr_LED_1",True) #LED ON
+    time.sleep(1) #1sc delay
+    io.setDO("RASP_DIG_tr_LED_1",False) #LED OFF
+    time.sleep(1) #1sc delay
+   
 ```
 
 
@@ -522,31 +602,30 @@ In order to read the digital value from the MCP3208 integration, the code block 
 
 **Important Note**
 
-**Since the Python library is used, **Raspi-Config -> Interfacing Options -> SPI** *enable* is required.**
+**Because of  using the Python library , **Raspi-Config -> Interfacing Options -> SPI** *enable* is required.**
+
+MiniIOEx3G class is suitable for Analog Input. To tun at the below code, there is no need to connect external cable. MiniIOEx-3G can measure 5V and 24V power input as internal.  
 
 ```python
-def readAI(ch):
-        if 7 <= ch <= 0:
-            raise Exception('MCP3208 channel must be 0-7: ' + str(ch))
 
-        cmd = 128  # 1000 0000
-        cmd += 64  # 1100 0000
-        cmd += ((ch & 0x07) << 3)
-        ret = spi.xfer2([cmd, 0x0, 0x0])
+import miniIOEx3G
+import time
 
-        # get the 12b out of the return
-        val = (ret[0] & 0x01) << 11  
-        val |= ret[1] << 3           
-        val |= ret[2] >> 5           
+io = miniIOEx3G.miniIOEx()
 
-        return (val & 0x0FFF)  
+counter  = 0
+while 1:
 	
+	print("# {} #".format(counter))
+	print("Raspberry Pi Power Supply Voltage: "+str(io.ps5V())) # ~5V
+	print("Industrial Shield Power Supply Voltage: "+str(io.ps24V())) #from 12V to 24V is ok
+	print("\n")
+	counter+=1
 	
-#digital value for 5V
-
-print(readAI(6))
+	time.sleep(1)
 
 ```
+<img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/ai-sample-1.jpg" alt="drawing" width="250"/>
 
 The equivalence of the above Python code written in C language is as follows. You can select the code block for which you want to work with the programming language in your work.
 
@@ -605,6 +684,9 @@ Since there is no voltage dropping element on the MiniIOEx in the 5V line, this 
 <img src="https://github.com/pe2a/miniIOEx3G/blob/master/doc/images/38.jpg" alt="drawing" width="250"/>
 
 As you can see above pictures, MinIOEx has bridge diode for 24V power in. 
+
+
+
 
 
 ## Serial Port ##
