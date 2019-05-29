@@ -233,6 +233,8 @@ $: wget https://raw.githubusercontent.com/pe2a/miniIOEx3G/master/miniIOEx3G.py
 ```
 This class is suitable with Python 2.x and Python 3.x. SPI port must be open to use this class. We are giving sample usage for this class on the following topics. 
 
+### SPI Settings for Python Usage ###
+
 SPI settings:
 
 - Step 1.
