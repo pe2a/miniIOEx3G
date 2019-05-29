@@ -11,6 +11,8 @@
 
 [IO Class for MiniIOEx-3G via Python](https://github.com/pe2a/miniIOEx3G#io-class-for-miniioex-3g-via-python)
 
+- [SPI Settings for Python Usage](https://github.com/pe2a/miniIOEx3G#spi-settings-for-python-usage)
+
 - [Test GUI Program](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#io-test-gui-program)
 
 - [Digital Input](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#digital-input)
