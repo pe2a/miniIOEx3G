@@ -64,9 +64,12 @@ class miniIOEx():
 
         self.AI_ANIN1 = 0
         self.AI_ANIN2 = 0
-
+        
+        self.RASP_DIG_IN_1 = 6 #PIN NO 31 OF RASPBERRY PI
 
         __myGPIOInit__()
+        
+        
 
  
     #ANALOG INPUT START
@@ -104,32 +107,32 @@ class miniIOEx():
 
     def setDO(self,ch,val = False):
 
-        if ch == RASP_DIG_R_OUT_1:
+        if ch == "RASP_DIG_R_OUT_1":
            
             if val == True:
                 GPIO.output(RASP_DIG_R_OUT_1, GPIO.HIGH)  # will be ON
             else:
                 GPIO.output(RASP_DIG_R_OUT_1, GPIO.LOW)  # will be OFF
               
-        elif ch == RASP_DIG_R_OUT_2:
+        elif ch == "RASP_DIG_R_OUT_2":
              if val == True:
                 GPIO.output(RASP_DIG_R_OUT_2, GPIO.HIGH)  # will be ON
              else:
                 GPIO.output(RASP_DIG_R_OUT_2, GPIO.LOW)  # will be OFF
    
-        elif ch == RASP_DIG_tr_OUT_1:
+        elif ch == "RASP_DIG_tr_OUT_1":
              if val == True:
                 GPIO.output(RASP_DIG_tr_OUT_1, GPIO.HIGH)  # will be ON
              else:
                 GPIO.output(RASP_DIG_tr_OUT_1, GPIO.LOW)  # will be OFF
      
-        elif ch == RASP_DIG_tr_OUT_2:
+        elif ch == "RASP_DIG_tr_OUT_2":
              if val == True:
                 GPIO.output(RASP_DIG_tr_OUT_2, GPIO.HIGH)  # will be ON
              else:
                 GPIO.output(RASP_DIG_tr_OUT_2, GPIO.LOW)  # will be OFF
                   
-        elif ch == RASP_DIG_tr_LED_1:
+        elif ch == "RASP_DIG_tr_LED_1":
              if val == True:
                 GPIO.output(RASP_DIG_tr_LED_1, GPIO.HIGH)  # will be ON
              else:
@@ -138,20 +141,30 @@ class miniIOEx():
     def getDI(self,ch):
 
            #Digital Input
-        if ch == RASP_DIG_IN_1:
+        if ch == "RASP_DIG_IN_1":
 
             if GPIO.input(RASP_DIG_IN_1):
                 return False
             else:
                 return True
                            #Digital Input
-        elif ch == RASP_DIG_IN_2:
+        elif ch == "RASP_DIG_IN_2":
 
             if GPIO.input(RASP_DIG_IN_2):
                
                 return False
             else:
                 return True
+                
+    #all DO will be OFF
+    def close_all_DO(self):
+        
+         for i in range(5):
+               
+                GPIO.output(stIOVal[i], GPIO.LOW)  # will be OFF
+                
+
+        
     
     def testDO(self):
 
@@ -160,8 +173,7 @@ class miniIOEx():
             for i in range(5):
                 GPIO.output(stIOVal[i], GPIO.HIGH)  # will be ON
                 sleep(0.250) #250ms
-                GPIO.output(stIOVal[i], GPIO.LOW)  # will be ON
+                GPIO.output(stIOVal[i], GPIO.LOW)  # will be OFF
                 sleep(0.25) #250ms
-
 
 
