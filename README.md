@@ -1841,7 +1841,7 @@ In this document, Danfoss motor driver is communicated via Modbus RTU with Raspb
 
 The program used in OS is written in Python. You can run it on MiniIOEx-3G by copy / paste.
 
-Which products used:
+Hardware components::
 
 -	Danfoss 1kW AC Motor Driver
 -	Siemens 0.25kW 1500rpm AC Motor 
