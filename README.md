@@ -2077,7 +2077,7 @@ You can use *nano* or *vi* editor to edit the file.
 1.Step:
 
 ```console
-$nano /etc/rc.login
+$nano /etc/rc.local
 ```
 2.Step 
 
