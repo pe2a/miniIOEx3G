@@ -58,9 +58,11 @@
 
 - [Run a Program on Raspbian at Startup](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#run-a-program-on-your-raspberry-pi-at-startup)
 
+- [Define Static IP](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#define-static-ip)
+
 [Support](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#support)
 
-[BUY](https://github.com/pe2a/miniIOEx3G/blob/master/README.md#buy)
+
 
 
 # An Industrial Raspberry Shield: MiniIOEx-3G #
@@ -2099,13 +2101,32 @@ $python3 /home/pi/Desktop/ai_reboot.py &
 
 Link: https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/
 
+### Define Static IP ###
+
+Since we use the ethernet line in industrial areas, Raspberry Pi often requires static IP. There are many ways to do this. If the Raspberry Pi static IP is not defined and a DHCP server is available, it receives a dynamic IP over the network. In order to obtain a static IP, the following file needs to be modified:
+
+When we use Raspberry Pi Zero, we use an SPI / Ethernet converter because there is no Ethernet on the device. Since there is no other Ethernet in the Raspberry Pi Zero, the Ethernet address starts with eth0. We do static IP identification according to eth0.
+
+```console
+$: nano /etc/dhcpcd.conf 
+```
+Add your static IP to the file:
+
+```console
+#static IP configuration
+
+interface eth0
+static ip_address=192.168.1.40/24
+static routers=192.168.1.1
+static domain_name_servers=192.168.1.1
+```
+That's done. 
+
 ## Support ##
 
 Please do not hesitate to create request for this document or product named MiniIOEx-3G, or you can contact to us directly as using support@pe2a.com .
 
-## Buy ##
 
-You can have MiniIOEx-3G just for $65. (https://iyzi.link/AAYIcA)
 
 
 
