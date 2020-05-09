@@ -2122,6 +2122,17 @@ static domain_name_servers=192.168.1.1
 ```
 That's done. 
 
+
+### Disable the Blank Screen  ###
+
+You can eliminate this problem by editing the /etc/lightdm/lightdm.conf file as follows:
+
+```console
+[SeatDefaults]
+xserver-command=X -s 0 -dpms
+```
+You must be root to do this. After this process, you can restart the Raspberry Pi.
+
 ## Support ##
 
 Please do not hesitate to create request for this document or product named MiniIOEx-3G, or you can contact to us directly as using support@pe2a.com .
